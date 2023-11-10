@@ -1,0 +1,55 @@
+---
+openapi: 3.0.3
+info:
+  title: onecx-theme theme import
+  version: 1.0.0
+servers:
+  - url: "http://localhost"
+paths:
+  /import/theme:
+    post:
+      operationId: importTheme
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataImport'
+      responses:
+        200:
+          description: ok
+components:
+  schemas:
+    DataImport:
+      type: object
+      properties:
+        themes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataImportTheme'
+    DataImportTheme:
+      required:
+        - name
+      type: object
+      properties:
+        version:
+          format: int32
+          type: integer
+        name:
+          minLength: 2
+          type: string
+        cssFile:
+          type: string
+        description:
+          type: string
+        assetsUrl:
+          type: string
+        logoUrl:
+          type: string
+        faviconUrl:
+          type: string
+        previewImageUrl:
+          type: string
+        assetsUpdateDate:
+          type: string
+        properties:
+          type: object
