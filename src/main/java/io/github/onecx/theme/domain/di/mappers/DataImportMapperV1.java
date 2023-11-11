@@ -1,10 +1,10 @@
 package io.github.onecx.theme.domain.di.mappers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.inject.Inject;
 
-import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gen.io.github.onecx.theme.di.v1.model.DataImportThemeDTOV1;
+import gen.io.github.onecx.theme.di.v1.model.DataImportThemesDTOV1;
 import io.github.onecx.theme.domain.models.Theme;
 
 @Mapper(uses = OffsetDateTimeMapper.class)
@@ -22,11 +23,23 @@ public abstract class DataImportMapperV1 {
     @Inject
     ObjectMapper mapper;
 
-    @IterableMapping(qualifiedByName = "import")
-    public abstract List<Theme> importThemes(List<DataImportThemeDTOV1> dto);
+    public List<Theme> importThemes(DataImportThemesDTOV1 request) {
+        List<Theme> result = new ArrayList<>();
+        if (request == null) {
+            return result;
+        }
+        request.forEach((name, dto) -> {
+            var theme = importTheme(dto);
+            theme.setName(name);
+            result.add(theme);
+        });
+
+        return result;
+    }
 
     @Named("import")
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "name", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "creationUser", ignore = true)
@@ -35,7 +48,7 @@ public abstract class DataImportMapperV1 {
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
-    public abstract Theme theme(DataImportThemeDTOV1 dto);
+    public abstract Theme importTheme(DataImportThemeDTOV1 dto);
 
     @Named("properties")
     String properties(Object properties) {

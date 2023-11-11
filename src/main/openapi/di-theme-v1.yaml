@@ -1,7 +1,7 @@
 ---
 openapi: 3.0.3
 info:
-  title: onecx-theme theme import
+  title: onecx-theme themes import from file during the start of the application
   version: 1.0.0
 servers:
   - url: "http://localhost"
@@ -23,20 +23,22 @@ components:
       type: object
       properties:
         themes:
-          type: array
-          items:
-            $ref: '#/components/schemas/DataImportTheme'
-    DataImportTheme:
+          $ref: '#/components/schemas/DataImportThemes'
+    DataImportThemes:
+      type: object
+      nullable: false
+      properties:
+        default:
+          type: string
+          minLength: 2
+          description: name of the theme
       required:
-        - name
+        - default
+      additionalProperties:
+        $ref: '#/components/schemas/DataImportTheme'
+    DataImportTheme:
       type: object
       properties:
-        version:
-          format: int32
-          type: integer
-        name:
-          minLength: 2
-          type: string
         cssFile:
           type: string
         description:

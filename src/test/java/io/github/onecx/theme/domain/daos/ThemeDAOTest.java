@@ -30,6 +30,8 @@ class ThemeDAOTest {
     void methodExceptionTests() {
         methodExceptionTests(() -> dao.findThemeByName(null),
                 ThemeDAO.ErrorKeys.ERROR_FIND_THEME_BY_NAME);
+        methodExceptionTests(() -> dao.findThemeByNames(null),
+                ThemeDAO.ErrorKeys.ERROR_FIND_THEME_BY_NAMES);
     }
 
     void methodExceptionTests(Executable fn, Enum<?> key) {

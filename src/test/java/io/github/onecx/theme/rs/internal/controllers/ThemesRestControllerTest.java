@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.from;
 
 import java.util.List;
 
@@ -54,12 +55,11 @@ class ThemesRestControllerTest extends AbstractTest {
                 .extract()
                 .body().as(ThemeDTO.class);
 
-        assertThat(dto).isNotNull();
-        assertThat(dto.getName()).isEqualTo(themeDto.getName());
-        assertThat(dto.getName()).isEqualTo(themeDto.getName());
-        assertThat(dto.getDescription()).isEqualTo(themeDto.getDescription());
-        assertThat(dto.getAssetsUrl()).isEqualTo(themeDto.getAssetsUrl());
-        assertThat(dto.getPreviewImageUrl()).isEqualTo(themeDto.getPreviewImageUrl());
+        assertThat(dto).isNotNull()
+                .returns(themeDto.getName(), from(ThemeDTO::getName))
+                .returns(themeDto.getDescription(), from(ThemeDTO::getDescription))
+                .returns(themeDto.getAssetsUrl(), from(ThemeDTO::getAssetsUrl))
+                .returns(themeDto.getPreviewImageUrl(), from(ThemeDTO::getPreviewImageUrl));
 
         // create theme without body
         var exception = given()
@@ -81,7 +81,7 @@ class ThemesRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .body(themeDto)
                 .post()
-                .then().log().all()
+                .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .extract().as(RestExceptionDTO.class);
 
@@ -244,7 +244,7 @@ class ThemesRestControllerTest extends AbstractTest {
                 .body(themeDto)
                 .pathParam("id", "11-111")
                 .put("{id}")
-                .then().log().all()
+                .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .extract().as(RestExceptionDTO.class);
 
@@ -264,7 +264,7 @@ class ThemesRestControllerTest extends AbstractTest {
                 .when()
                 .pathParam("id", "update_create_new")
                 .put("{id}")
-                .then().log().all()
+                .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .extract().as(RestExceptionDTO.class);
 

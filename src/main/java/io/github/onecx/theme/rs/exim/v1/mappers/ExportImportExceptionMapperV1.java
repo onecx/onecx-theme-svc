@@ -1,4 +1,4 @@
-package io.github.onecx.theme.rs.internal.mappers;
+package io.github.onecx.theme.rs.exim.v1.mappers;
 
 import java.util.List;
 import java.util.Set;
@@ -14,24 +14,23 @@ import org.mapstruct.Mapping;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
-import gen.io.github.onecx.theme.rs.internal.model.RestExceptionDTO;
-import gen.io.github.onecx.theme.rs.internal.model.ValidationConstraintDTO;
+import gen.io.github.onecx.theme.rs.exim.v1.model.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Mapper(uses = { OffsetDateTimeMapper.class })
-public abstract class ExceptionMapper {
+public abstract class ExportImportExceptionMapperV1 {
 
-    public RestResponse<RestExceptionDTO> constraint(ConstraintViolationException ex) {
-        log.error("Processing theme internal rest controller error: {}", ex.getMessage());
+    public RestResponse<EximRestExceptionDTOV1> constraint(ConstraintViolationException ex) {
+        log.error("Processing theme export import rest controller error: {}", ex.getMessage());
 
         var dto = exception("CONSTRAINT_VIOLATIONS", ex.getMessage());
         dto.setValidations(createErrorValidationResponse(ex.getConstraintViolations()));
         return RestResponse.status(Response.Status.BAD_REQUEST, dto);
     }
 
-    public RestResponse<RestExceptionDTO> exception(Exception ex) {
-        log.error("Processing theme internal rest controller error: {}", ex.getMessage());
+    public RestResponse<EximRestExceptionDTOV1> exception(Exception ex) {
+        log.error("Processing theme export import rest controller error: {}", ex.getMessage());
 
         if (ex instanceof DAOException de) {
             return RestResponse.status(Response.Status.BAD_REQUEST,
@@ -48,21 +47,21 @@ public abstract class ExceptionMapper {
     @Mapping(target = "parameters", ignore = true)
     @Mapping(target = "validations", ignore = true)
     @Mapping(target = "removeValidationsItem", ignore = true)
-    public abstract RestExceptionDTO exception(String errorCode, String message);
+    public abstract EximRestExceptionDTOV1 exception(String errorCode, String message);
 
     @Mapping(target = "removeParametersItem", ignore = true)
     @Mapping(target = "namedParameters", ignore = true)
     @Mapping(target = "removeNamedParametersItem", ignore = true)
     @Mapping(target = "validations", ignore = true)
     @Mapping(target = "removeValidationsItem", ignore = true)
-    public abstract RestExceptionDTO exception(String errorCode, String message, List<Object> parameters);
+    public abstract EximRestExceptionDTOV1 exception(String errorCode, String message, List<Object> parameters);
 
-    public abstract List<ValidationConstraintDTO> createErrorValidationResponse(
+    public abstract List<EximValidationConstraintDTOV1> createErrorValidationResponse(
             Set<ConstraintViolation<?>> constraintViolation);
 
     @Mapping(target = "parameter", source = "propertyPath")
     @Mapping(target = "message", source = "message")
-    public abstract ValidationConstraintDTO createError(ConstraintViolation<?> constraintViolation);
+    public abstract EximValidationConstraintDTOV1 createError(ConstraintViolation<?> constraintViolation);
 
     public String mapPath(Path path) {
         return path.toString();

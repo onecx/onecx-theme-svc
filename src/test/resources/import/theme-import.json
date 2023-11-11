@@ -1,9 +1,6 @@
 {
-  "themes": [
-    {
-      "id": "T_0",
-      "themeId": "Theme1",
-      "name": "Theme1",
+  "themes": {
+    "Theme1": {
       "description": "Theme1 basic color scheme",
       "properties": {
         "topbar": {
@@ -42,11 +39,8 @@
         }
       }
     },
-    {
-      "id": "T_2",
+    "Theme2": {
       "description": "Theme2 theme",
-      "themeId": "Theme2",
-      "name": "Theme2",
       "properties": {
         "topbar": {
           "topbar-bg-color": "#e20074",
@@ -85,5 +79,5 @@
         }
       }
     }
-  ]
+  }
 }
