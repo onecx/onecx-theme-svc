@@ -1,0 +1,170 @@
+---
+openapi: 3.0.3
+info:
+  title: onecx-theme export and import v1
+  version: 1.0.0
+servers:
+  - url: "http://onecx-portal:8080"
+tags:
+  - name: themesExportImport
+paths:
+  /exim/v1/themes/export:
+    post:
+      tags:
+        - themesExportImport
+      description: Export list of themes
+      operationId: exportThemes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EximExportRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EximImportRequest'
+        "404":
+          description: No themes founds
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EximRestException'
+  /exim/v1/themes/import:
+    post:
+      tags:
+        - themesExportImport
+      description: Import themes
+      operationId: importThemes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EximImportRequest'
+      responses:
+        "200":
+          description: Import result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EximImportResult'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EximRestException'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EximRestException'
+components:
+  schemas:
+    EximExportRequest:
+      type: object
+      properties:
+        names:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+    EximImportResult:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 10
+          description: ID of the request
+        themes:
+          $ref: '#/components/schemas/EximImportResultThemes'
+    EximImportResultThemes:
+      type: object
+      nullable: false
+      additionalProperties:
+        $ref: '#/components/schemas/EximThemeResult'
+    EximThemeResult:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/EximThemeResultStatus'
+    EximThemeResultStatus:
+      type: string
+      enum:
+        - UPDATE
+        - CREATED
+        - SKIP
+    EximImportRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 10
+          description: ID of the request
+        created:
+          $ref: '#/components/schemas/OffsetDateTime'
+        themes:
+          $ref: '#/components/schemas/EximImportThemes'
+    EximImportThemes:
+      type: object
+      nullable: false
+      additionalProperties:
+         $ref: '#/components/schemas/EximTheme'
+    EximTheme:
+      type: object
+      properties:
+        cssFile:
+          type: string
+        description:
+          type: string
+        assetsUrl:
+          type: string
+        logoUrl:
+          type: string
+        faviconUrl:
+          type: string
+        previewImageUrl:
+          type: string
+        assetsUpdateDate:
+          type: string
+        properties:
+          type: object
+    EximRestException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+        message:
+          type: string
+        parameters:
+          type: array
+          items:
+            type: object
+        namedParameters:
+          type: object
+          additionalProperties:
+            type: object
+        validations:
+          type: array
+          items:
+            $ref: '#/components/schemas/EximValidationConstraint'
+    EximValidationConstraint:
+      type: object
+      properties:
+        parameter:
+          type: string
+        message:
+          type: string
+    OffsetDateTime:
+      format: date-time
+      type: string
+      example: 2022-03-10T12:15:50-04:00
