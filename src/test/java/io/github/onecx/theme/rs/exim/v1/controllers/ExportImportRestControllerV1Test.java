@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.from;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,9 +12,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.tkit.quarkus.test.WithDBData;
 
-import gen.io.github.onecx.theme.rs.exim.v1.model.EximExportRequestDTOV1;
-import gen.io.github.onecx.theme.rs.exim.v1.model.EximImportRequestDTOV1;
-import gen.io.github.onecx.theme.rs.exim.v1.model.EximRestExceptionDTOV1;
+import gen.io.github.onecx.theme.rs.exim.v1.model.*;
 import io.github.onecx.theme.test.AbstractTest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
@@ -97,5 +96,38 @@ class ExportImportRestControllerV1Test extends AbstractTest {
     @Test
     void importThemesTest() {
 
+        var request = new EximExportRequestDTOV1();
+
+        var data = given()
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(request)
+                .post("export")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract().as(EximImportRequestDTOV1.class);
+        assertThat(data).isNotNull();
+        assertThat(data.getThemes()).hasSize(3);
+
+        var new_theme = new EximThemeDTOV1();
+        new_theme.setDescription("new theme description");
+        data.getThemes().put("new_theme", new_theme);
+
+        var dto = given()
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(data)
+                .post("import")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract().as(EximImportResultDTOV1.class);
+
+        assertThat(dto).isNotNull().returns(data.getId(), from(EximImportResultDTOV1::getId));
+
+        assertThat(dto.getThemes()).isNotNull().hasSize(4);
+        assertThat(dto.getThemes().get("cg")).returns(EximThemeResultStatusDTOV1.UPDATE, from(EximThemeResultDTOV1::getStatus));
+        assertThat(dto.getThemes().get("new_theme")).returns(EximThemeResultStatusDTOV1.CREATED,
+                from(EximThemeResultDTOV1::getStatus));
     }
+
 }

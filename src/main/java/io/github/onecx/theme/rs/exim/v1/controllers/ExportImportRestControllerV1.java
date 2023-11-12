@@ -1,5 +1,7 @@
 package io.github.onecx.theme.rs.exim.v1.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -51,7 +53,7 @@ public class ExportImportRestControllerV1 implements ThemesExportImportApi {
         var themes = dao.findThemeByNames(keys);
         var map = themes.collect(Collectors.toMap(Theme::getName, theme -> theme));
 
-        EximImportResultThemesDTOV1 items = new EximImportResultThemesDTOV1();
+        Map<String, EximThemeResultDTOV1> items = new HashMap<>();
 
         request.getThemes().forEach((name, dto) -> {
 

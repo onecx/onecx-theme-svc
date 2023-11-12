@@ -2,6 +2,7 @@ package io.github.onecx.theme.domain.di.mappers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.inject.Inject;
 
@@ -14,7 +15,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gen.io.github.onecx.theme.di.v1.model.DataImportThemeDTOV1;
-import gen.io.github.onecx.theme.di.v1.model.DataImportThemesDTOV1;
 import io.github.onecx.theme.domain.models.Theme;
 
 @Mapper(uses = OffsetDateTimeMapper.class)
@@ -23,7 +23,7 @@ public abstract class DataImportMapperV1 {
     @Inject
     ObjectMapper mapper;
 
-    public List<Theme> importThemes(DataImportThemesDTOV1 request) {
+    public List<Theme> importThemes(Map<String, DataImportThemeDTOV1> request) {
         List<Theme> result = new ArrayList<>();
         if (request == null) {
             return result;

@@ -27,13 +27,6 @@ components:
     DataImportThemes:
       type: object
       nullable: false
-      properties:
-        default:
-          type: string
-          minLength: 2
-          description: name of the theme
-      required:
-        - default
       additionalProperties:
         $ref: '#/components/schemas/DataImportTheme'
     DataImportTheme:

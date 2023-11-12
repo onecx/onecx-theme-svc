@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.notNull;
+import static org.mockito.ArgumentMatchers.any;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class ExportImportRestControllerV1ExceptionTest extends AbstractTest {
 
     @BeforeEach
     void beforeAll() {
-        Mockito.when(dao.findThemeByNames(notNull()))
+        Mockito.when(dao.findThemeByNames(any()))
                 .thenThrow(new RuntimeException("Test technical error exception"))
                 .thenThrow(new DAOException(ErrorKey.ERROR_TEST, new RuntimeException("Test")));
     }

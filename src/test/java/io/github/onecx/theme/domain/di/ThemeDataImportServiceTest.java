@@ -16,7 +16,6 @@ import org.tkit.quarkus.test.WithDBData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gen.io.github.onecx.theme.di.v1.model.DataImportDTOV1;
-import gen.io.github.onecx.theme.di.v1.model.DataImportThemesDTOV1;
 import io.github.onecx.theme.domain.daos.ThemeDAO;
 import io.github.onecx.theme.domain.models.Theme;
 import io.github.onecx.theme.test.AbstractTest;
@@ -102,7 +101,7 @@ class ThemeDataImportServiceTest extends AbstractTest {
                 public byte[] getData() {
                     try {
                         var data = new DataImportDTOV1();
-                        data.setThemes(new DataImportThemesDTOV1());
+                        data.setThemes(null);
                         return mapper.writeValueAsBytes(data);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);

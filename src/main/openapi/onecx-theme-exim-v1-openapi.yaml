@@ -90,13 +90,6 @@ components:
     EximImportResultThemes:
       type: object
       nullable: false
-      properties:
-        default:
-          type: string
-          minLength: 2
-          description: name of the theme
-      required:
-        - default
       additionalProperties:
         $ref: '#/components/schemas/EximThemeResult'
     EximThemeResult:
@@ -124,13 +117,6 @@ components:
     EximImportThemes:
       type: object
       nullable: false
-      properties:
-        default:
-          type: string
-          minLength: 2
-          description: name of the theme
-      required:
-        - default
       additionalProperties:
          $ref: '#/components/schemas/EximTheme'
     EximTheme:
