@@ -54,7 +54,7 @@ public class ThemeDataImportServiceV1 implements DataImportService {
             }
 
             DataImportDTOV1 data = objectMapper.readValue(config.getData(), DataImportDTOV1.class);
-            System.out.println("### " + data.getThemes());
+
             if (data.getThemes() == null || data.getThemes().isEmpty()) {
                 log.warn("Import configuration key {} does not contains any JSON data to import", config.getKey());
                 return;
