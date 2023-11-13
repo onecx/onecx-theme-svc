@@ -58,6 +58,12 @@ public class ThemesRestController implements ThemesInternalApi {
     }
 
     @Override
+    public Response getThemeInfoList() {
+        var items = dao.findAllInfos();
+        return Response.ok(mapper.mapInfoList(items)).build();
+    }
+
+    @Override
     public Response getThemeById(String id) {
         var theme = dao.findById(id);
         if (theme == null) {
@@ -76,9 +82,9 @@ public class ThemesRestController implements ThemesInternalApi {
     }
 
     @Override
-    public Response getThemes() {
-        var items = dao.findAll();
-        return Response.ok(mapper.map(items)).build();
+    public Response getThemes(Integer pageNumber, Integer pageSize) {
+        var items = dao.findAll(pageNumber, pageSize);
+        return Response.ok(mapper.mapPage(items)).build();
     }
 
     @Override

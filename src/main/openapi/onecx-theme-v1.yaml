@@ -6,167 +6,12 @@ info:
 servers:
   - url: "http://onecx-portal:8080"
 tags:
-  - name: themesInternal
+  - name: themes
 paths:
-  /internal/themes:
+  /v1/themes/info:
     get:
       tags:
-        - themesInternal
-      description: Return list of themes
-      operationId: getThemes
-      parameters:
-        - name: pageNumber
-          in: query
-          schema:
-            format: int32
-            description: The number of page.
-            default: 0
-            type: integer
-        - name: pageSize
-          in: query
-          schema:
-            format: int32
-            description: The size of page
-            default: 10
-            type: integer
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ThemePageResult'
-        "403":
-          description: Forbidden
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
-    post:
-      tags:
-        - themesInternal
-      description: Create new theme
-      operationId: createNewTheme
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateTheme'
-      responses:
-        "201":
-          description: New theme created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Theme'
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
-  /internal/themes/{id}:
-    get:
-      tags:
-        - themesInternal
-      description: Return theme by ID
-      operationId: getThemeById
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Theme'
-        "404":
-          description: Not found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
-    put:
-      tags:
-        - themesInternal
-      description: Update theme by ID
-      operationId: updateTheme
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateTheme'
-      responses:
-        "204":
-          description: Theme updated
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
-        "404":
-          description: Theme not found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
-    delete:
-      tags:
-        - themesInternal
-      description: Delete theme by ID
-      operationId: deleteTheme
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Theme'
-        "204":
-          description: No Content
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
-  /internal/themes/info:
-    get:
-      tags:
-        - themesInternal
+        - themes
       description: Get list of all themes
       operationId: getThemeInfoList
       responses:
@@ -184,10 +29,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestException'
-  /internal/themes/name/{name}:
+  /v1/themes/name/{name}:
     get:
       tags:
-        - themesInternal
+        - themes
       description: Load a single theme definition
       operationId: getThemeByThemeDefinitionName
       parameters:
@@ -228,26 +73,6 @@ components:
           type: string
         description:
           type: string
-    ThemePageResult:
-      type: object
-      properties:
-        totalElements:
-          format: int64
-          description: The total elements in the resource.
-          type: integer
-        number:
-          format: int32
-          type: integer
-        size:
-          format: int32
-          type: integer
-        totalPages:
-          format: int64
-          type: integer
-        stream:
-          type: array
-          items:
-            $ref: '#/components/schemas/Theme'
     Theme:
       required:
         - name
