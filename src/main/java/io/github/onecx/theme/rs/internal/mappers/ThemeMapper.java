@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+import org.tkit.quarkus.jpa.daos.PageResult;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,12 +17,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gen.io.github.onecx.theme.rs.internal.model.*;
 import io.github.onecx.theme.domain.models.Theme;
+import io.github.onecx.theme.domain.models.ThemeInfo;
 
 @Mapper(uses = { OffsetDateTimeMapper.class })
 public abstract class ThemeMapper {
 
     @Inject
     ObjectMapper mapper;
+
+    public ThemeInfoListDTO mapInfoList(Stream<ThemeInfo> data) {
+        ThemeInfoListDTO result = new ThemeInfoListDTO();
+        result.setThemes(mapInfo(data));
+        return result;
+    }
+
+    public abstract List<ThemeInfoDTO> mapInfo(Stream<ThemeInfo> page);
+
+    @Mapping(target = "removeStreamItem", ignore = true)
+    public abstract ThemePageResultDTO mapPage(PageResult<Theme> page);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)

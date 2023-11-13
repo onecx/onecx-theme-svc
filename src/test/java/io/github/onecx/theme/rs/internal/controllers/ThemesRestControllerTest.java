@@ -6,8 +6,6 @@ import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.from;
 
-import java.util.List;
-
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
@@ -15,13 +13,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.tkit.quarkus.test.WithDBData;
 
-import gen.io.github.onecx.theme.rs.internal.model.RestExceptionDTO;
-import gen.io.github.onecx.theme.rs.internal.model.ThemeDTO;
-import gen.io.github.onecx.theme.rs.internal.model.UpdateThemeDTO;
+import gen.io.github.onecx.theme.rs.internal.model.*;
 import io.github.onecx.theme.test.AbstractTest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.common.mapper.TypeRef;
 
 @QuarkusTest
 @TestHTTPEndpoint(ThemesRestController.class)
@@ -180,14 +175,31 @@ class ThemesRestControllerTest extends AbstractTest {
         var data = given()
                 .contentType(APPLICATION_JSON)
                 .get()
-                .then().statusCode(OK.getStatusCode())
+                .then()
+                .statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .as(new TypeRef<List<ThemeDTO>>() {
-                });
+                .as(ThemePageResultDTO.class);
 
-        assertThat(data).hasSize(3);
+        assertThat(data).isNotNull();
+        assertThat(data.getTotalElements()).isEqualTo(3);
+        assertThat(data.getStream()).isNotNull().hasSize(3);
 
+    }
+
+    @Test
+    void getThemeInfoListTest() {
+        var data = given()
+                .contentType(APPLICATION_JSON)
+                .get("info")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract()
+                .as(ThemeInfoListDTO.class);
+
+        assertThat(data).isNotNull();
+        assertThat(data.getThemes()).isNotNull().hasSize(3);
     }
 
     @Test

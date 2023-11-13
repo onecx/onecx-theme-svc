@@ -197,6 +197,19 @@
                             <modelNameSuffix>DTOV1</modelNameSuffix>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>v1</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>src/main/openapi/onecx-theme-v1.yaml</inputSpec>
+                            <apiPackage>gen.io.github.onecx.theme.rs.external.v1</apiPackage>
+                            <modelPackage>gen.io.github.onecx.theme.rs.external.v1.model</modelPackage>
+                            <modelNameSuffix>DTOV1</modelNameSuffix>
+                            <apiNameSuffix>V1Api</apiNameSuffix>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
