@@ -188,6 +188,56 @@ class ThemesRestControllerTest extends AbstractTest {
     }
 
     @Test
+    void searchThemesTest() {
+        var criteria = new ThemeSearchCriteriaDTO();
+
+        var data = given()
+                .contentType(APPLICATION_JSON)
+                .body(criteria)
+                .post("/search")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract()
+                .as(ThemePageResultDTO.class);
+
+        assertThat(data).isNotNull();
+        assertThat(data.getTotalElements()).isEqualTo(3);
+        assertThat(data.getStream()).isNotNull().hasSize(3);
+
+        criteria.setName(" ");
+        data = given()
+                .contentType(APPLICATION_JSON)
+                .body(criteria)
+                .post("/search")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract()
+                .as(ThemePageResultDTO.class);
+
+        assertThat(data).isNotNull();
+        assertThat(data.getTotalElements()).isEqualTo(3);
+        assertThat(data.getStream()).isNotNull().hasSize(3);
+
+        criteria.setName("cg");
+        data = given()
+                .contentType(APPLICATION_JSON)
+                .body(criteria)
+                .post("/search")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract()
+                .as(ThemePageResultDTO.class);
+
+        assertThat(data).isNotNull();
+        assertThat(data.getTotalElements()).isEqualTo(1);
+        assertThat(data.getStream()).isNotNull().hasSize(1);
+
+    }
+
+    @Test
     void getThemeInfoListTest() {
         var data = given()
                 .contentType(APPLICATION_JSON)

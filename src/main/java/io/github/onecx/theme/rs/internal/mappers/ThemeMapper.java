@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gen.io.github.onecx.theme.rs.internal.model.*;
+import io.github.onecx.theme.domain.criteria.ThemeSearchCriteria;
 import io.github.onecx.theme.domain.models.Theme;
 import io.github.onecx.theme.domain.models.ThemeInfo;
 
@@ -24,6 +25,8 @@ public abstract class ThemeMapper {
 
     @Inject
     ObjectMapper mapper;
+
+    public abstract ThemeSearchCriteria map(ThemeSearchCriteriaDTO dto);
 
     public ThemeInfoListDTO mapInfoList(Stream<ThemeInfo> data) {
         ThemeInfoListDTO result = new ThemeInfoListDTO();

@@ -11,7 +11,9 @@ import org.tkit.quarkus.jpa.daos.AbstractDAO;
 import org.tkit.quarkus.jpa.daos.Page;
 import org.tkit.quarkus.jpa.daos.PageResult;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
+import org.tkit.quarkus.jpa.utils.QueryCriteriaUtil;
 
+import io.github.onecx.theme.domain.criteria.ThemeSearchCriteria;
 import io.github.onecx.theme.domain.models.Theme;
 import io.github.onecx.theme.domain.models.ThemeInfo;
 import io.github.onecx.theme.domain.models.Theme_;
@@ -34,6 +36,22 @@ public class ThemeDAO extends AbstractDAO<Theme> {
 
         } catch (Exception ex) {
             throw new DAOException(ErrorKeys.ERROR_FIND_THEME_BY_NAMES, ex);
+        }
+    }
+
+    public PageResult<Theme> findThemesByCriteria(ThemeSearchCriteria criteria) {
+        try {
+            var cb = this.getEntityManager().getCriteriaBuilder();
+            var cq = cb.createQuery(Theme.class);
+            var root = cq.from(Theme.class);
+
+            if (criteria.getName() != null && !criteria.getName().isBlank()) {
+                cq.where(cb.like(root.get(Theme_.name), QueryCriteriaUtil.wildcard(criteria.getName())));
+            }
+
+            return createPageQuery(cq, Page.of(criteria.getPageNumber(), criteria.getPageSize())).getPageResult();
+        } catch (Exception ex) {
+            throw new DAOException(ErrorKeys.ERROR_FIND_THEMES_BY_CRITERIA, ex);
         }
     }
 
@@ -78,6 +96,7 @@ public class ThemeDAO extends AbstractDAO<Theme> {
 
     public enum ErrorKeys {
 
+        ERROR_FIND_THEMES_BY_CRITERIA,
         ERROR_FIND_ALL_THEME_INFO,
         ERROR_FIND_ALL_THEME_PAGE,
         ERROR_FIND_THEME_BY_NAMES,
