@@ -88,6 +88,13 @@ public class ThemesRestController implements ThemesInternalApi {
     }
 
     @Override
+    public Response searchThemes(ThemeSearchCriteriaDTO themeSearchCriteriaDTO) {
+        var criteria = mapper.map(themeSearchCriteriaDTO);
+        var result = dao.findThemesByCriteria(criteria);
+        return Response.ok(mapper.mapPage(result)).build();
+    }
+
+    @Override
     @Transactional
     public Response updateTheme(String id, UpdateThemeDTO updateThemeDTO) {
 

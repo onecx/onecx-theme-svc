@@ -28,6 +28,8 @@ class ThemeDAOTest {
 
     @Test
     void methodExceptionTests() {
+        methodExceptionTests(() -> dao.findThemesByCriteria(null),
+                ThemeDAO.ErrorKeys.ERROR_FIND_THEMES_BY_CRITERIA);
         methodExceptionTests(() -> dao.findThemeByName(null),
                 ThemeDAO.ErrorKeys.ERROR_FIND_THEME_BY_NAME);
         methodExceptionTests(() -> dao.findThemeByNames(null),

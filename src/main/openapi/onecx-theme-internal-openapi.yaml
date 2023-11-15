@@ -38,8 +38,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ThemePageResult'
-        "403":
-          description: Forbidden
         "500":
           description: Internal Server Error
           content:
@@ -155,12 +153,6 @@ paths:
           schema:
             type: string
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Theme'
         "204":
           description: No Content
         "500":
@@ -184,6 +176,33 @@ paths:
                 $ref: '#/components/schemas/ThemeInfoList'
         "404":
           description: Not found
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestException'
+  /internal/themes/search:
+    post:
+      tags:
+        - themesInternal
+      description: Search for themes
+      operationId: searchThemes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThemeSearchCriteria'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ThemePageResult'
         "500":
           description: Internal Server Error
           content:
@@ -219,6 +238,21 @@ paths:
                 $ref: '#/components/schemas/RestException'
 components:
   schemas:
+    ThemeSearchCriteria:
+      type: object
+      properties:
+        name:
+          type: string
+        pageNumber:
+          format: int32
+          description: The number of page.
+          default: 0
+          type: integer
+        pageSize:
+          format: int32
+          description: The size of page
+          default: 10
+          type: integer
     ThemeInfoList:
       type: object
       properties:
