@@ -27,7 +27,7 @@ class ThemesRestControllerTest extends AbstractTest {
     void createNewThemeTest() {
 
         // create theme
-        var themeDto = new ThemeDTO();
+        var themeDto = new CreateThemeDTO();
         themeDto.setName("test01");
         themeDto.setCssFile("cssFile");
         themeDto.setDescription("description");
@@ -63,13 +63,13 @@ class ThemesRestControllerTest extends AbstractTest {
                 .post()
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
-                .extract().as(RestExceptionDTO.class);
+                .extract().as(ProblemDetailResponseDTO.class);
 
         assertThat(exception.getErrorCode()).isEqualTo("CONSTRAINT_VIOLATIONS");
-        assertThat(exception.getMessage()).isEqualTo("createNewTheme.createThemeDTO: must not be null");
+        assertThat(exception.getDetail()).isEqualTo("createNewTheme.createThemeDTO: must not be null");
 
         // create theme with existing name
-        themeDto = new ThemeDTO();
+        themeDto = new CreateThemeDTO();
         themeDto.setName("cg");
 
         exception = given().when()
@@ -78,10 +78,11 @@ class ThemesRestControllerTest extends AbstractTest {
                 .post()
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
-                .extract().as(RestExceptionDTO.class);
+                .extract().as(ProblemDetailResponseDTO.class);
 
         assertThat(exception.getErrorCode()).isEqualTo("PERSIST_ENTITY_FAILED");
-        assertThat(exception.getMessage()).isEqualTo("Errors,key:PERSIST_ENTITY_FAILED,parameters:[Theme],namedParameters:{}");
+        assertThat(exception.getDetail()).isEqualTo(
+                "could not execute statement [ERROR: duplicate key value violates unique constraint 'theme_name_key'  Detail: Key (name)=(cg) already exists.]");
     }
 
     @Test
@@ -308,13 +309,14 @@ class ThemesRestControllerTest extends AbstractTest {
                 .put("{id}")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
-                .extract().as(RestExceptionDTO.class);
+                .extract().as(ProblemDetailResponseDTO.class);
 
         Assertions.assertNotNull(exception);
         Assertions.assertEquals("MERGE_ENTITY_FAILED", exception.getErrorCode());
-        Assertions.assertEquals("Errors,key:MERGE_ENTITY_FAILED,parameters:[Theme],namedParameters:{}",
-                exception.getMessage());
-        Assertions.assertNull(exception.getValidations());
+        Assertions.assertEquals(
+                "could not execute statement [ERROR: duplicate key value violates unique constraint 'theme_name_key'  Detail: Key (name)=(themeWithoutPortal) already exists.]",
+                exception.getDetail());
+        Assertions.assertNull(exception.getInvalidParams());
 
     }
 
@@ -328,13 +330,13 @@ class ThemesRestControllerTest extends AbstractTest {
                 .put("{id}")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
-                .extract().as(RestExceptionDTO.class);
+                .extract().as(ProblemDetailResponseDTO.class);
 
         Assertions.assertNotNull(exception);
         Assertions.assertEquals("CONSTRAINT_VIOLATIONS", exception.getErrorCode());
         Assertions.assertEquals("updateTheme.updateThemeDTO: must not be null",
-                exception.getMessage());
-        Assertions.assertNotNull(exception.getValidations());
-        Assertions.assertEquals(1, exception.getValidations().size());
+                exception.getDetail());
+        Assertions.assertNotNull(exception.getInvalidParams());
+        Assertions.assertEquals(1, exception.getInvalidParams().size());
     }
 }

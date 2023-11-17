@@ -87,10 +87,10 @@ class ExportImportRestControllerV1Test extends AbstractTest {
                 .post("export")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
-                .extract().as(EximRestExceptionDTOV1.class);
+                .extract().as(EximProblemDetailResponseDTOV1.class);
 
         assertThat(exception.getErrorCode()).isEqualTo("CONSTRAINT_VIOLATIONS");
-        assertThat(exception.getMessage()).isEqualTo("exportThemes.eximExportRequestDTOV1: must not be null");
+        assertThat(exception.getDetail()).isEqualTo("exportThemes.eximExportRequestDTOV1: must not be null");
     }
 
     @Test

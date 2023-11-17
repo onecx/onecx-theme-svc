@@ -31,12 +31,6 @@ paths:
                   $ref: '#/components/schemas/EximImportRequest'
         "404":
           description: No themes founds
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EximRestException'
   /exim/v1/themes/import:
     post:
       tags:
@@ -61,13 +55,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EximRestException'
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EximRestException'
+                $ref: '#/components/schemas/EximProblemDetailResponse'
 components:
   schemas:
     EximExportRequest:
@@ -138,29 +126,32 @@ components:
           type: string
         properties:
           type: object
-    EximRestException:
+    EximProblemDetailResponse:
       type: object
       properties:
         errorCode:
           type: string
-        message:
+        detail:
           type: string
-        parameters:
+        params:
           type: array
           items:
-            type: object
-        namedParameters:
-          type: object
-          additionalProperties:
-            type: object
-        validations:
+            $ref: '#/components/schemas/EximProblemDetailParam'
+        invalidParams:
           type: array
           items:
-            $ref: '#/components/schemas/EximValidationConstraint'
-    EximValidationConstraint:
+            $ref: '#/components/schemas/EximProblemDetailInvalidParam'
+    EximProblemDetailParam:
       type: object
       properties:
-        parameter:
+        key:
+          type: string
+        value:
+          type: string
+    EximProblemDetailInvalidParam:
+      type: object
+      properties:
+        name:
           type: string
         message:
           type: string

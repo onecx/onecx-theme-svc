@@ -6,15 +6,13 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
-import org.jboss.resteasy.reactive.RestResponse;
-import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.io.github.onecx.theme.rs.external.v1.ThemesV1Api;
-import gen.io.github.onecx.theme.rs.external.v1.model.RestExceptionDTOV1;
 import io.github.onecx.theme.domain.daos.ThemeDAO;
-import io.github.onecx.theme.rs.external.v1.mappers.ExceptionMapper;
 import io.github.onecx.theme.rs.external.v1.mappers.ThemeMapper;
 
+@LogService
 @Path("/v1/themes")
 @ApplicationScoped
 @Transactional(Transactional.TxType.NOT_SUPPORTED)
@@ -22,9 +20,6 @@ public class ThemesRestControllerV1 implements ThemesV1Api {
 
     @Inject
     ThemeDAO dao;
-
-    @Inject
-    ExceptionMapper exceptionMapper;
 
     @Inject
     ThemeMapper mapper;
@@ -42,11 +37,6 @@ public class ThemesRestControllerV1 implements ThemesV1Api {
     public Response getThemeInfoList() {
         var items = dao.findAllInfos();
         return Response.ok(mapper.mapInfoList(items)).build();
-    }
-
-    @ServerExceptionMapper
-    public RestResponse<RestExceptionDTOV1> exception(Exception ex) {
-        return exceptionMapper.exception(ex);
     }
 
 }

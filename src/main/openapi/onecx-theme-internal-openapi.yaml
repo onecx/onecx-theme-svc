@@ -38,12 +38,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ThemePageResult'
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
     post:
       tags:
         - themesInternal
@@ -73,13 +67,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestException'
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
+                $ref: '#/components/schemas/ProblemDetailResponse'
   /internal/themes/{id}:
     get:
       tags:
@@ -101,12 +89,6 @@ paths:
                 $ref: '#/components/schemas/Theme'
         "404":
           description: Not found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
     put:
       tags:
         - themesInternal
@@ -132,15 +114,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestException'
+                $ref: '#/components/schemas/ProblemDetailResponse'
         "404":
           description: Theme not found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
     delete:
       tags:
         - themesInternal
@@ -160,7 +136,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestException'
+                $ref: '#/components/schemas/ProblemDetailResponse'
   /internal/themes/info:
     get:
       tags:
@@ -176,12 +152,6 @@ paths:
                 $ref: '#/components/schemas/ThemeInfoList'
         "404":
           description: Not found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
   /internal/themes/search:
     post:
       tags:
@@ -203,12 +173,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ThemePageResult'
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
   /internal/themes/name/{name}:
     get:
       tags:
@@ -235,7 +199,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestException'
+                $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
     ThemeSearchCriteria:
@@ -329,29 +293,32 @@ components:
       format: date-time
       type: string
       example: 2022-03-10T12:15:50-04:00
-    RestException:
+    ProblemDetailResponse:
       type: object
       properties:
         errorCode:
           type: string
-        message:
+        detail:
           type: string
-        parameters:
+        params:
           type: array
           items:
-            type: object
-        namedParameters:
-          type: object
-          additionalProperties:
-            type: object
-        validations:
+            $ref: '#/components/schemas/ProblemDetailParam'
+        invalidParams:
           type: array
           items:
-            $ref: '#/components/schemas/ValidationConstraint'
-    ValidationConstraint:
+            $ref: '#/components/schemas/ProblemDetailInvalidParam'
+    ProblemDetailParam:
       type: object
       properties:
-        parameter:
+        key:
+          type: string
+        value:
+          type: string
+    ProblemDetailInvalidParam:
+      type: object
+      properties:
+        name:
           type: string
         message:
           type: string

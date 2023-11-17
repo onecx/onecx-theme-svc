@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.Response;
 
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.tkit.quarkus.jpa.exceptions.ConstraintException;
+import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.io.github.onecx.theme.rs.exim.v1.ThemesExportImportApi;
 import gen.io.github.onecx.theme.rs.exim.v1.model.*;
@@ -21,6 +23,7 @@ import io.github.onecx.theme.domain.models.Theme;
 import io.github.onecx.theme.rs.exim.v1.mappers.ExportImportExceptionMapperV1;
 import io.github.onecx.theme.rs.exim.v1.mappers.ExportImportMapperV1;
 
+@LogService
 @Path("/exim/v1/themes")
 @ApplicationScoped
 @Transactional(Transactional.TxType.NOT_SUPPORTED)
@@ -77,12 +80,12 @@ public class ExportImportRestControllerV1 implements ThemesExportImportApi {
     }
 
     @ServerExceptionMapper
-    public RestResponse<EximRestExceptionDTOV1> exception(Exception ex) {
+    public RestResponse<EximProblemDetailResponseDTOV1> exception(ConstraintException ex) {
         return exceptionMapper.exception(ex);
     }
 
     @ServerExceptionMapper
-    public RestResponse<EximRestExceptionDTOV1> constraint(ConstraintViolationException ex) {
+    public RestResponse<EximProblemDetailResponseDTOV1> constraint(ConstraintViolationException ex) {
         return exceptionMapper.constraint(ex);
     }
 }
