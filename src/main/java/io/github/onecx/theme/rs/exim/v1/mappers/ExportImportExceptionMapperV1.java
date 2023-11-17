@@ -1,6 +1,7 @@
 package io.github.onecx.theme.rs.exim.v1.mappers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jakarta.validation.ConstraintViolation;
@@ -11,7 +12,7 @@ import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.tkit.quarkus.jpa.exceptions.DAOException;
+import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
 import gen.io.github.onecx.theme.rs.exim.v1.model.*;
@@ -21,47 +22,44 @@ import lombok.extern.slf4j.Slf4j;
 @Mapper(uses = { OffsetDateTimeMapper.class })
 public abstract class ExportImportExceptionMapperV1 {
 
-    public RestResponse<EximRestExceptionDTOV1> constraint(ConstraintViolationException ex) {
-        log.error("Processing theme export import rest controller error: {}", ex.getMessage());
-
+    public RestResponse<EximProblemDetailResponseDTOV1> constraint(ConstraintViolationException ex) {
         var dto = exception("CONSTRAINT_VIOLATIONS", ex.getMessage());
-        dto.setValidations(createErrorValidationResponse(ex.getConstraintViolations()));
+        dto.setInvalidParams(createErrorValidationResponse(ex.getConstraintViolations()));
         return RestResponse.status(Response.Status.BAD_REQUEST, dto);
     }
 
-    public RestResponse<EximRestExceptionDTOV1> exception(Exception ex) {
-        log.error("Processing theme export import rest controller error: {}", ex.getMessage());
-
-        if (ex instanceof DAOException de) {
-            return RestResponse.status(Response.Status.BAD_REQUEST,
-                    exception(de.getMessageKey().name(), ex.getMessage(), de.parameters));
-        }
-        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR,
-                exception("UNDEFINED_ERROR_CODE", ex.getMessage()));
-
+    public RestResponse<EximProblemDetailResponseDTOV1> exception(ConstraintException ex) {
+        var dto = exception(ex.getMessageKey().name(), ex.getConstraints());
+        dto.setParams(map(ex.namedParameters));
+        return RestResponse.status(Response.Status.BAD_REQUEST, dto);
     }
 
-    @Mapping(target = "removeParametersItem", ignore = true)
-    @Mapping(target = "namedParameters", ignore = true)
-    @Mapping(target = "removeNamedParametersItem", ignore = true)
-    @Mapping(target = "parameters", ignore = true)
-    @Mapping(target = "validations", ignore = true)
-    @Mapping(target = "removeValidationsItem", ignore = true)
-    public abstract EximRestExceptionDTOV1 exception(String errorCode, String message);
+    @Mapping(target = "removeParamsItem", ignore = true)
+    @Mapping(target = "params", ignore = true)
+    @Mapping(target = "invalidParams", ignore = true)
+    @Mapping(target = "removeInvalidParamsItem", ignore = true)
+    public abstract EximProblemDetailResponseDTOV1 exception(String errorCode, String detail);
 
-    @Mapping(target = "removeParametersItem", ignore = true)
-    @Mapping(target = "namedParameters", ignore = true)
-    @Mapping(target = "removeNamedParametersItem", ignore = true)
-    @Mapping(target = "validations", ignore = true)
-    @Mapping(target = "removeValidationsItem", ignore = true)
-    public abstract EximRestExceptionDTOV1 exception(String errorCode, String message, List<Object> parameters);
+    public List<EximProblemDetailParamDTOV1> map(Map<String, Object> params) {
+        if (params == null) {
+            return null;
+        }
+        return params.entrySet().stream().map(e -> {
+            var item = new EximProblemDetailParamDTOV1();
+            item.setKey(e.getKey());
+            if (e.getValue() != null) {
+                item.setValue(e.getValue().toString());
+            }
+            return item;
+        }).toList();
+    }
 
-    public abstract List<EximValidationConstraintDTOV1> createErrorValidationResponse(
+    public abstract List<EximProblemDetailInvalidParamDTOV1> createErrorValidationResponse(
             Set<ConstraintViolation<?>> constraintViolation);
 
-    @Mapping(target = "parameter", source = "propertyPath")
+    @Mapping(target = "name", source = "propertyPath")
     @Mapping(target = "message", source = "message")
-    public abstract EximValidationConstraintDTOV1 createError(ConstraintViolation<?> constraintViolation);
+    public abstract EximProblemDetailInvalidParamDTOV1 createError(ConstraintViolation<?> constraintViolation);
 
     public String mapPath(Path path) {
         return path.toString();

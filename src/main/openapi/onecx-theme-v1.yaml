@@ -23,12 +23,6 @@ paths:
                 $ref: '#/components/schemas/ThemeInfoList'
         "404":
           description: Not found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
   /v1/themes/name/{name}:
     get:
       tags:
@@ -50,12 +44,6 @@ paths:
                 $ref: '#/components/schemas/Theme'
         "404":
           description: Not found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
 components:
   schemas:
     ThemeInfoList:
@@ -114,32 +102,6 @@ components:
       format: date-time
       type: string
       example: 2022-03-10T12:15:50-04:00
-    RestException:
-      type: object
-      properties:
-        errorCode:
-          type: string
-        message:
-          type: string
-        parameters:
-          type: array
-          items:
-            type: object
-        namedParameters:
-          type: object
-          additionalProperties:
-            type: object
-        validations:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationConstraint'
-    ValidationConstraint:
-      type: object
-      properties:
-        parameter:
-          type: string
-        message:
-          type: string
     CreateTheme:
       required:
         - name
