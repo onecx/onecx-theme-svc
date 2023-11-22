@@ -52,6 +52,7 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
     public abstract void update(EximThemeDTOV1 dto, @MappingTarget Theme entity);
 
@@ -64,6 +65,7 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
     public abstract Theme create(EximThemeDTOV1 dto);
 

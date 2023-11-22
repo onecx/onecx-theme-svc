@@ -4,7 +4,7 @@ info:
   title: onecx-theme internal service
   version: 1.0.0
 servers:
-  - url: "http://onecx-portal:8080"
+  - url: "http://onecx-theme-svc:8080"
 tags:
   - name: themesInternal
 paths:
@@ -131,12 +131,6 @@ paths:
       responses:
         "204":
           description: No Content
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
   /internal/themes/info:
     get:
       tags:
@@ -194,12 +188,6 @@ paths:
                 $ref: '#/components/schemas/Theme'
         "404":
           description: Not found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
     ThemeSearchCriteria:

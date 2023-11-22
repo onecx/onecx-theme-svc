@@ -1,6 +1,7 @@
 {
   "themes": {
     "Theme1": {
+      "tenantId": "default",
       "description": "Theme1 basic color scheme",
       "properties": {
         "topbar": {
@@ -24,7 +25,7 @@
           "secondary-color": " #ee4400",
           "body-bg-color": " #f7f7f7",
           "content-bg-color": " #ffffff",
-          "content-alt-bg-colorr": "",
+          "content-alt-bg-color": "",
           "overlay-content-bg-color": " #ffffff",
           "hover-bg-color": " rgba(0, 0, 0, 0.04)",
           "solid-surface-text-color": " #ffffff",
@@ -40,6 +41,7 @@
       }
     },
     "Theme2": {
+      "tenantId": "default",
       "description": "Theme2 theme",
       "properties": {
         "topbar": {
@@ -63,7 +65,7 @@
           "secondary-color": "#262626",
           "body-bg-color": " #f7f7f7",
           "content-bg-color": " #ffffff",
-          "content-alt-bg-colorr": "",
+          "content-alt-bg-color": "",
           "overlay-content-bg-color": " #ffffff",
           "hover-bg-color": " rgba(0, 0, 0, 0.04)",
           "solid-surface-text-color": " #ffffff",

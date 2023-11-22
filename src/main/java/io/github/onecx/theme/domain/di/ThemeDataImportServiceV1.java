@@ -7,6 +7,8 @@ import jakarta.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tkit.quarkus.context.ApplicationContext;
+import org.tkit.quarkus.context.Context;
 import org.tkit.quarkus.dataimport.DataImport;
 import org.tkit.quarkus.dataimport.DataImportConfig;
 import org.tkit.quarkus.dataimport.DataImportService;
@@ -72,9 +74,24 @@ public class ThemeDataImportServiceV1 implements DataImportService {
         // clean data
         themeDAO.deleteAll();
 
-        // import themes
-        var themes = mapper.importThemes(data.getThemes());
-        themeDAO.create(themes);
+        data.getThemes().forEach((themeName, dto) -> {
+
+            try {
+                var ctx = Context.builder()
+                        .principal("data-import")
+                        .tenantId(dto.getTenantId())
+                        .build();
+
+                ApplicationContext.start(ctx);
+                // import themes
+                var theme = mapper.importTheme(dto);
+                theme.setName(themeName);
+                themeDAO.create(theme);
+            } finally {
+                ApplicationContext.close();
+            }
+        });
+
     }
 
     public static class ImportException extends RuntimeException {

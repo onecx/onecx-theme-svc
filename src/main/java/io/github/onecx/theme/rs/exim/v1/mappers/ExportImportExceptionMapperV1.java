@@ -42,7 +42,7 @@ public abstract class ExportImportExceptionMapperV1 {
 
     public List<EximProblemDetailParamDTOV1> map(Map<String, Object> params) {
         if (params == null) {
-            return null;
+            return List.of();
         }
         return params.entrySet().stream().map(e -> {
             var item = new EximProblemDetailParamDTOV1();

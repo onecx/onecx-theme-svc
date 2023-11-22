@@ -82,7 +82,7 @@ class ThemesRestControllerTest extends AbstractTest {
 
         assertThat(exception.getErrorCode()).isEqualTo("PERSIST_ENTITY_FAILED");
         assertThat(exception.getDetail()).isEqualTo(
-                "could not execute statement [ERROR: duplicate key value violates unique constraint 'theme_name_key'  Detail: Key (name)=(cg) already exists.]");
+                "could not execute statement [ERROR: duplicate key value violates unique constraint 'theme_name'  Detail: Key (name, tenant_id)=(cg, default) already exists.]");
     }
 
     @Test
@@ -314,7 +314,7 @@ class ThemesRestControllerTest extends AbstractTest {
         Assertions.assertNotNull(exception);
         Assertions.assertEquals("MERGE_ENTITY_FAILED", exception.getErrorCode());
         Assertions.assertEquals(
-                "could not execute statement [ERROR: duplicate key value violates unique constraint 'theme_name_key'  Detail: Key (name)=(themeWithoutPortal) already exists.]",
+                "could not execute statement [ERROR: duplicate key value violates unique constraint 'theme_name'  Detail: Key (name, tenant_id)=(themeWithoutPortal, default) already exists.]",
                 exception.getDetail());
         Assertions.assertNull(exception.getInvalidParams());
 
