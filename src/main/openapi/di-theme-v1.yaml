@@ -31,7 +31,11 @@ components:
         $ref: '#/components/schemas/DataImportTheme'
     DataImportTheme:
       type: object
+      required:
+        - tenantId
       properties:
+        tenantId:
+          type: string
         cssFile:
           type: string
         description:

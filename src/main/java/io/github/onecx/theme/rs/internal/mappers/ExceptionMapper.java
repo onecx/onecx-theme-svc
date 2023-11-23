@@ -44,7 +44,7 @@ public abstract class ExceptionMapper {
 
     public List<ProblemDetailParamDTO> map(Map<String, Object> params) {
         if (params == null) {
-            return null;
+            return List.of();
         }
         return params.entrySet().stream().map(e -> {
             var item = new ProblemDetailParamDTO();

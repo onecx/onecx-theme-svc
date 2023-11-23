@@ -12,7 +12,6 @@ import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
 import gen.io.github.onecx.theme.rs.exim.v1.model.*;
@@ -28,12 +27,6 @@ public abstract class ExportImportExceptionMapperV1 {
         return RestResponse.status(Response.Status.BAD_REQUEST, dto);
     }
 
-    public RestResponse<EximProblemDetailResponseDTOV1> exception(ConstraintException ex) {
-        var dto = exception(ex.getMessageKey().name(), ex.getConstraints());
-        dto.setParams(map(ex.namedParameters));
-        return RestResponse.status(Response.Status.BAD_REQUEST, dto);
-    }
-
     @Mapping(target = "removeParamsItem", ignore = true)
     @Mapping(target = "params", ignore = true)
     @Mapping(target = "invalidParams", ignore = true)
@@ -42,7 +35,7 @@ public abstract class ExportImportExceptionMapperV1 {
 
     public List<EximProblemDetailParamDTOV1> map(Map<String, Object> params) {
         if (params == null) {
-            return null;
+            return List.of();
         }
         return params.entrySet().stream().map(e -> {
             var item = new EximProblemDetailParamDTOV1();

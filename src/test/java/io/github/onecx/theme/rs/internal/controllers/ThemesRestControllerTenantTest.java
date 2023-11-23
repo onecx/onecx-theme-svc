@@ -6,7 +6,6 @@ import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.from;
 
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Assertions;
@@ -17,11 +16,13 @@ import gen.io.github.onecx.theme.rs.internal.model.*;
 import io.github.onecx.theme.test.AbstractTest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
 
 @QuarkusTest
 @TestHTTPEndpoint(ThemesRestController.class)
-@WithDBData(value = "data/testdata-internal.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
-class ThemesRestControllerTest extends AbstractTest {
+@WithDBData(value = "data/testdata-internal-tenant.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
+@TestProfile(AbstractTest.TenantTestProfile.class)
+class ThemesRestControllerTenantTest extends AbstractTest {
 
     @Test
     void createNewThemeTest() {
@@ -34,17 +35,28 @@ class ThemesRestControllerTest extends AbstractTest {
         themeDto.setAssetsUrl("assets/url");
         themeDto.setPreviewImageUrl("image/url");
 
-        var uri = given()
+        var dto = given()
                 .when()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(themeDto)
                 .post()
-                .then().statusCode(CREATED.getStatusCode())
-                .extract().header(HttpHeaders.LOCATION);
+                .then()
+                .statusCode(CREATED.getStatusCode())
+                .extract()
+                .body().as(ThemeDTO.class);
 
-        var dto = given()
+        given()
                 .contentType(APPLICATION_JSON)
-                .get(uri)
+                .header(APM_HEADER_PARAM, createToken("org2"))
+                .get(dto.getId())
+                .then()
+                .statusCode(NOT_FOUND.getStatusCode());
+
+        dto = given()
+                .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
+                .get(dto.getId())
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
@@ -60,6 +72,7 @@ class ThemesRestControllerTest extends AbstractTest {
         var exception = given()
                 .when()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
                 .post()
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
@@ -74,6 +87,7 @@ class ThemesRestControllerTest extends AbstractTest {
 
         exception = given().when()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(themeDto)
                 .post()
                 .then()
@@ -82,31 +96,45 @@ class ThemesRestControllerTest extends AbstractTest {
 
         assertThat(exception.getErrorCode()).isEqualTo("PERSIST_ENTITY_FAILED");
         assertThat(exception.getDetail()).isEqualTo(
-                "could not execute statement [ERROR: duplicate key value violates unique constraint 'theme_name'  Detail: Key (name, tenant_id)=(cg, default) already exists.]");
+                "could not execute statement [ERROR: duplicate key value violates unique constraint 'theme_name'  Detail: Key (name, tenant_id)=(cg, tenant-100) already exists.]");
     }
 
     @Test
     void deleteThemeTest() {
 
+        // delete entity with wrong tenant
+        given()
+                .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
+                .delete("DELETE_1")
+                .then().statusCode(NO_CONTENT.getStatusCode());
+
+        // delete entity with wrong tenant still exists
+        given()
+                .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org2"))
+                .get("DELETE_1")
+                .then().statusCode(OK.getStatusCode());
+
         // delete theme
         given()
                 .contentType(APPLICATION_JSON)
-                .pathParam("id", "DELETE_1")
-                .delete("{id}")
+                .header(APM_HEADER_PARAM, createToken("org2"))
+                .delete("DELETE_1")
                 .then().statusCode(NO_CONTENT.getStatusCode());
 
         // check if theme exists
         given()
                 .contentType(APPLICATION_JSON)
-                .pathParam("id", "DELETE_1")
-                .get("{id}")
+                .header(APM_HEADER_PARAM, createToken("org2"))
+                .get("DELETE_1")
                 .then().statusCode(NOT_FOUND.getStatusCode());
 
         // delete theme in portal
         given()
                 .contentType(APPLICATION_JSON)
-                .pathParam("id", "11-111")
-                .delete("{id}")
+                .header(APM_HEADER_PARAM, createToken("org2"))
+                .delete("11-111")
                 .then()
                 .statusCode(NO_CONTENT.getStatusCode());
 
@@ -116,6 +144,7 @@ class ThemesRestControllerTest extends AbstractTest {
     void getThemeByThemeDefinitionNameTest() {
         var dto = given()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
                 .pathParam("name", "themeWithoutPortal")
                 .get("/name/{name}")
                 .then().statusCode(OK.getStatusCode())
@@ -129,7 +158,8 @@ class ThemesRestControllerTest extends AbstractTest {
 
         given()
                 .contentType(APPLICATION_JSON)
-                .pathParam("name", "none-exists")
+                .header(APM_HEADER_PARAM, createToken("org2"))
+                .pathParam("name", "themeWithoutPortal")
                 .get("/name/{name}")
                 .then().statusCode(NOT_FOUND.getStatusCode());
     }
@@ -139,8 +169,8 @@ class ThemesRestControllerTest extends AbstractTest {
 
         var dto = given()
                 .contentType(APPLICATION_JSON)
-                .pathParam("id", "22-222")
-                .get("{id}")
+                .header(APM_HEADER_PARAM, createToken("org1"))
+                .get("22-222")
                 .then().statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
@@ -152,14 +182,13 @@ class ThemesRestControllerTest extends AbstractTest {
 
         given()
                 .contentType(APPLICATION_JSON)
-                .pathParam("id", "___")
-                .get("{id}")
+                .get("22-222")
                 .then().statusCode(NOT_FOUND.getStatusCode());
 
         dto = given()
                 .contentType(APPLICATION_JSON)
-                .pathParam("id", "11-111")
-                .get("{id}")
+                .header(APM_HEADER_PARAM, createToken("org1"))
+                .get("11-111")
                 .then().statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
@@ -172,7 +201,7 @@ class ThemesRestControllerTest extends AbstractTest {
     }
 
     @Test
-    void getThemesTest() {
+    void getThemesNoTenantTest() {
         var data = given()
                 .contentType(APPLICATION_JSON)
                 .get()
@@ -183,8 +212,40 @@ class ThemesRestControllerTest extends AbstractTest {
                 .as(ThemePageResultDTO.class);
 
         assertThat(data).isNotNull();
-        assertThat(data.getTotalElements()).isEqualTo(3);
-        assertThat(data.getStream()).isNotNull().hasSize(3);
+        assertThat(data.getTotalElements()).isZero();
+        assertThat(data.getStream()).isNotNull().isEmpty();
+
+    }
+
+    @Test
+    void getThemesTest() {
+        var data = given()
+                .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
+                .get()
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract()
+                .as(ThemePageResultDTO.class);
+
+        assertThat(data).isNotNull();
+        assertThat(data.getTotalElements()).isEqualTo(2);
+        assertThat(data.getStream()).isNotNull().hasSize(2);
+
+        data = given()
+                .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org2"))
+                .get()
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract()
+                .as(ThemePageResultDTO.class);
+
+        assertThat(data).isNotNull();
+        assertThat(data.getTotalElements()).isEqualTo(1);
+        assertThat(data.getStream()).isNotNull().hasSize(1);
 
     }
 
@@ -194,6 +255,7 @@ class ThemesRestControllerTest extends AbstractTest {
 
         var data = given()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(criteria)
                 .post("/search")
                 .then()
@@ -203,12 +265,13 @@ class ThemesRestControllerTest extends AbstractTest {
                 .as(ThemePageResultDTO.class);
 
         assertThat(data).isNotNull();
-        assertThat(data.getTotalElements()).isEqualTo(3);
-        assertThat(data.getStream()).isNotNull().hasSize(3);
+        assertThat(data.getTotalElements()).isEqualTo(2);
+        assertThat(data.getStream()).isNotNull().hasSize(2);
 
         criteria.setName(" ");
         data = given()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(criteria)
                 .post("/search")
                 .then()
@@ -218,12 +281,13 @@ class ThemesRestControllerTest extends AbstractTest {
                 .as(ThemePageResultDTO.class);
 
         assertThat(data).isNotNull();
-        assertThat(data.getTotalElements()).isEqualTo(3);
-        assertThat(data.getStream()).isNotNull().hasSize(3);
+        assertThat(data.getTotalElements()).isEqualTo(2);
+        assertThat(data.getStream()).isNotNull().hasSize(2);
 
         criteria.setName("cg");
         data = given()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(criteria)
                 .post("/search")
                 .then()
@@ -242,6 +306,7 @@ class ThemesRestControllerTest extends AbstractTest {
     void getThemeInfoListTest() {
         var data = given()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org2"))
                 .get("info")
                 .then()
                 .statusCode(OK.getStatusCode())
@@ -250,7 +315,7 @@ class ThemesRestControllerTest extends AbstractTest {
                 .as(ThemeInfoListDTO.class);
 
         assertThat(data).isNotNull();
-        assertThat(data.getThemes()).isNotNull().hasSize(3);
+        assertThat(data.getThemes()).isNotNull().hasSize(1);
     }
 
     @Test
@@ -263,27 +328,27 @@ class ThemesRestControllerTest extends AbstractTest {
 
         given()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org2"))
                 .body(themeDto)
                 .when()
-                .pathParam("id", "does-not-exists")
-                .put("{id}")
+                .put("11-111")
                 .then().statusCode(NOT_FOUND.getStatusCode());
 
         // update theme
         given()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(themeDto)
                 .when()
-                .pathParam("id", "11-111")
-                .put("{id}")
+                .put("11-111")
                 .then().statusCode(NO_CONTENT.getStatusCode());
 
         // download theme
         var dto = given().contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(themeDto)
                 .when()
-                .pathParam("id", "11-111")
-                .get("{id}")
+                .get("11-111")
                 .then().statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
@@ -303,10 +368,10 @@ class ThemesRestControllerTest extends AbstractTest {
 
         var exception = given()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org1"))
                 .when()
                 .body(themeDto)
-                .pathParam("id", "11-111")
-                .put("{id}")
+                .put("11-111")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
@@ -314,7 +379,7 @@ class ThemesRestControllerTest extends AbstractTest {
         Assertions.assertNotNull(exception);
         Assertions.assertEquals("MERGE_ENTITY_FAILED", exception.getErrorCode());
         Assertions.assertEquals(
-                "could not execute statement [ERROR: duplicate key value violates unique constraint 'theme_name'  Detail: Key (name, tenant_id)=(themeWithoutPortal, default) already exists.]",
+                "could not execute statement [ERROR: duplicate key value violates unique constraint 'theme_name'  Detail: Key (name, tenant_id)=(themeWithoutPortal, tenant-100) already exists.]",
                 exception.getDetail());
         Assertions.assertNull(exception.getInvalidParams());
 
@@ -325,9 +390,9 @@ class ThemesRestControllerTest extends AbstractTest {
 
         var exception = given()
                 .contentType(APPLICATION_JSON)
+                .header(APM_HEADER_PARAM, createToken("org2"))
                 .when()
-                .pathParam("id", "update_create_new")
-                .put("{id}")
+                .put("update_create_new")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
@@ -339,4 +404,5 @@ class ThemesRestControllerTest extends AbstractTest {
         Assertions.assertNotNull(exception.getInvalidParams());
         Assertions.assertEquals(1, exception.getInvalidParams().size());
     }
+
 }

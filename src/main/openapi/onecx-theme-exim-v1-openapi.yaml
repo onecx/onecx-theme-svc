@@ -4,7 +4,7 @@ info:
   title: onecx-theme export and import v1
   version: 1.0.0
 servers:
-  - url: "http://onecx-portal:8080"
+  - url: "http://onecx-theme-svc:8080"
 tags:
   - name: themesExportImport
 paths:

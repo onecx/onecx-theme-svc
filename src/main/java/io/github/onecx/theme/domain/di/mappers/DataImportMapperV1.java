@@ -1,9 +1,5 @@
 package io.github.onecx.theme.domain.di.mappers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import jakarta.inject.Inject;
 
 import org.mapstruct.Mapper;
@@ -23,20 +19,6 @@ public abstract class DataImportMapperV1 {
     @Inject
     ObjectMapper mapper;
 
-    public List<Theme> importThemes(Map<String, DataImportThemeDTOV1> request) {
-        List<Theme> result = new ArrayList<>();
-        if (request == null) {
-            return result;
-        }
-        request.forEach((name, dto) -> {
-            var theme = importTheme(dto);
-            theme.setName(name);
-            result.add(theme);
-        });
-
-        return result;
-    }
-
     @Named("import")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", ignore = true)
@@ -48,6 +30,7 @@ public abstract class DataImportMapperV1 {
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     public abstract Theme importTheme(DataImportThemeDTOV1 dto);
 
     @Named("properties")

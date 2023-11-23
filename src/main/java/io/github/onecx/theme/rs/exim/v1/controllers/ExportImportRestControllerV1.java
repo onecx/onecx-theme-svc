@@ -13,7 +13,6 @@ import jakarta.ws.rs.core.Response;
 
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
-import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.io.github.onecx.theme.rs.exim.v1.ThemesExportImportApi;
@@ -77,11 +76,6 @@ public class ExportImportRestControllerV1 implements ThemesExportImportApi {
         });
 
         return Response.ok(mapper.create(request, items)).build();
-    }
-
-    @ServerExceptionMapper
-    public RestResponse<EximProblemDetailResponseDTOV1> exception(ConstraintException ex) {
-        return exceptionMapper.exception(ex);
     }
 
     @ServerExceptionMapper

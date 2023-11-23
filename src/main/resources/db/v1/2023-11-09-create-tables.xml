@@ -28,14 +28,12 @@
                 <column name="properties" type="TEXT"/>
                 <column name="creationuser" type="VARCHAR(255)"/>
                 <column name="modificationuser" type="VARCHAR(255)"/>
+                <column name="tenant_id" type="varchar(255 BYTE)">
+                    <constraints nullable="false"/>
+                </column>
             </createTable>
 
-            <createIndex indexName="theme_definition_name_idx" tableName="theme">
-                <column name="name"/>
-            </createIndex>
-
-            <addUniqueConstraint columnNames="name" constraintName="theme_name_key" tableName="theme"/>
-
+            <addUniqueConstraint columnNames="name, tenant_id" constraintName="theme_name" tableName="theme"/>
         </changeSet>
     </databaseChangeLog>
 

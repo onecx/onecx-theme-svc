@@ -44,6 +44,7 @@ public abstract class ThemeMapper {
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "tenantId", ignore = true)
     public abstract Theme create(CreateThemeDTO object);
 
     public abstract List<ThemeDTO> map(Stream<Theme> entity);
@@ -60,6 +61,7 @@ public abstract class ThemeMapper {
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "tenantId", ignore = true)
     public abstract void update(UpdateThemeDTO themeDTO, @MappingTarget Theme entity);
 
     @Mapping(target = "id", ignore = true)
@@ -67,6 +69,7 @@ public abstract class ThemeMapper {
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "tenantId", ignore = true)
     public abstract Theme map(UpdateThemeDTO object);
 
     @Named("properties")
