@@ -326,8 +326,6 @@ components:
           $ref: '#/components/schemas/OffsetDateTime'
         modificationUser:
           type: string
-        id:
-          type: string
         name:
           minLength: 2
           type: string
@@ -362,8 +360,6 @@ components:
         modificationDate:
           $ref: '#/components/schemas/OffsetDateTime'
         modificationUser:
-          type: string
-        id:
           type: string
         name:
           minLength: 2
