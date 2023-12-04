@@ -8,6 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
 import org.jboss.resteasy.reactive.RestResponse;
@@ -21,6 +22,7 @@ import io.github.onecx.theme.domain.models.Theme;
 import io.github.onecx.theme.rs.exim.v1.mappers.ExportImportExceptionMapperV1;
 import io.github.onecx.theme.rs.exim.v1.mappers.ExportImportMapperV1;
 
+@Path("/exim/v1/themes")
 @LogService
 @ApplicationScoped
 @Transactional(Transactional.TxType.NOT_SUPPORTED)

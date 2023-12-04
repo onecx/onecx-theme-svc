@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
@@ -22,6 +23,7 @@ import io.github.onecx.theme.rs.internal.mappers.ExceptionMapper;
 import io.github.onecx.theme.rs.internal.mappers.ThemeMapper;
 import lombok.extern.slf4j.Slf4j;
 
+@Path("/internal/themes")
 @Slf4j
 @LogService
 @ApplicationScoped
