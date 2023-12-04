@@ -6,7 +6,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
@@ -14,6 +13,7 @@ import jakarta.ws.rs.core.UriInfo;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
+import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.io.github.onecx.theme.rs.internal.ThemesInternalApi;
 import gen.io.github.onecx.theme.rs.internal.model.*;
@@ -23,7 +23,7 @@ import io.github.onecx.theme.rs.internal.mappers.ThemeMapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Path("/internal/themes") // remove this after quarkus fix ServiceExceptionMapper for impl classes
+@LogService
 @ApplicationScoped
 @Transactional(value = NOT_SUPPORTED)
 public class ThemesRestController implements ThemesInternalApi {

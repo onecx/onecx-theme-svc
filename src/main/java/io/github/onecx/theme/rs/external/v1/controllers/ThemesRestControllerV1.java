@@ -3,7 +3,6 @@ package io.github.onecx.theme.rs.external.v1.controllers;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
 import org.tkit.quarkus.log.cdi.LogService;
@@ -13,7 +12,6 @@ import io.github.onecx.theme.domain.daos.ThemeDAO;
 import io.github.onecx.theme.rs.external.v1.mappers.ThemeMapper;
 
 @LogService
-@Path("/v1/themes")
 @ApplicationScoped
 @Transactional(Transactional.TxType.NOT_SUPPORTED)
 public class ThemesRestControllerV1 implements ThemesV1Api {
