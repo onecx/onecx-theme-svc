@@ -5,17 +5,16 @@ import static io.restassured.RestAssured.config;
 import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
 
 import java.security.PrivateKey;
-import java.util.Map;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObjectBuilder;
 
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.jwt.Claims;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.quarkus.test.junit.QuarkusTestProfile;
 import io.restassured.config.RestAssuredConfig;
 import io.smallrye.jwt.build.Jwt;
 import io.smallrye.jwt.util.KeyUtils;
@@ -23,8 +22,10 @@ import io.smallrye.jwt.util.KeyUtils;
 @SuppressWarnings("java:S2187")
 public class AbstractTest {
 
-    protected static final String APM_HEADER_PARAM = "apm-principal-token";
-    protected static final String CLAIMS_ORG_ID = "orgId";
+    protected static final String APM_HEADER_PARAM = ConfigProvider.getConfig()
+            .getValue("%test.tkit.rs.context.tenant-id.mock.token-header-param", String.class);
+    protected static final String CLAIMS_ORG_ID = ConfigProvider.getConfig()
+            .getValue("%test.tkit.rs.context.tenant-id.mock.claim-org-id", String.class);;
 
     static {
         config = RestAssuredConfig.config().objectMapperConfig(
@@ -51,23 +52,4 @@ public class AbstractTest {
         }
     }
 
-    public static class TenantTestProfile implements QuarkusTestProfile {
-
-        @Override
-        public String getConfigProfile() {
-            return "test";
-        }
-
-        @Override
-        public Map<String, String> getConfigOverrides() {
-            return Map.of(
-                    "tkit.rs.context.tenant-id.enabled", "true",
-                    "tkit.rs.context.tenant-id.mock.enabled", "true",
-                    "tkit.rs.context.tenant-id.mock.default-tenant", "test",
-                    "tkit.rs.context.tenant-id.mock.claim-org-id", CLAIMS_ORG_ID,
-                    "tkit.rs.context.tenant-id.mock.token-header-param", APM_HEADER_PARAM,
-                    "tkit.rs.context.tenant-id.mock.data.org1", "tenant-100",
-                    "tkit.rs.context.tenant-id.mock.data.org2", "tenant-200");
-        }
-    }
 }

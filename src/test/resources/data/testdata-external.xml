@@ -6,4 +6,7 @@
 	<THEME guid="22-222" optlock="0" name="themeWithoutPortal" tenant_id="default" />
 	<THEME guid="DELETE_1" optlock="0" name="toDelete" tenant_id="default" />
 
+	<THEME guid="t-11-111" optlock="0" name="cg" tenant_id="tenant-100" />
+	<THEME guid="t-22-222" optlock="0" name="themeWithoutPortal" tenant_id="tenant-100" />
+	<THEME guid="t-DELETE_1" optlock="0" name="toDelete" tenant_id="tenant-200" />
 </dataset>

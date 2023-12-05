@@ -13,7 +13,7 @@ paths:
       tags:
         - themes
       description: Get list of all themes
-      operationId: getThemeInfoList
+      operationId: getThemesInfo
       responses:
         "200":
           description: OK
@@ -28,7 +28,7 @@ paths:
       tags:
         - themes
       description: Load a single theme definition
-      operationId: getThemeByThemeDefinitionName
+      operationId: getThemeByName
       parameters:
         - name: name
           in: path

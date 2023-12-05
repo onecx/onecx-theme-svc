@@ -49,7 +49,7 @@ class ExportImportRestControllerV1ExceptionTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .body(request)
                 .post("export")
-                .then().log().all()
+                .then()
                 .statusCode(INTERNAL_SERVER_ERROR.getStatusCode());
 
     }

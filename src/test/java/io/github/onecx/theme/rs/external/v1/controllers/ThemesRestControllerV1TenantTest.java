@@ -14,12 +14,10 @@ import gen.io.github.onecx.theme.rs.external.v1.model.ThemeInfoListDTOV1;
 import io.github.onecx.theme.test.AbstractTest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 
 @QuarkusTest
 @TestHTTPEndpoint(ThemesRestControllerV1.class)
-@WithDBData(value = "data/testdata-external-tenant.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
-@TestProfile(AbstractTest.TenantTestProfile.class)
+@WithDBData(value = "data/testdata-external.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
 class ThemesRestControllerV1TenantTest extends AbstractTest {
 
     @Test
@@ -36,7 +34,7 @@ class ThemesRestControllerV1TenantTest extends AbstractTest {
 
         assertThat(dto).isNotNull();
         assertThat(dto.getName()).isEqualTo("themeWithoutPortal");
-        assertThat(dto.getId()).isEqualTo("22-222");
+        assertThat(dto.getId()).isEqualTo("t-22-222");
 
         given()
                 .contentType(APPLICATION_JSON)
@@ -70,6 +68,6 @@ class ThemesRestControllerV1TenantTest extends AbstractTest {
                 .as(ThemeInfoListDTOV1.class);
 
         assertThat(data).isNotNull();
-        assertThat(data.getThemes()).isNotNull().isEmpty();
+        assertThat(data.getThemes()).hasSize(3);
     }
 }
