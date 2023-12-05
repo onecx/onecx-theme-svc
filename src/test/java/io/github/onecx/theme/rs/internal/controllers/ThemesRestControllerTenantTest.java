@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.from;
 
 import jakarta.ws.rs.core.Response;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.tkit.quarkus.test.WithDBData;
