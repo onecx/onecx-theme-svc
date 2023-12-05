@@ -10,11 +10,12 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
 
+import io.github.onecx.theme.test.AbstractTest;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-class ThemeDAOTest {
+class ThemeDAOTest extends AbstractTest {
     @Inject
     ThemeDAO dao;
 

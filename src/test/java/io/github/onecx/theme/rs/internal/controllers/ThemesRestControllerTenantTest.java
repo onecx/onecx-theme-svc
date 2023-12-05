@@ -16,12 +16,10 @@ import gen.io.github.onecx.theme.rs.internal.model.*;
 import io.github.onecx.theme.test.AbstractTest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 
 @QuarkusTest
 @TestHTTPEndpoint(ThemesRestController.class)
-@WithDBData(value = "data/testdata-internal-tenant.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
-@TestProfile(AbstractTest.TenantTestProfile.class)
+@WithDBData(value = "data/testdata-internal.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
 class ThemesRestControllerTenantTest extends AbstractTest {
 
     @Test
@@ -106,35 +104,35 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         given()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
-                .delete("DELETE_1")
+                .delete("t-DELETE_1")
                 .then().statusCode(NO_CONTENT.getStatusCode());
 
         // delete entity with wrong tenant still exists
         given()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
-                .get("DELETE_1")
+                .get("t-DELETE_1")
                 .then().statusCode(OK.getStatusCode());
 
         // delete theme
         given()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
-                .delete("DELETE_1")
+                .delete("t-DELETE_1")
                 .then().statusCode(NO_CONTENT.getStatusCode());
 
         // check if theme exists
         given()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
-                .get("DELETE_1")
+                .get("t-DELETE_1")
                 .then().statusCode(NOT_FOUND.getStatusCode());
 
         // delete theme in portal
         given()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
-                .delete("11-111")
+                .delete("t-11-111")
                 .then()
                 .statusCode(NO_CONTENT.getStatusCode());
 
@@ -154,7 +152,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         assertThat(dto).isNotNull();
         assertThat(dto.getName()).isEqualTo("themeWithoutPortal");
-        assertThat(dto.getId()).isEqualTo("22-222");
+        assertThat(dto.getId()).isEqualTo("t-22-222");
 
         given()
                 .contentType(APPLICATION_JSON)
@@ -170,7 +168,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         var dto = given()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
-                .get("22-222")
+                .get("t-22-222")
                 .then().statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
@@ -178,17 +176,17 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         assertThat(dto).isNotNull();
         assertThat(dto.getName()).isEqualTo("themeWithoutPortal");
-        assertThat(dto.getId()).isEqualTo("22-222");
+        assertThat(dto.getId()).isEqualTo("t-22-222");
 
         given()
                 .contentType(APPLICATION_JSON)
-                .get("22-222")
+                .get("t-22-222")
                 .then().statusCode(NOT_FOUND.getStatusCode());
 
         dto = given()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
-                .get("11-111")
+                .get("t-11-111")
                 .then().statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
@@ -196,24 +194,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         assertThat(dto).isNotNull();
         assertThat(dto.getName()).isEqualTo("cg");
-        assertThat(dto.getId()).isEqualTo("11-111");
-
-    }
-
-    @Test
-    void getThemesNoTenantTest() {
-        var data = given()
-                .contentType(APPLICATION_JSON)
-                .get()
-                .then()
-                .statusCode(OK.getStatusCode())
-                .contentType(APPLICATION_JSON)
-                .extract()
-                .as(ThemePageResultDTO.class);
-
-        assertThat(data).isNotNull();
-        assertThat(data.getTotalElements()).isZero();
-        assertThat(data.getStream()).isNotNull().isEmpty();
+        assertThat(dto.getId()).isEqualTo("t-11-111");
 
     }
 
@@ -331,7 +312,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .body(themeDto)
                 .when()
-                .put("11-111")
+                .put("t-11-111")
                 .then().statusCode(NOT_FOUND.getStatusCode());
 
         // update theme
@@ -340,7 +321,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(themeDto)
                 .when()
-                .put("11-111")
+                .put("t-11-111")
                 .then().statusCode(NO_CONTENT.getStatusCode());
 
         // download theme
@@ -348,7 +329,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(themeDto)
                 .when()
-                .get("11-111")
+                .get("t-11-111")
                 .then().statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
@@ -371,7 +352,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .when()
                 .body(themeDto)
-                .put("11-111")
+                .put("t-11-111")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);

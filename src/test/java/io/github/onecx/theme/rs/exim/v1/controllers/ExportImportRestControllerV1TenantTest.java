@@ -16,12 +16,10 @@ import gen.io.github.onecx.theme.rs.exim.v1.model.*;
 import io.github.onecx.theme.test.AbstractTest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 
 @QuarkusTest
 @TestHTTPEndpoint(ExportImportRestControllerV1.class)
-@WithDBData(value = "data/testdata-exim-tenant.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
-@TestProfile(AbstractTest.TenantTestProfile.class)
+@WithDBData(value = "data/testdata-exim.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
 class ExportImportRestControllerV1TenantTest extends AbstractTest {
 
     @Test
