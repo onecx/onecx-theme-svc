@@ -68,10 +68,7 @@ public class ThemeDataImportServiceV1 implements DataImportService {
 
         // clean data
         var tenants = data.getThemes().values().stream().map(DataImportThemeDTOV1::getTenantId).collect(Collectors.toSet());
-        for (var tenant : tenants) {
-            importService.deleteAllByTenantId(tenant);
-        }
-        //        tenants.forEach(x -> importService.deleteAllByTenantId(x));
+        tenants.forEach(x -> importService.deleteAllByTenantId(x));
 
         // import themes
         data.getThemes().forEach((name, dto) -> importService.importTheme(name, dto));
