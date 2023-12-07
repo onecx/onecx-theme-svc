@@ -1,7 +1,9 @@
 package io.github.onecx.theme.domain.di;
 
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
+import gen.io.github.onecx.theme.di.v1.model.DataImportThemeDTOV1;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
@@ -25,13 +27,11 @@ public class ThemeDataImportServiceV1 implements DataImportService {
     private static final Logger log = LoggerFactory.getLogger(ThemeDataImportServiceV1.class);
 
     @Inject
-    ThemeDAO themeDAO;
-
-    @Inject
     ObjectMapper objectMapper;
 
     @Inject
-    DataImportMapperV1 mapper;
+    ThemeImportService importService;
+
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
@@ -72,25 +72,14 @@ public class ThemeDataImportServiceV1 implements DataImportService {
     public void cleanInsert(DataImportDTOV1 data) {
 
         // clean data
-        themeDAO.deleteAll();
+        var tenants = data.getThemes().values().stream().map(DataImportThemeDTOV1::getTenantId).collect(Collectors.toSet());
+        for (var tenant : tenants) {
+            importService.deleteAllByTenantId(tenant);
+        }
+//        tenants.forEach(x -> importService.deleteAllByTenantId(x));
 
-        data.getThemes().forEach((themeName, dto) -> {
-
-            try {
-                var ctx = Context.builder()
-                        .principal("data-import")
-                        .tenantId(dto.getTenantId())
-                        .build();
-
-                ApplicationContext.start(ctx);
-                // import themes
-                var theme = mapper.importTheme(dto);
-                theme.setName(themeName);
-                themeDAO.create(theme);
-            } finally {
-                ApplicationContext.close();
-            }
-        });
+        // import themes
+        data.getThemes().forEach((name, dto) -> importService.importTheme(name, dto));
 
     }
 
