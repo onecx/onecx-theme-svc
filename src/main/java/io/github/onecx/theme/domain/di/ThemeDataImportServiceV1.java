@@ -3,14 +3,11 @@ package io.github.onecx.theme.domain.di;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import gen.io.github.onecx.theme.di.v1.model.DataImportThemeDTOV1;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tkit.quarkus.context.ApplicationContext;
-import org.tkit.quarkus.context.Context;
 import org.tkit.quarkus.dataimport.DataImport;
 import org.tkit.quarkus.dataimport.DataImportConfig;
 import org.tkit.quarkus.dataimport.DataImportService;
@@ -18,8 +15,7 @@ import org.tkit.quarkus.dataimport.DataImportService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gen.io.github.onecx.theme.di.v1.model.DataImportDTOV1;
-import io.github.onecx.theme.domain.daos.ThemeDAO;
-import io.github.onecx.theme.domain.di.mappers.DataImportMapperV1;
+import gen.io.github.onecx.theme.di.v1.model.DataImportThemeDTOV1;
 
 @DataImport("theme")
 public class ThemeDataImportServiceV1 implements DataImportService {
@@ -31,7 +27,6 @@ public class ThemeDataImportServiceV1 implements DataImportService {
 
     @Inject
     ThemeImportService importService;
-
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
@@ -76,7 +71,7 @@ public class ThemeDataImportServiceV1 implements DataImportService {
         for (var tenant : tenants) {
             importService.deleteAllByTenantId(tenant);
         }
-//        tenants.forEach(x -> importService.deleteAllByTenantId(x));
+        //        tenants.forEach(x -> importService.deleteAllByTenantId(x));
 
         // import themes
         data.getThemes().forEach((name, dto) -> importService.importTheme(name, dto));
