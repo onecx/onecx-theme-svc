@@ -20,7 +20,6 @@ import io.github.onecx.theme.domain.models.ThemeInfo;
 import io.github.onecx.theme.domain.models.Theme_;
 
 @ApplicationScoped
-@Transactional(Transactional.TxType.NOT_SUPPORTED)
 public class ThemeDAO extends AbstractDAO<Theme> {
 
     // https://hibernate.atlassian.net/browse/HHH-16830#icft=HHH-16830
