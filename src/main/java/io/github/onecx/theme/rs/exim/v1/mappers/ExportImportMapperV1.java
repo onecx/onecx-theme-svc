@@ -25,15 +25,16 @@ public abstract class ExportImportMapperV1 {
 
     @Mapping(target = "id", source = "request.id")
     @Mapping(target = "themes", source = "themes")
-    public abstract EximImportResultDTOV1 create(EximImportRequestDTOV1 request, Map<String, EximThemeResultDTOV1> themes);
+    public abstract ImportThemeResponseDTOV1 create(ThemeSnapshotDTOV1 request,
+            Map<String, ImportThemeResponseStatusDTOV1> themes);
 
-    public abstract EximThemeResultDTOV1 create(EximThemeResultStatusDTOV1 status);
+    // public abstract EximThemeResultDTOV1 create(EximThemeResultStatusDTOV1 status);
 
-    public EximImportRequestDTOV1 create(Map<String, Theme> data) {
+    public ThemeSnapshotDTOV1 create(Map<String, Theme> data) {
         if (data == null) {
             return null;
         }
-        EximImportRequestDTOV1 result = new EximImportRequestDTOV1();
+        ThemeSnapshotDTOV1 result = new ThemeSnapshotDTOV1();
         result.setCreated(OffsetDateTime.now());
         result.setThemes(map(data));
         return result;

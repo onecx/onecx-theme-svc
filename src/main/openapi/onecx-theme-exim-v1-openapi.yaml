@@ -19,16 +19,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EximExportRequest'
+              $ref: '#/components/schemas/ExportThemeRequest'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/EximImportRequest'
+                $ref: '#/components/schemas/ThemeSnapshot'
         "404":
           description: No themes founds
   /exim/v1/themes/import:
@@ -42,14 +40,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EximImportRequest'
+              $ref: '#/components/schemas/ThemeSnapshot'
       responses:
         "200":
           description: Import result
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EximImportResult'
+                $ref: '#/components/schemas/ImportThemeResponse'
         "400":
           description: Bad request
           content:
@@ -58,7 +56,7 @@ paths:
                 $ref: '#/components/schemas/EximProblemDetailResponse'
 components:
   schemas:
-    EximExportRequest:
+    ExportThemeRequest:
       type: object
       properties:
         names:
@@ -66,32 +64,7 @@ components:
           uniqueItems: true
           items:
             type: string
-    EximImportResult:
-      type: object
-      properties:
-        id:
-          type: string
-          minLength: 10
-          description: ID of the request
-        themes:
-          $ref: '#/components/schemas/EximImportResultThemes'
-    EximImportResultThemes:
-      type: object
-      nullable: false
-      additionalProperties:
-        $ref: '#/components/schemas/EximThemeResult'
-    EximThemeResult:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/EximThemeResultStatus'
-    EximThemeResultStatus:
-      type: string
-      enum:
-        - UPDATE
-        - CREATED
-        - SKIP
-    EximImportRequest:
+    ThemeSnapshot:
       type: object
       properties:
         id:
@@ -101,12 +74,26 @@ components:
         created:
           $ref: '#/components/schemas/OffsetDateTime'
         themes:
-          $ref: '#/components/schemas/EximImportThemes'
-    EximImportThemes:
+          type: object
+          nullable: false
+          additionalProperties:
+            $ref: '#/components/schemas/EximTheme'
+    ImportThemeResponse:
       type: object
-      nullable: false
-      additionalProperties:
-         $ref: '#/components/schemas/EximTheme'
+      properties:
+        id:
+          type: string
+          minLength: 10
+          description: ID of the request
+        themes:
+          additionalProperties:
+            $ref: '#/components/schemas/ImportThemeResponseStatus'
+    ImportThemeResponseStatus:
+      type: string
+      enum:
+        - UPDATE
+        - CREATED
+        - SKIP
     EximTheme:
       type: object
       properties:

@@ -25,7 +25,7 @@ class ExportImportRestControllerV1Test extends AbstractTest {
     @Test
     void exportThemesTest() {
 
-        var request = new EximExportRequestDTOV1();
+        var request = new ExportThemeRequestDTOV1();
 
         var dto = given()
                 .when()
@@ -34,7 +34,7 @@ class ExportImportRestControllerV1Test extends AbstractTest {
                 .post("export")
                 .then()
                 .statusCode(OK.getStatusCode())
-                .extract().as(EximImportRequestDTOV1.class);
+                .extract().as(ThemeSnapshotDTOV1.class);
         assertThat(dto).isNotNull();
         assertThat(dto.getThemes()).hasSize(3);
 
@@ -46,7 +46,7 @@ class ExportImportRestControllerV1Test extends AbstractTest {
                 .post("export")
                 .then()
                 .statusCode(OK.getStatusCode())
-                .extract().as(EximImportRequestDTOV1.class);
+                .extract().as(ThemeSnapshotDTOV1.class);
         assertThat(dto).isNotNull();
         assertThat(dto.getThemes()).hasSize(3);
 
@@ -58,7 +58,7 @@ class ExportImportRestControllerV1Test extends AbstractTest {
                 .post("export")
                 .then()
                 .statusCode(OK.getStatusCode())
-                .extract().as(EximImportRequestDTOV1.class);
+                .extract().as(ThemeSnapshotDTOV1.class);
         assertThat(dto).isNotNull();
         assertThat(dto.getThemes()).hasSize(2);
     }
@@ -66,7 +66,7 @@ class ExportImportRestControllerV1Test extends AbstractTest {
     @Test
     void exportThemesWrongNamesTest() {
 
-        var request = new EximExportRequestDTOV1();
+        var request = new ExportThemeRequestDTOV1();
         request.setNames(Set.of("does-not-exists"));
 
         given()
@@ -90,13 +90,13 @@ class ExportImportRestControllerV1Test extends AbstractTest {
                 .extract().as(EximProblemDetailResponseDTOV1.class);
 
         assertThat(exception.getErrorCode()).isEqualTo("CONSTRAINT_VIOLATIONS");
-        assertThat(exception.getDetail()).isEqualTo("exportThemes.eximExportRequestDTOV1: must not be null");
+        assertThat(exception.getDetail()).isEqualTo("exportThemes.exportThemeRequestDTOV1: must not be null");
     }
 
     @Test
     void importThemesTest() {
 
-        var request = new EximExportRequestDTOV1();
+        var request = new ThemeSnapshotDTOV1();
 
         var data = given()
                 .when()
@@ -105,7 +105,7 @@ class ExportImportRestControllerV1Test extends AbstractTest {
                 .post("export")
                 .then()
                 .statusCode(OK.getStatusCode())
-                .extract().as(EximImportRequestDTOV1.class);
+                .extract().as(ThemeSnapshotDTOV1.class);
         assertThat(data).isNotNull();
         assertThat(data.getThemes()).hasSize(3);
 
@@ -120,14 +120,15 @@ class ExportImportRestControllerV1Test extends AbstractTest {
                 .post("import")
                 .then()
                 .statusCode(OK.getStatusCode())
-                .extract().as(EximImportResultDTOV1.class);
+                .extract().as(ImportThemeResponseDTOV1.class);
 
-        assertThat(dto).isNotNull().returns(data.getId(), from(EximImportResultDTOV1::getId));
+        assertThat(dto).isNotNull().returns(data.getId(), from(ImportThemeResponseDTOV1::getId));
 
         assertThat(dto.getThemes()).isNotNull().hasSize(4);
-        assertThat(dto.getThemes().get("cg")).returns(EximThemeResultStatusDTOV1.UPDATE, from(EximThemeResultDTOV1::getStatus));
-        assertThat(dto.getThemes().get("new_theme")).returns(EximThemeResultStatusDTOV1.CREATED,
-                from(EximThemeResultDTOV1::getStatus));
+        assertThat(dto.getThemes().get("cg")).returns(ImportThemeResponseStatusDTOV1.UPDATE.toString(),
+                from(ImportThemeResponseStatusDTOV1::toString));
+        assertThat(dto.getThemes().get("new_theme")).returns(ImportThemeResponseStatusDTOV1.CREATED.toString(),
+                from(ImportThemeResponseStatusDTOV1::toString));
     }
 
 }

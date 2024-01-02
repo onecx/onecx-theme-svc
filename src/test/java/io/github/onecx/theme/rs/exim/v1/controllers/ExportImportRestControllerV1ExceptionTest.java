@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
 
-import gen.io.github.onecx.theme.rs.exim.v1.model.EximExportRequestDTOV1;
+import gen.io.github.onecx.theme.rs.exim.v1.model.ExportThemeRequestDTOV1;
 import io.github.onecx.theme.domain.daos.ThemeDAO;
 import io.github.onecx.theme.test.AbstractTest;
 import io.quarkus.test.InjectMock;
@@ -34,7 +34,7 @@ class ExportImportRestControllerV1ExceptionTest extends AbstractTest {
     @Test
     void exportThemesExceptionTest() {
 
-        var request = new EximExportRequestDTOV1();
+        var request = new ExportThemeRequestDTOV1();
 
         given()
                 .when()

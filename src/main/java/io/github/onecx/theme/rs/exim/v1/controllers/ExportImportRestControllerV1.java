@@ -35,7 +35,7 @@ public class ExportImportRestControllerV1 implements ThemesExportImportApi {
     ExportImportMapperV1 mapper;
 
     @Override
-    public Response exportThemes(EximExportRequestDTOV1 request) {
+    public Response exportThemes(ExportThemeRequestDTOV1 request) {
         var themes = dao.findThemeByNames(request.getNames());
 
         var data = themes.collect(Collectors.toMap(Theme::getName, theme -> theme));
@@ -48,12 +48,12 @@ public class ExportImportRestControllerV1 implements ThemesExportImportApi {
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public Response importThemes(EximImportRequestDTOV1 request) {
+    public Response importThemes(ThemeSnapshotDTOV1 request) {
         var keys = request.getThemes().keySet();
         var themes = dao.findThemeByNames(keys);
         var map = themes.collect(Collectors.toMap(Theme::getName, theme -> theme));
 
-        Map<String, EximThemeResultDTOV1> items = new HashMap<>();
+        Map<String, ImportThemeResponseStatusDTOV1> items = new HashMap<>();
 
         request.getThemes().forEach((name, dto) -> {
 
@@ -63,13 +63,13 @@ public class ExportImportRestControllerV1 implements ThemesExportImportApi {
                 theme = mapper.create(dto);
                 theme.setName(name);
                 dao.create(theme);
-                items.put(name, mapper.create(EximThemeResultStatusDTOV1.CREATED));
+                items.put(name, ImportThemeResponseStatusDTOV1.CREATED);
 
             } else {
 
                 mapper.update(dto, theme);
                 dao.update(theme);
-                items.put(name, mapper.create(EximThemeResultStatusDTOV1.UPDATE));
+                items.put(name, ImportThemeResponseStatusDTOV1.UPDATE);
             }
         });
 
