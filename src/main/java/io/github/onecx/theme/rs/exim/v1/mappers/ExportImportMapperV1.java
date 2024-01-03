@@ -27,9 +27,7 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "themes", source = "themes")
     public abstract ImportThemeResponseDTOV1 create(ThemeSnapshotDTOV1 request,
             Map<String, ImportThemeResponseStatusDTOV1> themes);
-
-    // public abstract EximThemeResultDTOV1 create(EximThemeResultStatusDTOV1 status);
-
+    
     public ThemeSnapshotDTOV1 create(Map<String, Theme> data) {
         if (data == null) {
             return null;
