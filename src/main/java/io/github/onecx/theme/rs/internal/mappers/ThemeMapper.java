@@ -50,6 +50,7 @@ public abstract class ThemeMapper {
     public abstract List<ThemeDTO> map(Stream<Theme> entity);
 
     @Mapping(target = "version", source = "modificationCount")
+    @Mapping(target = "properties", qualifiedByName = "propertiesJson")
     public abstract ThemeDTO map(Theme theme);
 
     @Mapping(target = "id", ignore = true)
@@ -81,6 +82,20 @@ public abstract class ThemeMapper {
 
         try {
             return mapper.writeValueAsString(properties);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
+    }
+
+    @Named("propertiesJson")
+    public Object stringToObject(String jsonVar) {
+
+        if (jsonVar == null || jsonVar.isEmpty()) {
+            return null;
+        }
+
+        try {
+            return mapper.readTree(jsonVar);
         } catch (JsonProcessingException e) {
             return null;
         }

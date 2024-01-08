@@ -40,6 +40,7 @@ public abstract class ExportImportMapperV1 {
 
     public abstract Map<String, EximThemeDTOV1> map(Map<String, Theme> data);
 
+    @Mapping(target = "properties", qualifiedByName = "propertiesJson")
     public abstract EximThemeDTOV1 map(Theme theme);
 
     @Mapping(target = "id", ignore = true)
@@ -77,6 +78,20 @@ public abstract class ExportImportMapperV1 {
 
         try {
             return objectMapper.writeValueAsString(properties);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
+    }
+
+    @Named("propertiesJson")
+    public Object stringToObject(String jsonVar) {
+
+        if (jsonVar == null || jsonVar.isEmpty()) {
+            return null;
+        }
+
+        try {
+            return objectMapper.readTree(jsonVar);
         } catch (JsonProcessingException e) {
             return null;
         }
