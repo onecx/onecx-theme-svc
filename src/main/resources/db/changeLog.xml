@@ -5,5 +5,7 @@
 
     <include relativeToChangelogFile="true" file="v1/2023-11-09-create-tables.xml"/>
     <include relativeToChangelogFile="true" file="v1/2023-11-09-data-import-log.xml"/>
+    <include relativeToChangelogFile="true" file="v1/2024-19-01-create-table-images.xml"/>
+    <include relativeToChangelogFile="true" file="v1/2024-19-01-rename-favicon-and-logo-columns.xml"/>
 
 </databaseChangeLog>

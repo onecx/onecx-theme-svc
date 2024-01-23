@@ -35,10 +35,10 @@ public class Theme extends TraceableEntity {
     @Column(name = "ASSETS_URL")
     private String assetsUrl;
 
-    @Column(name = "LOGO_URL")
+    @Column(name = "LOGO_ID")
     private String logoUrl;
 
-    @Column(name = "FAVICON_URL")
+    @Column(name = "FAVICON_ID")
     private String faviconUrl;
 
     @Column(name = "PREVIEW_IMAGE_URL")
