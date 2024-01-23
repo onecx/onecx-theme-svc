@@ -19,7 +19,7 @@
                 <column name="modificationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
                 <column name="creationuser" type="VARCHAR(255)"/>
                 <column name="modificationuser" type="VARCHAR(255)"/>
-                <column name="image" type="OID" />
+                <column name="imageData" type="OID" />
                 <column name="MIME_TYPE" type="VARCHAR(255)" />
                 <column name="width" type="int4" />
                 <column name="height" type="int4" />

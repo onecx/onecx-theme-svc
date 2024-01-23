@@ -10,10 +10,10 @@ import org.tkit.quarkus.jpa.models.TraceableEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-@Table
 @Entity
 @Getter
 @Setter
+@Table(name = "IMAGE")
 @SuppressWarnings("squid:S2160")
 public class Image extends TraceableEntity {
 
@@ -25,6 +25,9 @@ public class Image extends TraceableEntity {
 
     @Column(name = "MIME_TYPE")
     private String mimeType;
+
+    @Column(name = "URL")
+    private String url;
 
     @Lob
     private byte[] imageData;

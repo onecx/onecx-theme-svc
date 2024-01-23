@@ -34,7 +34,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImageInfoDTOv1'
+                $ref: '#/components/schemas/ImageInfo'
         "401":
           description: Unauthorized
         "403":
@@ -68,7 +68,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImageInfoDTOv1'
+                $ref: '#/components/schemas/ImageInfo'
         "500":
           description: Internal Server Error
         "401":
@@ -113,14 +113,48 @@ paths:
             - onecx-portal-user
             - onecx-portal-admin
             - onecx-portal-super-admin
+    put:
+      tags:
+        - imageV1
+      description: update Images
+      operationId: updateImage
+      parameters:
+        - name: imageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  format: binary
+                  description: file data
+                  type: string
+                fileName:
+                  type: string
+            encoding:
+              image:
+                contentType: application/octet-stream
+              fileName:
+                contentType: text/plain
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageInfo'
+        "400":
+          description: Bad request
 components:
   schemas:
-    ImageInfoDTOv1:
+    ImageInfo:
       type: object
       properties:
-        version:
-          format: int32
-          type: integer
         creationDate:
           $ref: '#/components/schemas/OffsetDateTime'
         creationUser:
@@ -131,38 +165,10 @@ components:
           type: string
         id:
           type: string
-        userUploaded:
-          description: flag whether Image was uploaded by user
-          type: boolean
-        lastUpdateTime:
-          allOf:
-            - $ref: '#/components/schemas/OffsetDateTime'
-            - description: dateTime of last update
-        imageUrl:
+        url:
           type: string
           example: http://onecx-image-svc/data/afcc5d0d-6509-497a-8125-614f82b106ae
-        smallImageUrl:
-          type: string
-          example: http://onecx-image-svc/data/afcc5d0d-6509-497a-8125-614f82asb106ae
     OffsetDateTime:
       format: date-time
       type: string
       example: 2022-03-10T12:15:50-04:00
-    Image:
-      type: object
-      properties:
-        height:
-          type: integer
-          format: int32
-          description: Height of the image
-        width:
-          type: integer
-          format: int32
-          description: Width of the image
-        mimeType:
-          type: string
-          description: MIME type of the image
-        image:
-          type: string
-          format: binary
-          description: Image file data
