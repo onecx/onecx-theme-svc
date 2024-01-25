@@ -31,6 +31,8 @@ public abstract class DataImportMapperV1 {
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "logoId", ignore = true)
+    @Mapping(target = "faviconId", ignore = true)
     public abstract Theme importTheme(DataImportThemeDTOV1 dto);
 
     @Named("properties")

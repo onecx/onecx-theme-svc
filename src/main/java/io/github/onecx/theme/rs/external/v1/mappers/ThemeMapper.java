@@ -17,6 +17,8 @@ import io.github.onecx.theme.domain.models.ThemeInfo;
 public abstract class ThemeMapper {
 
     @Mapping(target = "version", source = "modificationCount")
+    @Mapping(target = "logoId", ignore = true)
+    @Mapping(target = "faviconId", ignore = true)
     public abstract ThemeDTOV1 map(Theme theme);
 
     public ThemeInfoListDTOV1 mapInfoList(Stream<ThemeInfo> data) {

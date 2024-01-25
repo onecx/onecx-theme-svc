@@ -93,9 +93,9 @@ components:
         faviconUrl:
           type: string
         logoId:
-          type: string
+          $ref: '#/components/schemas/Image'
         faviconId:
-          type: string
+          $ref: '#/components/schemas/Image'
         previewImageUrl:
           type: string
         assetsUpdateDate:
@@ -138,9 +138,9 @@ components:
         faviconUrl:
           type: string
         logoId:
-          type: string
+          $ref: '#/components/schemas/Image'
         faviconId:
-          type: string
+          $ref: '#/components/schemas/Image'
         previewImageUrl:
           type: string
         assetsUpdateDate:
@@ -179,12 +179,38 @@ components:
         faviconUrl:
           type: string
         logoId:
-          type: string
+          $ref: '#/components/schemas/Image'
         faviconId:
-          type: string
+          $ref: '#/components/schemas/Image'
         previewImageUrl:
           type: string
         assetsUpdateDate:
           type: string
         properties:
           type: object
+    Image:
+      type: object
+      properties:
+        imageData:
+          type: object
+          properties:
+            imageBytes:
+              type: string
+              format: byte
+        mimeType:
+          type: string
+        width:
+          type: string
+        height:
+          type: string
+        url:
+          type: string
+          example: http://onecx-image-svc/data/afcc5d0d-6509-497a-8125-614f82b106ae
+        creationDate:
+          $ref: '#/components/schemas/OffsetDateTime'
+        creationUser:
+          type: string
+        modificationDate:
+          $ref: '#/components/schemas/OffsetDateTime'
+        modificationUser:
+          type: string

@@ -45,12 +45,16 @@ public abstract class ThemeMapper {
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
     @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "logoId", ignore = true)
+    @Mapping(target = "faviconId", ignore = true)
     public abstract Theme create(CreateThemeDTO object);
 
     public abstract List<ThemeDTO> map(Stream<Theme> entity);
 
     @Mapping(target = "version", source = "modificationCount")
     @Mapping(target = "properties", qualifiedByName = "propertiesJson")
+    @Mapping(target = "logoId", ignore = true)
+    @Mapping(target = "faviconId", ignore = true)
     public abstract ThemeDTO map(Theme theme);
 
     @Mapping(target = "id", ignore = true)
@@ -63,6 +67,8 @@ public abstract class ThemeMapper {
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
     @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "logoId", ignore = true)
+    @Mapping(target = "faviconId", ignore = true)
     public abstract void update(UpdateThemeDTO themeDTO, @MappingTarget Theme entity);
 
     @Mapping(target = "id", ignore = true)
@@ -71,6 +77,8 @@ public abstract class ThemeMapper {
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
     @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "logoId", ignore = true)
+    @Mapping(target = "faviconId", ignore = true)
     public abstract Theme map(UpdateThemeDTO object);
 
     @Named("properties")

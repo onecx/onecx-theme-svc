@@ -41,15 +41,13 @@ public class Theme extends TraceableEntity {
     @Column(name = "FAVICON_URL")
     private String faviconUrl;
 
-    @Column(name = "LOGO_ID")
-    //    @OneToOne(cascade = CascadeType.ALL)
-    //    @JoinColumn(name = "LOGO_ID", referencedColumnName = "guid")
-    private String logoId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "LOGO_ID", referencedColumnName = "guid")
+    private Image logoId;
 
-    @Column(name = "FAVICON_ID")
-    //    @OneToOne(cascade = CascadeType.ALL)
-    //    @JoinColumn(name = "FAVICON_ID", referencedColumnName = "guid")
-    private String faviconId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FAVICON_ID", referencedColumnName = "guid")
+    private Image faviconId;
 
     @Column(name = "PREVIEW_IMAGE_URL")
     private String previewImageUrl;

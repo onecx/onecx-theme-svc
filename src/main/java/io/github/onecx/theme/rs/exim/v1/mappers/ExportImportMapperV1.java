@@ -41,6 +41,8 @@ public abstract class ExportImportMapperV1 {
     public abstract Map<String, EximThemeDTOV1> map(Map<String, Theme> data);
 
     @Mapping(target = "properties", qualifiedByName = "propertiesJson")
+    @Mapping(target = "logoId", ignore = true)
+    @Mapping(target = "faviconId", ignore = true)
     public abstract EximThemeDTOV1 map(Theme theme);
 
     @Mapping(target = "id", ignore = true)
@@ -54,6 +56,8 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "logoId", ignore = true)
+    @Mapping(target = "faviconId", ignore = true)
     public abstract void update(EximThemeDTOV1 dto, @MappingTarget Theme entity);
 
     @Mapping(target = "id", ignore = true)
@@ -67,6 +71,8 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "logoId", ignore = true)
+    @Mapping(target = "faviconId", ignore = true)
     public abstract Theme create(EximThemeDTOV1 dto);
 
     @Named("properties")
