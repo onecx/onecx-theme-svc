@@ -5,12 +5,18 @@ info:
 servers:
   - url: "http://localhost"
 paths:
-  /v1/images:
+  /internal/images:
     post:
       tags:
         - imageV1
       description: Upload Images
       operationId: uploadImage
+      parameters:
+        - name: themeId
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           multipart/form-data:
@@ -26,8 +32,6 @@ paths:
             encoding:
               image:
                 contentType: application/octet-stream
-              fileName:
-                contentType: text/plain
       responses:
         "200":
           description: OK
@@ -50,7 +54,7 @@ paths:
             - onecx-portal-user
             - onecx-portal-admin
             - onecx-portal-super-admin
-  /v1/images/{imageId}:
+  /internal/images/{imageId}:
     get:
       tags:
         - imageV1

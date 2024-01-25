@@ -271,6 +271,10 @@ components:
           type: string
         faviconUrl:
           type: string
+        logoId:
+          type: string
+        faviconId:
+          type: string
         previewImageUrl:
           type: string
         assetsUpdateDate:
@@ -339,6 +343,10 @@ components:
           type: string
         faviconUrl:
           type: string
+        logoId:
+          type: string
+        faviconId:
+          type: string
         previewImageUrl:
           type: string
         assetsUpdateDate:
@@ -373,6 +381,10 @@ components:
         logoUrl:
           type: string
         faviconUrl:
+          type: string
+        logoId:
+          type: string
+        faviconId:
           type: string
         previewImageUrl:
           type: string

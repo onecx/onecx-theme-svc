@@ -107,6 +107,10 @@ components:
           type: string
         faviconUrl:
           type: string
+        logoId:
+          type: string
+        faviconId:
+          type: string
         previewImageUrl:
           type: string
         assetsUpdateDate:

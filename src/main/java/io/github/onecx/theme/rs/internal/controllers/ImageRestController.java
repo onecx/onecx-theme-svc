@@ -4,6 +4,7 @@ import static io.smallrye.config.ConfigLogging.log;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
@@ -59,7 +60,6 @@ public class ImageRestController implements ImageV1Api {
     public Response getImage(String imageId) {
         Image image = imageDAO.findById(imageId);
         CacheControl cc = new CacheControl();
-        cc.setMaxAge(604800);
         cc.setPrivate(true);
 
         if (image == null) {
@@ -70,7 +70,28 @@ public class ImageRestController implements ImageV1Api {
     }
 
     @Override
-    public Response uploadImage(InputStream imageInputStream, String fileName) {
+    public Response updateImage(String imageId, InputStream imageInputStream, String fileName) {
+        Image image = imageDAO.findById(imageId);
+
+        if (image == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        try {
+            // Update the image data
+            image.setImageData(readInputStreamToByteArray(imageInputStream));
+        } catch (IOException e) {
+            log.error("Error occured when uploading Image", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        // Call the DAO to update the image in the database
+        imageDAO.update(image);
+
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @Override
+    public Response uploadImage(String themeId, InputStream imageInputStream, String fileName) {
 
         if (imageInputStream == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -88,14 +109,10 @@ public class ImageRestController implements ImageV1Api {
 
                 throw new WebApplicationException(Response.Status.BAD_REQUEST);
             }
-            byte[] compressedImageData = this.convertToSmallImage(imageBytes);
-
+            byte[] compressedImageData = this.compressImageData(imageBytes);
             Image image = saveImage(compressedImageData, imageContentType);
-            ImageInfoDTOV1 imageDTOV1 = imageMapper.map(image);
-            imageDTOV1.setUrl(uriInfo.getPath()
-                    .concat("/")
-                    .concat(image.getId()));
 
+            ImageInfoDTOV1 imageDTOV1 = imageMapper.map(image);
             return Response.ok(imageDTOV1).build();
 
         } catch (IOException | DAOException e) {
@@ -105,18 +122,30 @@ public class ImageRestController implements ImageV1Api {
     }
 
     @Override
-    public Response updateImage(String imageId, InputStream imageInputStream, String fileName) {
-
-        return null;
-    }
-
-    @Override
     public Response deleteImage(String imageId) {
 
-        return null;
+        try {
+            imageDAO.deleteQueryById(imageId);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (DAOException e) {
+            log.error("Error occured when uploading Image", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    private byte[] convertToSmallImage(byte[] imgBytesArray) throws IOException {
+    public static byte[] readInputStreamToByteArray(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096]; // You can adjust the buffer size as needed
+
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, bytesRead);
+        }
+
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    private byte[] compressImageData(byte[] imgBytesArray) throws IOException {
 
         return ImageUtilService.resizeImage(imgBytesArray, smallImgWidth, smallImgHeight);
     }
@@ -124,6 +153,9 @@ public class ImageRestController implements ImageV1Api {
     private Image saveImage(byte[] compressedImageData, String mimeType) {
         Image image = new Image();
         image.setImageData(compressedImageData);
+        image.setUrl(uriInfo.getPath()
+                .concat("/")
+                .concat(image.getId()));
         image.setMimeType(mimeType);
 
         try {
