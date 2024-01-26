@@ -11,12 +11,6 @@ paths:
         - imageV1
       description: Upload Images
       operationId: uploadImage
-      parameters:
-        - name: themeId
-          in: path
-          required: true
-          schema:
-            type: string
       requestBody:
         content:
           multipart/form-data:
@@ -27,8 +21,13 @@ paths:
                   format: binary
                   description: file data
                   type: string
-                fileName:
+                themeId:
                   type: string
+                imageType:
+                  type: string
+                  enum:
+                    - LOGO
+                    - FAVICON
             encoding:
               image:
                 contentType: application/octet-stream
@@ -45,15 +44,6 @@ paths:
           description: Not Authorized
         "500":
           description: Internal Server Error
-      security:
-        - SecurityScheme:
-            - onecx-portal-user
-            - onecx-portal-admin
-            - onecx-portal-super-admin
-        - SecurityScheme:
-            - onecx-portal-user
-            - onecx-portal-admin
-            - onecx-portal-super-admin
   /internal/images/{imageId}:
     get:
       tags:
@@ -79,44 +69,6 @@ paths:
           description: Not Authorized
         "403":
           description: Not Allowed
-      security:
-        - SecurityScheme:
-            - onecx-portal-user
-            - onecx-portal-admin
-            - onecx-portal-super-admin
-        - SecurityScheme:
-            - onecx-portal-user
-            - onecx-portal-admin
-            - onecx-portal-super-admin
-    delete:
-      tags:
-        - imageV1
-      description: Delete Image
-      operationId: deleteImage
-      parameters:
-        - name: imageId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: No Content
-        "401":
-          description: Unauthorized
-        "403":
-          description: Not Authorized
-        "500":
-          description: Internal Server Error
-      security:
-        - SecurityScheme:
-            - onecx-portal-user
-            - onecx-portal-admin
-            - onecx-portal-super-admin
-        - SecurityScheme:
-            - onecx-portal-user
-            - onecx-portal-admin
-            - onecx-portal-super-admin
     put:
       tags:
         - imageV1

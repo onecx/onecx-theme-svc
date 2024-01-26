@@ -31,7 +31,9 @@ import gen.io.github.onecx.theme.rs.external.v1.ImageV1Api;
 import gen.io.github.onecx.theme.rs.external.v1.model.ImageInfoDTOV1;
 import gen.io.github.onecx.theme.rs.internal.model.ProblemDetailResponseDTO;
 import io.github.onecx.theme.domain.daos.ImageDAO;
+import io.github.onecx.theme.domain.daos.ThemeDAO;
 import io.github.onecx.theme.domain.models.Image;
+import io.github.onecx.theme.domain.models.Theme;
 import io.github.onecx.theme.rs.internal.mappers.ExceptionMapper;
 import io.github.onecx.theme.rs.internal.mappers.ImageMapper;
 import io.github.onecx.theme.rs.internal.services.ImageUtilService;
@@ -46,6 +48,8 @@ public class ImageRestController implements ImageV1Api {
 
     @Inject
     ImageDAO imageDAO;
+    @Inject
+    ThemeDAO themeDAO;
 
     @Context
     UriInfo uriInfo;
@@ -91,7 +95,7 @@ public class ImageRestController implements ImageV1Api {
     }
 
     @Override
-    public Response uploadImage(String themeId, InputStream imageInputStream, String fileName) {
+    public Response uploadImage(InputStream imageInputStream, String themeId, String imageType) {
 
         if (imageInputStream == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -112,22 +116,20 @@ public class ImageRestController implements ImageV1Api {
             byte[] compressedImageData = this.compressImageData(imageBytes);
             Image image = saveImage(compressedImageData, imageContentType);
 
+            Theme theme = themeDAO.findById(themeId);
+
+            if (imageType == "LOGO") {
+                theme.setLogoId(image);
+            } else if (imageType == "FAVICON") {
+                theme.setFaviconId(image);
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
             ImageInfoDTOV1 imageDTOV1 = imageMapper.map(image);
             return Response.ok(imageDTOV1).build();
 
         } catch (IOException | DAOException e) {
-            log.error("Error occured when uploading Image", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @Override
-    public Response deleteImage(String imageId) {
-
-        try {
-            imageDAO.deleteQueryById(imageId);
-            return Response.status(Response.Status.NO_CONTENT).build();
-        } catch (DAOException e) {
             log.error("Error occured when uploading Image", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

@@ -53,8 +53,6 @@ public abstract class ThemeMapper {
 
     @Mapping(target = "version", source = "modificationCount")
     @Mapping(target = "properties", qualifiedByName = "propertiesJson")
-    @Mapping(target = "logoId", ignore = true)
-    @Mapping(target = "faviconId", ignore = true)
     public abstract ThemeDTO map(Theme theme);
 
     @Mapping(target = "id", ignore = true)
