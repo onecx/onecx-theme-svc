@@ -60,7 +60,6 @@ public class ImageService {
     public ImageInfoDTO updateImage(InputStream inputStream, String imageId) {
         try {
             byte[] imageData = IOUtils.toByteArray(inputStream);
-            Log.info("IMAGEDATA WAS FOUND " + imageId);
             Image image = imageDAO.findById(imageId);
             // Update the image data
             image.setImageData(imageData);
@@ -108,8 +107,6 @@ public class ImageService {
         if (data[0] == (byte) 0x89 && data[1] == (byte) 0x50) {
             return "image/png";
         }
-
-        // Add more checks for other image formats as needed
 
         return "Unknown";
     }
