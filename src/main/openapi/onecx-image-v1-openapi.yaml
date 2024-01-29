@@ -60,9 +60,10 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            application/octet-stream:
               schema:
-                $ref: '#/components/schemas/ImageInfo'
+                type: string
+                format: binary
         "500":
           description: Internal Server Error
         "401":
@@ -90,13 +91,9 @@ paths:
                   format: binary
                   description: file data
                   type: string
-                fileName:
-                  type: string
             encoding:
               image:
                 contentType: application/octet-stream
-              fileName:
-                contentType: text/plain
       responses:
         "200":
           description: OK
