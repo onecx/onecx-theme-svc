@@ -21,13 +21,12 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.io.github.onecx.theme.rs.external.v1.ImageV1Api;
-import gen.io.github.onecx.theme.rs.external.v1.model.ImageInfoDTOV1;
+import gen.io.github.onecx.theme.rs.internal.ImageV1Api;
+import gen.io.github.onecx.theme.rs.internal.model.ImageInfoDTO;
 import gen.io.github.onecx.theme.rs.internal.model.ProblemDetailResponseDTO;
 import io.github.onecx.theme.domain.daos.ImageDAO;
 import io.github.onecx.theme.domain.models.Image;
 import io.github.onecx.theme.rs.internal.mappers.ExceptionMapper;
-import io.github.onecx.theme.rs.internal.mappers.ImageMapper;
 import io.github.onecx.theme.rs.internal.services.ImageService;
 import io.quarkus.logging.Log;
 
@@ -35,8 +34,6 @@ import io.quarkus.logging.Log;
 @ApplicationScoped
 @Transactional(value = NOT_SUPPORTED)
 public class ImageRestController implements ImageV1Api {
-    @Inject
-    ImageMapper imageMapper;
 
     @Inject
     ExceptionMapper exceptionMapper;
@@ -90,8 +87,13 @@ public class ImageRestController implements ImageV1Api {
     public Response uploadImage(InputStream imageInputStream, String themeId, String imageType) {
         Log.info("ImageController entered uploadFile method {}", imageInputStream.toString(), null);
         try {
-            ImageInfoDTOV1 imageInfoDTO = imageService.uploadFile(imageInputStream, themeId, imageType);
-            return Response.ok(imageInfoDTO).build();
+            ImageInfoDTO imageInfoDTO = imageService.uploadFile(imageInputStream, themeId, imageType);
+            if (imageInfoDTO == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            return Response.created(uriInfo.getAbsolutePathBuilder().path(imageInfoDTO.getId()).build())
+                    .entity(imageInfoDTO)
+                    .build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }

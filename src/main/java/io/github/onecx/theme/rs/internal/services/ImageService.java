@@ -1,16 +1,19 @@
 package io.github.onecx.theme.rs.internal.services;
 
+import static jakarta.transaction.Transactional.TxType.NOT_SUPPORTED;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriInfo;
 
 import org.apache.commons.io.IOUtils;
 
-import gen.io.github.onecx.theme.rs.external.v1.model.ImageInfoDTOV1;
+import gen.io.github.onecx.theme.rs.internal.model.ImageInfoDTO;
 import io.github.onecx.theme.domain.daos.ImageDAO;
 import io.github.onecx.theme.domain.daos.ThemeDAO;
 import io.github.onecx.theme.domain.models.Image;
@@ -19,6 +22,7 @@ import io.github.onecx.theme.rs.internal.mappers.ImageMapper;
 import io.quarkus.logging.Log;
 
 @ApplicationScoped
+@Transactional(value = NOT_SUPPORTED)
 public class ImageService {
 
     @Inject
@@ -33,24 +37,30 @@ public class ImageService {
     @Context
     UriInfo uriInfo;
 
-    public ImageInfoDTOV1 uploadFile(InputStream inputStream, String themeId, String imageType) throws IOException {
+    public ImageInfoDTO uploadFile(InputStream inputStream, String themeId, String imageType) throws IOException {
         Image image = saveImage(inputStream);
 
         Log.info("Image was saved" + image);
 
         Theme theme = themeDAO.findById(themeId);
-        if (imageType.equals("LOGO")) {
-            theme.setLogoId(image);
-        } else if (imageType.equals("FAVICON")) {
-            theme.setFaviconId(image);
+        if (theme.getId() != null) {
+            if (imageType.equals("LOGO")) {
+                theme.setLogoId(image);
+            } else if (imageType.equals("FAVICON")) {
+                theme.setFaviconId(image);
+            }
+            return imageMapper.map(image);
+        } else {
+            return null;
         }
-        return imageMapper.map(image);
+
     }
 
-    public ImageInfoDTOV1 updateImage(InputStream inputStream, String imageId) {
+    @Transactional
+    public ImageInfoDTO updateImage(InputStream inputStream, String imageId) {
         try {
             byte[] imageData = IOUtils.toByteArray(inputStream);
-
+            Log.info("IMAGEDATA WAS FOUND " + imageId);
             Image image = imageDAO.findById(imageId);
             // Update the image data
             image.setImageData(imageData);

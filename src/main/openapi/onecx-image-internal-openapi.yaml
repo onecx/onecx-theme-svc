@@ -3,7 +3,7 @@ info:
   title: onecx-theme image import from file during the start of the application
   version: 1.0.0
 servers:
-  - url: "http://localhost"
+  - url: "http://onecx-theme-svc:8080"
 paths:
   /internal/images:
     post:
@@ -32,23 +32,17 @@ paths:
               image:
                 contentType: application/octet-stream
       responses:
-        "200":
-          description: OK
+        "201":
+          description: CREATED
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImageInfo'
-        "401":
-          description: Unauthorized
-        "403":
-          description: Not Authorized
-        "500":
-          description: Internal Server Error
   /internal/images/{imageId}:
     get:
       tags:
         - imageV1
-      description: Upload Images
+      description: Get Image by id
       operationId: getImage
       parameters:
         - name: imageId
@@ -64,12 +58,6 @@ paths:
               schema:
                 type: string
                 format: binary
-        "500":
-          description: Internal Server Error
-        "401":
-          description: Not Authorized
-        "403":
-          description: Not Allowed
     put:
       tags:
         - imageV1
@@ -101,27 +89,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImageInfo'
-        "400":
-          description: Bad request
 components:
   schemas:
     ImageInfo:
       type: object
       properties:
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
         id:
           type: string
-        url:
-          type: string
-          example: http://onecx-image-svc/data/afcc5d0d-6509-497a-8125-614f82b106ae
-    OffsetDateTime:
-      format: date-time
-      type: string
-      example: 2022-03-10T12:15:50-04:00

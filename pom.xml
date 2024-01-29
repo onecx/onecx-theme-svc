@@ -217,15 +217,15 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>onecx-image-v1</id>
+                        <id>onecx-image-internal</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>src/main/openapi/onecx-image-v1-openapi.yaml</inputSpec>
-                            <apiPackage>gen.io.github.onecx.theme.rs.external.v1</apiPackage>
-                            <modelPackage>gen.io.github.onecx.theme.rs.external.v1.model</modelPackage>
-                            <modelNameSuffix>DTOV1</modelNameSuffix>
+                            <inputSpec>src/main/openapi/onecx-image-internal-openapi.yaml</inputSpec>
+                            <apiPackage>gen.io.github.onecx.theme.rs.internal</apiPackage>
+                            <modelPackage>gen.io.github.onecx.theme.rs.internal.model</modelPackage>
+                            <modelNameSuffix>DTO</modelNameSuffix>
                         </configuration>
                     </execution>
                     <execution>
