@@ -226,6 +226,7 @@
                             <apiPackage>gen.io.github.onecx.theme.rs.internal</apiPackage>
                             <modelPackage>gen.io.github.onecx.theme.rs.internal.model</modelPackage>
                             <modelNameSuffix>DTO</modelNameSuffix>
+                            <apiNameSuffix>InternalApi</apiNameSuffix>
                         </configuration>
                     </execution>
                     <execution>
