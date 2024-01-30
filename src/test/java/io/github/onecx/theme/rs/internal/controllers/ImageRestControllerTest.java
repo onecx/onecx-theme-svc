@@ -42,22 +42,6 @@ class ImageRestControllerTest {
     }
 
     @Test
-    void uploadImage_shouldReturnBadRequest_whenThemeIdNotExists() {
-
-        File file = new File(ImageRestControllerTest.class.getResource("/META-INF/resources/cap_logo.png").getFile());
-        given()
-                .multiPart("image", file)
-                .multiPart("imageType", "LOGO")
-                .multiPart("themeId", "notn_exist")
-                .contentType("multipart/form-data")
-                .when()
-                .post()
-                .then()
-                .statusCode(BAD_REQUEST.getStatusCode());
-
-    }
-
-    @Test
     void updateImage() {
         File file = new File(ImageRestControllerTest.class.getResource("/META-INF/resources/cap_logo.png").getFile());
 

@@ -21,13 +21,6 @@ paths:
                   format: binary
                   description: file data
                   type: string
-                themeId:
-                  type: string
-                imageType:
-                  type: string
-                  enum:
-                    - LOGO
-                    - FAVICON
             encoding:
               image:
                 contentType: application/octet-stream

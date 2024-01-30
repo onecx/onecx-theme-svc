@@ -75,19 +75,20 @@ public class ImageRestController implements ImageV1Api {
         }
         try {
             // Update the image data
-            imageService.updateImage(imageInputStream, imageId);
+            var imagedto = imageService.updateImage(imageInputStream, imageId);
+            return Response.status(Response.Status.OK).entity(imagedto).build();
         } catch (Exception e) {
             Log.error("Error occured when uploading Image", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return Response.status(Response.Status.OK).build();
+
     }
 
     @Override
-    public Response uploadImage(InputStream imageInputStream, String themeId, String imageType) {
+    public Response uploadImage(InputStream imageInputStream) {
         Log.info("ImageController entered uploadFile method {}", imageInputStream.toString(), null);
         try {
-            ImageInfoDTO imageInfoDTO = imageService.uploadFile(imageInputStream, themeId, imageType);
+            ImageInfoDTO imageInfoDTO = imageService.uploadFile(imageInputStream);
             if (imageInfoDTO == null) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }

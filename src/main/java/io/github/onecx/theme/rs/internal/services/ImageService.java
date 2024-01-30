@@ -17,7 +17,6 @@ import gen.io.github.onecx.theme.rs.internal.model.ImageInfoDTO;
 import io.github.onecx.theme.domain.daos.ImageDAO;
 import io.github.onecx.theme.domain.daos.ThemeDAO;
 import io.github.onecx.theme.domain.models.Image;
-import io.github.onecx.theme.domain.models.Theme;
 import io.github.onecx.theme.rs.internal.mappers.ImageMapper;
 import io.quarkus.logging.Log;
 
@@ -37,23 +36,24 @@ public class ImageService {
     @Context
     UriInfo uriInfo;
 
-    public ImageInfoDTO uploadFile(InputStream inputStream, String themeId, String imageType) throws IOException {
-        Image image = saveImage(inputStream);
+    public ImageInfoDTO uploadFile(InputStream inputStream) throws IOException {
+        try {
+            byte[] imageData = IOUtils.toByteArray(inputStream);
+            Log.info("Byte Array was created from InputStream " + imageData.length);
+            Image image = new Image();
+            image.setImageData(imageData);
+            image.setUrl(uriInfo.getPath()
+                    .concat("/")
+                    .concat(image.getId()));
+            String imageContentType = detectMimeTypeType(imageData);
+            image.setMimeType(imageContentType);
 
-        Log.info("Image was saved" + image);
-
-        Theme theme = themeDAO.findById(themeId);
-        if (theme.getId() != null) {
-            if (imageType.equals("LOGO")) {
-                theme.setLogoId(image);
-            } else if (imageType.equals("FAVICON")) {
-                theme.setFaviconId(image);
-            }
+            imageDAO.create(image);
             return imageMapper.map(image);
-        } else {
-            return null;
+        } catch (Exception e) {
+            Log.info("Error saving Image into database ", e);
+            throw e;
         }
-
     }
 
     @Transactional
@@ -70,26 +70,6 @@ public class ImageService {
         } catch (IOException e) {
             Log.error("Error occured when uploading Image", e);
             return null;
-        }
-    }
-
-    private Image saveImage(InputStream inputStream) throws IOException {
-        try {
-            byte[] imageData = IOUtils.toByteArray(inputStream);
-            Log.info("Byte Array was created from InputStream " + imageData.length);
-            Image image = new Image();
-            image.setImageData(imageData);
-            image.setUrl(uriInfo.getPath()
-                    .concat("/")
-                    .concat(image.getId()));
-            String imageContentType = detectMimeTypeType(imageData);
-            image.setMimeType(imageContentType);
-
-            imageDAO.create(image);
-            return image;
-        } catch (Exception e) {
-            Log.info("Error saving Image into database ", e);
-            throw e;
         }
     }
 
