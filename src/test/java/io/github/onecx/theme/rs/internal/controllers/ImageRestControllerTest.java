@@ -21,7 +21,7 @@ class ImageRestControllerTest {
     @Test
     void uploadImage() {
 
-        File file = new File(ImageRestControllerTest.class.getResource("/META-INF/resources/cap_logo.png").getFile());
+        File file = new File(ImageRestControllerTest.class.getResource("/META-INF/resources/Testimage.png").getFile());
         var imgPost = given()
                 .multiPart("image", file)
                 .multiPart("imageType", "LOGO")
