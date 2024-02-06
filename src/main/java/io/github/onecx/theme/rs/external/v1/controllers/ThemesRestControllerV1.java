@@ -32,6 +32,12 @@ public class ThemesRestControllerV1 implements ThemesV1Api {
     }
 
     @Override
+    public Response getThemeFaviconByName(String name) {
+
+        return null;
+    }
+
+    @Override
     public Response getThemesInfo() {
         var items = dao.findAllInfos();
         return Response.ok(mapper.mapInfoList(items)).build();

@@ -42,16 +42,17 @@ public abstract class ThemeMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     @Mapping(target = "modificationCount", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "creationUser", ignore = true)
+    @Mapping(target = "modificationDate", ignore = true)
+    @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
     @Mapping(target = "tenantId", ignore = true)
-    @Mapping(target = "logoId", ignore = true)
-    @Mapping(target = "faviconId", ignore = true)
     public abstract Theme create(CreateThemeDTO object);
 
     public abstract List<ThemeDTO> map(Stream<Theme> entity);
 
-    @Mapping(target = "version", source = "modificationCount")
     @Mapping(target = "properties", qualifiedByName = "propertiesJson")
     public abstract ThemeDTO map(Theme theme);
 
@@ -65,18 +66,18 @@ public abstract class ThemeMapper {
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
     @Mapping(target = "tenantId", ignore = true)
-    @Mapping(target = "logoId", ignore = true)
-    @Mapping(target = "faviconId", ignore = true)
     public abstract void update(UpdateThemeDTO themeDTO, @MappingTarget Theme entity);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     @Mapping(target = "modificationCount", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "creationUser", ignore = true)
+    @Mapping(target = "modificationDate", ignore = true)
+    @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
     @Mapping(target = "tenantId", ignore = true)
-    @Mapping(target = "logoId", ignore = true)
-    @Mapping(target = "faviconId", ignore = true)
     public abstract Theme map(UpdateThemeDTO object);
 
     @Named("properties")

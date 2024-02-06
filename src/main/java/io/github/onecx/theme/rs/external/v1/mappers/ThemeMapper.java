@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
 import gen.io.github.onecx.theme.rs.external.v1.model.ThemeDTOV1;
@@ -16,7 +15,6 @@ import io.github.onecx.theme.domain.models.ThemeInfo;
 @Mapper(uses = { OffsetDateTimeMapper.class })
 public abstract class ThemeMapper {
 
-    @Mapping(target = "version", source = "modificationCount")
     public abstract ThemeDTOV1 map(Theme theme);
 
     public ThemeInfoListDTOV1 mapInfoList(Stream<ThemeInfo> data) {

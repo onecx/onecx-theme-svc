@@ -33,7 +33,6 @@ class ThemesRestControllerV1Test extends AbstractTest {
 
         assertThat(dto).isNotNull();
         assertThat(dto.getName()).isEqualTo("themeWithoutPortal");
-        assertThat(dto.getId()).isEqualTo("22-222");
 
         given()
                 .contentType(APPLICATION_JSON)

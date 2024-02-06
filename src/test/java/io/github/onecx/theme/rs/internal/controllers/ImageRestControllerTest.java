@@ -6,64 +6,95 @@ import static jakarta.ws.rs.core.Response.Status.*;
 
 import java.io.File;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.tkit.quarkus.test.WithDBData;
 
 import gen.io.github.onecx.theme.rs.internal.model.ImageInfoDTO;
-import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-@TestHTTPEndpoint(ImageRestController.class)
+//@TestHTTPEndpoint(ImageRestController.class)
 @WithDBData(value = "data/testdata-internal.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
 class ImageRestControllerTest {
 
     @Test
     void uploadImage() {
 
+        var refId = "themeName";
+        var refType = "LOGO";
         File file = new File(ImageRestControllerTest.class.getResource("/META-INF/resources/Testimage.png").getFile());
         var imgPost = given()
                 .multiPart("image", file)
-                .multiPart("imageType", "LOGO")
-                .multiPart("themeId", "11-111")
                 .contentType("multipart/form-data")
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
                 .when()
-                .post()
+                .post("/internal/images/{refId}/{refType}")
                 .then()
                 .statusCode(CREATED.getStatusCode())
                 .extract()
                 .body().as(ImageInfoDTO.class);
+    }
+
+    @Test
+    void getImageTest() {
+
+        File file = new File(ImageRestControllerTest.class.getResource("/META-INF/resources/Testimage.png").getFile());
+        var refId = "themeNameGetTest";
+        var refType = "FAVICON";
+
+        given()
+                .multiPart("image", file)
+                .contentType("multipart/form-data")
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .when()
+                .post("/internal/images/{refId}/{refType}")
+                .then()
+                .statusCode(CREATED.getStatusCode());
 
         given()
                 .contentType(APPLICATION_JSON)
-                .get(imgPost.getId())
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .get("/internal/images/{refId}/{refType}")
                 .then()
                 .statusCode(OK.getStatusCode());
     }
 
     @Test
     void updateImage() {
-        File file = new File(ImageRestControllerTest.class.getResource("/META-INF/resources/cap_logo.png").getFile());
 
-        var imgPost = given()
+        File file = new File(ImageRestControllerTest.class.getResource("/META-INF/resources/Testimage.png").getFile());
+        var refId = "themeName";
+        var refType = "LOGO";
+
+        given()
                 .multiPart("image", file)
-                .multiPart("imageType", "LOGO")
-                .multiPart("themeId", "22-222")
                 .contentType("multipart/form-data")
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
                 .when()
-                .post()
+                .post("/internal/images/{refId}/{refType}")
                 .then()
                 .statusCode(CREATED.getStatusCode())
                 .extract()
                 .body().as(ImageInfoDTO.class);
 
-        given()
+        var res = given()
                 .multiPart("image", file)
                 .contentType("multipart/form-data")
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
                 .when()
-                .put(imgPost.getId())
+                .put("/internal/images/{refId}/{refType}")
                 .then()
-                .statusCode(OK.getStatusCode());
+                .statusCode(OK.getStatusCode())
+                .extract()
+                .body().as(ImageInfoDTO.class);
+
+        Assertions.assertNotNull(res);
     }
 
 }

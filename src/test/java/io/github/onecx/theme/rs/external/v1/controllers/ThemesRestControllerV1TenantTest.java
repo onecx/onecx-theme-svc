@@ -34,7 +34,6 @@ class ThemesRestControllerV1TenantTest extends AbstractTest {
 
         assertThat(dto).isNotNull();
         assertThat(dto.getName()).isEqualTo("themeWithoutPortal");
-        assertThat(dto.getId()).isEqualTo("t-22-222");
 
         given()
                 .contentType(APPLICATION_JSON)

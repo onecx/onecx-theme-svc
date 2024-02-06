@@ -5,11 +5,22 @@ info:
 servers:
   - url: "http://onecx-theme-svc:8080"
 paths:
-  /internal/images:
+  /internal/images/{refId}/{refType}:
     post:
       tags:
         - image
       description: Upload Images
+      parameters:
+        - name: refId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: refType
+          in: path
+          required: true
+          schema:
+            type: string
       operationId: uploadImage
       requestBody:
         content:
@@ -31,14 +42,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImageInfo'
-  /internal/images/{imageId}:
+        "400":
+          description: Bad Request
     get:
       tags:
         - image
       description: Get Image by id
       operationId: getImage
       parameters:
-        - name: imageId
+        - name: refId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: refType
           in: path
           required: true
           schema:
@@ -51,18 +68,30 @@ paths:
               schema:
                 type: string
                 format: binary
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
     put:
       tags:
         - image
       description: update Images
       operationId: updateImage
       parameters:
-        - name: imageId
+        - name: refId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: refType
           in: path
           required: true
           schema:
             type: string
       requestBody:
+        required: true
         content:
           multipart/form-data:
             schema:
@@ -82,10 +111,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImageInfo'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
     ImageInfo:
       type: object
       properties:
         id:
+          type: string
+    ProblemDetailResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+        detail:
+          type: string
+        params:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemDetailParam'
+        invalidParams:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemDetailInvalidParam'
+    ProblemDetailParam:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+    ProblemDetailInvalidParam:
+      type: object
+      properties:
+        name:
+          type: string
+        message:
           type: string

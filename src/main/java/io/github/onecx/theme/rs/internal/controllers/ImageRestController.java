@@ -15,7 +15,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
@@ -47,58 +46,6 @@ public class ImageRestController implements ImageInternalApi {
     @Context
     UriInfo uriInfo;
 
-    @ConfigProperty(name = "Image.small.height", defaultValue = "150")
-    Integer smallImgHeight;
-
-    @ConfigProperty(name = "Image.small.width", defaultValue = "150")
-    Integer smallImgWidth;
-
-    @Override
-    @Transactional
-    public Response getImage(String imageId) {
-        Image image = imageDAO.findById(imageId);
-        CacheControl cc = new CacheControl();
-        cc.setPrivate(true);
-
-        if (image == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        ByteArrayInputStream imageByteInputStream = new ByteArrayInputStream(image.getImageData());
-        return Response.ok(imageByteInputStream).header("Content-Type", image.getMimeType()).cacheControl(cc).build();
-    }
-
-    @Override
-    public Response updateImage(String imageId, InputStream imageInputStream) {
-
-        if (imageInputStream == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("File has not been provided").build();
-        }
-        try {
-            // Update the image data
-            var imagedto = imageService.updateImage(imageInputStream, imageId);
-            return Response.status(Response.Status.OK).entity(imagedto).build();
-        } catch (Exception e) {
-            Log.error("Error occured when uploading Image", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-
-    }
-
-    @Override
-    public Response uploadImage(InputStream imageInputStream) {
-        Log.info("ImageController entered uploadFile method {}", imageInputStream.toString(), null);
-        try {
-            ImageInfoDTO imageInfoDTO = imageService.uploadFile(imageInputStream);
-            if (imageInfoDTO == null) {
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            }
-            return Response.created(uriInfo.getAbsolutePathBuilder().path(imageInfoDTO.getId()).build())
-                    .entity(imageInfoDTO)
-                    .build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
-    }
 
     @ServerExceptionMapper
     public RestResponse<ProblemDetailResponseDTO> exception(ConstraintException ex) {
@@ -110,4 +57,48 @@ public class ImageRestController implements ImageInternalApi {
         return exceptionMapper.constraint(ex);
     }
 
+    @Override
+    @Transactional
+    public Response getImage(String refId, String refType) {
+        Image image = imageDAO.findByRefIdAndRefType(refId, refType);
+        CacheControl cc = new CacheControl();
+        cc.setPrivate(true);
+
+        if (image == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        ByteArrayInputStream imageByteInputStream = new ByteArrayInputStream(image.getImageData());
+        return Response.ok(imageByteInputStream).header("Content-Type", image.getMimeType()).cacheControl(cc).build();
+    }
+
+    @Override
+    public Response updateImage(String refId, String refType, InputStream imageInputStream) {
+        if (imageInputStream == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("File has not been provided").build();
+        }
+        try {
+            // Update the image data
+            var imageDTO = imageService.updateImage(imageInputStream, refId, refType);
+            return Response.status(Response.Status.OK).entity(imageDTO).build();
+        } catch (Exception e) {
+            Log.error("Error occured when uploading Image", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Override
+    public Response uploadImage(String refId, String refType, InputStream imageInputStream) {
+        Log.info("ImageController entered uploadFile method {}", imageInputStream.toString(), null);
+        try {
+            ImageInfoDTO imageInfoDTO = imageService.uploadFile(refId, refType, imageInputStream);
+            if (imageInfoDTO == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            return Response.created(uriInfo.getAbsolutePathBuilder().path(imageInfoDTO.getId()).build())
+                    .entity(imageInfoDTO)
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
 }

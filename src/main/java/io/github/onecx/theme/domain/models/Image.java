@@ -17,17 +17,14 @@ import lombok.Setter;
 @SuppressWarnings("squid:S2160")
 public class Image extends TraceableEntity {
 
-    @Column(name = "HEIGHT")
-    private Integer height;
-
-    @Column(name = "WIDTH")
-    private Integer width;
-
     @Column(name = "MIME_TYPE")
     private String mimeType;
 
-    @Column(name = "URL")
-    private String url;
+    @Column(name = "REF_TYPE")
+    private String refType;
+
+    @Column(name = "REF_ID")
+    private String refID;
 
     @Lob
     private byte[] imageData;

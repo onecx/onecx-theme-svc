@@ -36,18 +36,16 @@ public class ImageService {
     @Context
     UriInfo uriInfo;
 
-    public ImageInfoDTO uploadFile(InputStream inputStream) throws IOException {
+    public ImageInfoDTO uploadFile(String refId, String refType, InputStream inputStream) throws IOException {
         try {
             byte[] imageData = IOUtils.toByteArray(inputStream);
             Log.info("Byte Array was created from InputStream " + imageData.length);
             Image image = new Image();
             image.setImageData(imageData);
-            image.setUrl(uriInfo.getPath()
-                    .concat("/")
-                    .concat(image.getId()));
+            image.setRefID(refId);
+            image.setRefType(refType);
             String imageContentType = detectMimeTypeType(imageData);
             image.setMimeType(imageContentType);
-
             imageDAO.create(image);
             return imageMapper.map(image);
         } catch (Exception e) {
@@ -57,15 +55,15 @@ public class ImageService {
     }
 
     @Transactional
-    public ImageInfoDTO updateImage(InputStream inputStream, String imageId) {
+    public ImageInfoDTO updateImage(InputStream inputStream, String refId, String refType) {
         try {
             byte[] imageData = IOUtils.toByteArray(inputStream);
-            Image image = imageDAO.findById(imageId);
+            Image image = imageDAO.findByRefIdAndRefType(refId, refType);
             // Update the image data
             image.setImageData(imageData);
             String imageContentType = detectMimeTypeType(imageData);
             image.setMimeType(imageContentType);
-            Log.info("Image was updated with id {}", imageId, null);
+            Log.info("Image was updated with ref_id {}", refId, null);
             return imageMapper.map(image);
         } catch (IOException e) {
             Log.error("Error occured when uploading Image", e);

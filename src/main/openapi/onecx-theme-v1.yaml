@@ -44,6 +44,28 @@ paths:
                 $ref: '#/components/schemas/Theme'
         "404":
           description: Not found
+  /v1/themes/name/{name}/favicon:
+    get:
+      tags:
+        - themes
+      description: Load a single theme definition
+      operationId: getThemeFaviconByName
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Not found
 components:
   schemas:
     ThemeInfoList:
@@ -66,97 +88,6 @@ components:
         - name
       type: object
       properties:
-        version:
-          format: int32
-          type: integer
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        id:
-          type: string
-        name:
-          minLength: 2
-          type: string
-        cssFile:
-          type: string
-        description:
-          type: string
-        assetsUrl:
-          type: string
-        logoUrl:
-          type: string
-        faviconUrl:
-          type: string
-        previewImageUrl:
-          type: string
-        assetsUpdateDate:
-          type: string
-        properties:
-          type: object
-    OffsetDateTime:
-      format: date-time
-      type: string
-      example: 2022-03-10T12:15:50-04:00
-    CreateTheme:
-      required:
-        - name
-      type: object
-      properties:
-        version:
-          format: int32
-          type: integer
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        id:
-          type: string
-        name:
-          minLength: 2
-          type: string
-        cssFile:
-          type: string
-        description:
-          type: string
-        assetsUrl:
-          type: string
-        logoUrl:
-          type: string
-        faviconUrl:
-          type: string
-        previewImageUrl:
-          type: string
-        assetsUpdateDate:
-          type: string
-        properties:
-          type: object
-    UpdateTheme:
-      required:
-        - name
-      type: object
-      properties:
-        version:
-          format: int32
-          type: integer
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        id:
-          type: string
         name:
           minLength: 2
           type: string
