@@ -25,7 +25,7 @@ public class Image extends TraceableEntity {
     private String refType;
 
     @Column(name = "REF_ID")
-    private String refID;
+    private String refId;
 
     @Lob
     private byte[] imageData;

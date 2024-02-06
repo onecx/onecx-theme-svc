@@ -38,6 +38,23 @@ class ImageRestControllerTest {
     }
 
     @Test
+    void uploadImage_shouldReturnBadRequest_whenImageIs() {
+
+        var refId = "themeName";
+        var refType = "LOGO";
+        File file = new File(ImageRestControllerTest.class.getResource("/META-INF/resources/Testimage.png").getFile());
+        var imgPost = given()
+                .multiPart("image", file)
+                .contentType("multipart/form-data")
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .when()
+                .post("/internal/images/{refId}/{refType}")
+                .then()
+                .statusCode(CREATED.getStatusCode());
+    }
+
+    @Test
     void getImageTest() {
 
         File file = new File(ImageRestControllerTest.class.getResource("/META-INF/resources/Testimage.png").getFile());

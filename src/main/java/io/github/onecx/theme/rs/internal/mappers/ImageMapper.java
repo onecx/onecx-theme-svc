@@ -1,6 +1,7 @@
 package io.github.onecx.theme.rs.internal.mappers;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
 import gen.io.github.onecx.theme.rs.internal.model.ImageInfoDTO;
@@ -10,4 +11,19 @@ import io.github.onecx.theme.domain.models.Image;
 public interface ImageMapper {
 
     ImageInfoDTO map(Image image);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "mimeType", ignore = true)
+    @Mapping(target = "imageData", ignore = true)
+    @Mapping(target = "controlTraceabilityManual", ignore = true)
+    @Mapping(target = "modificationCount", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "creationUser", ignore = true)
+    @Mapping(target = "modificationDate", ignore = true)
+    @Mapping(target = "modificationUser", ignore = true)
+    @Mapping(target = "persisted", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "refId", source = "refId")
+    @Mapping(target = "refType", source = "refType")
+    Image create(String refId, String refType);
 }
