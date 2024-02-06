@@ -48,6 +48,9 @@
                 <column name="MIME_TYPE" type="VARCHAR(255)" />
                 <column name="REF_ID" type="VARCHAR(255)" />
                 <column name="REF_TYPE" type="VARCHAR(255)" />
+                <column name="tenant_id" type="varchar(255 BYTE)">
+                    <constraints nullable="false"/>
+                </column>
             </createTable>
         </changeSet>
     </databaseChangeLog>

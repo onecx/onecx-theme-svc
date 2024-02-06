@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
+import org.hibernate.annotations.TenantId;
 import org.tkit.quarkus.jpa.models.TraceableEntity;
 
 import lombok.Getter;
@@ -28,5 +29,9 @@ public class Image extends TraceableEntity {
 
     @Lob
     private byte[] imageData;
+
+    @TenantId
+    @Column(name = "TENANT_ID")
+    private String tenantId;
 
 }

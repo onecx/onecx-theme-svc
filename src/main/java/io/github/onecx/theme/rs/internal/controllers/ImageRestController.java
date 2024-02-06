@@ -46,7 +46,6 @@ public class ImageRestController implements ImageInternalApi {
     @Context
     UriInfo uriInfo;
 
-
     @ServerExceptionMapper
     public RestResponse<ProblemDetailResponseDTO> exception(ConstraintException ex) {
         return exceptionMapper.exception(ex);
