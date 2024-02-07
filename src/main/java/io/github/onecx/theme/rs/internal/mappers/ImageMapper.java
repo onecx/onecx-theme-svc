@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
-import gen.io.github.onecx.theme.rs.internal.model.ImageInfoDTO;
+import gen.io.github.onecx.image.rs.internal.model.ImageInfoDTO;
 import io.github.onecx.theme.domain.models.Image;
 
 @Mapper(uses = OffsetDateTimeMapper.class)

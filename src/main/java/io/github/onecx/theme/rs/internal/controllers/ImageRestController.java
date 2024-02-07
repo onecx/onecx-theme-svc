@@ -16,24 +16,25 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.io.github.onecx.theme.rs.internal.ImageInternalApi;
+import gen.io.github.onecx.image.rs.internal.ImagesInternalApi;
 import gen.io.github.onecx.theme.rs.internal.model.ProblemDetailResponseDTO;
 import io.github.onecx.theme.domain.daos.ImageDAO;
 import io.github.onecx.theme.domain.models.Image;
 import io.github.onecx.theme.rs.internal.mappers.ExceptionMapper;
 import io.github.onecx.theme.rs.internal.mappers.ImageMapper;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @LogService
 @ApplicationScoped
 @Transactional(value = NOT_SUPPORTED)
-public class ImageRestController implements ImageInternalApi {
+public class ImageRestController implements ImagesInternalApi {
 
     @Inject
     ExceptionMapper exceptionMapper;
 
     @Inject
     ImageDAO imageDAO;
-
 
     @Context
     UriInfo uriInfo;

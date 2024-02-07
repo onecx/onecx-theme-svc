@@ -1,9 +1,6 @@
 package io.github.onecx.theme.domain.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import org.hibernate.annotations.TenantId;
 import org.tkit.quarkus.jpa.models.TraceableEntity;
@@ -28,6 +25,7 @@ public class Image extends TraceableEntity {
     private String refId;
 
     @Lob
+    @Column(name = "imageData")
     private byte[] imageData;
 
     @TenantId

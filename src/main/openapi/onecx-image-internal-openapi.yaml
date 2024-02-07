@@ -4,11 +4,13 @@ info:
   version: 1.0.0
 servers:
   - url: "http://onecx-theme-svc:8080"
+tags:
+  - name: imagesInternal
 paths:
   /internal/images/{refId}/{refType}:
     post:
       tags:
-        - image
+        - imagesInternal
       description: Upload Images
       parameters:
         - name: refId
@@ -23,10 +25,13 @@ paths:
             type: string
       operationId: uploadImage
       requestBody:
+        required: true
         content:
           multipart/form-data:
             schema:
               type: object
+              required:
+                - image
               properties:
                 image:
                   format: binary
@@ -46,7 +51,7 @@ paths:
           description: Bad Request
     get:
       tags:
-        - image
+        - imagesInternal
       description: Get Image by id
       operationId: getImage
       parameters:
@@ -80,7 +85,7 @@ paths:
                 $ref: '#/components/schemas/ProblemDetailResponse'
     put:
       tags:
-        - image
+        - imagesInternal
       description: update Images
       operationId: updateImage
       parameters:
@@ -100,6 +105,8 @@ paths:
           multipart/form-data:
             schema:
               type: object
+              required:
+                - image
               properties:
                 image:
                   format: binary
