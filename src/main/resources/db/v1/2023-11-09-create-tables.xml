@@ -18,10 +18,10 @@
                 <column name="assets_url" type="VARCHAR(255)"/>
                 <column name="css_file" type="VARCHAR(255)"/>
                 <column name="description" type="VARCHAR(255)"/>
-                <column name="favicon_url" type="VARCHAR(255)"/>
                 <column name="guid" type="VARCHAR(255)">
                     <constraints nullable="false" primaryKey="true" primaryKeyName="theme_pkey"/>
                 </column>
+                <column name="favicon_url" type="VARCHAR(255)"/>
                 <column name="logo_url" type="VARCHAR(255)"/>
                 <column name="name" type="VARCHAR(255)"/>
                 <column name="preview_image_url" type="VARCHAR(255)"/>
@@ -32,8 +32,26 @@
                     <constraints nullable="false"/>
                 </column>
             </createTable>
-
             <addUniqueConstraint columnNames="name, tenant_id" constraintName="theme_name" tableName="theme"/>
+            <createTable tableName="image">
+                <column name="guid" type="VARCHAR(255)">
+                    <constraints nullable="false" primaryKey="true" primaryKeyName="image_pkey"/>
+                </column>
+                <column name="optlock" type="INTEGER">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="creationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
+                <column name="modificationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
+                <column name="creationuser" type="VARCHAR(255)"/>
+                <column name="modificationuser" type="VARCHAR(255)"/>
+                <column name="imageData" type="OID" />
+                <column name="MIME_TYPE" type="VARCHAR(255)" />
+                <column name="REF_ID" type="VARCHAR(255)" />
+                <column name="REF_TYPE" type="VARCHAR(255)" />
+                <column name="tenant_id" type="varchar(255 BYTE)">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
         </changeSet>
     </databaseChangeLog>
 
