@@ -1,3 +1,4 @@
+---
 openapi: 3.0.3
 info:
   title: onecx-theme image import from file during the start of the application
@@ -27,19 +28,10 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/octet-stream:
             schema:
-              type: object
-              required:
-                - image
-              properties:
-                image:
-                  format: binary
-                  description: file data
-                  type: string
-            encoding:
-              image:
-                contentType: application/octet-stream
+              type: string
+              format: binary
       responses:
         "201":
           description: CREATED
@@ -102,19 +94,11 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/octet-stream:
             schema:
-              type: object
-              required:
-                - image
-              properties:
-                image:
-                  format: binary
-                  description: file data
-                  type: string
-            encoding:
-              image:
-                contentType: application/octet-stream
+              minLength: 1
+              type: string
+              format: binary
       responses:
         "200":
           description: OK

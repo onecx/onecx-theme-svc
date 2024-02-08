@@ -48,7 +48,7 @@ public class ImageRestController implements ImagesInternalApi {
 
         Image image = imageDAO.findByRefIdAndRefType(refId, refType);
 
-        if (image == null) {
+        if (image == null || image.getImageData() == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         ByteArrayInputStream imageByteInputStream = new ByteArrayInputStream(image.getImageData());

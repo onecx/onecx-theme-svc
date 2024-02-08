@@ -227,6 +227,7 @@
                             <modelPackage>gen.io.github.onecx.image.rs.internal.model</modelPackage>
                             <generateModelTests>true</generateModelTests>
                             <generateModelDocumentation>true</generateModelDocumentation>
+                            <typeMappings>File=InputStream</typeMappings>
                         </configuration>
                     </execution>
                     <execution>
