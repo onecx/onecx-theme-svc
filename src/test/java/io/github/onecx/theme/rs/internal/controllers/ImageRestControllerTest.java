@@ -175,5 +175,4 @@ class ImageRestControllerTest {
         Assertions.assertNotNull(exception);
     }
 
-
 }
