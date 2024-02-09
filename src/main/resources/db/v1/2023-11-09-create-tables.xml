@@ -33,25 +33,30 @@
                 </column>
             </createTable>
             <addUniqueConstraint columnNames="name, tenant_id" constraintName="theme_name" tableName="theme"/>
+
             <createTable tableName="image">
-                <column name="guid" type="VARCHAR(255)">
-                    <constraints nullable="false" primaryKey="true" primaryKeyName="image_pkey"/>
-                </column>
+                <column name="data_length" type="INTEGER"/>
                 <column name="optlock" type="INTEGER">
                     <constraints nullable="false"/>
                 </column>
                 <column name="creationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
                 <column name="modificationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
-                <column name="creationuser" type="VARCHAR(255)"/>
-                <column name="modificationuser" type="VARCHAR(255)"/>
-                <column name="imageData" type="OID" />
-                <column name="MIME_TYPE" type="VARCHAR(255)" />
-                <column name="REF_ID" type="VARCHAR(255)" />
-                <column name="REF_TYPE" type="VARCHAR(255)" />
-                <column name="tenant_id" type="varchar(255 BYTE)">
+                <column name="guid" type="VARCHAR(255)">
+                    <constraints nullable="false" primaryKey="true" primaryKeyName="image_pkey"/>
+                </column>
+                <column name="mime_type" type="VARCHAR(255)"/>
+                <column name="ref_id" type="VARCHAR(255)"/>
+                <column name="ref_type" type="VARCHAR(255)"/>
+                <column name="tenant_id" type="VARCHAR(255)">
                     <constraints nullable="false"/>
                 </column>
+                <column name="creationuser" type="VARCHAR(255)"/>
+                <column name="modificationuser" type="VARCHAR(255)"/>
+                <column name="data" type="BYTEA"/>
             </createTable>
+            <addUniqueConstraint columnNames="ref_id, ref_type, tenant_id" constraintName="image_constraints" tableName="image"/>
+
         </changeSet>
+
     </databaseChangeLog>
 

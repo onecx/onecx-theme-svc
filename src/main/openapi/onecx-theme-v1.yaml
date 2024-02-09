@@ -8,7 +8,7 @@ servers:
 tags:
   - name: themes
 paths:
-  /v1/themes/info:
+  /v1/themes:
     get:
       tags:
         - themes
@@ -23,7 +23,7 @@ paths:
                 $ref: '#/components/schemas/ThemeInfoList'
         "404":
           description: Not found
-  /v1/themes/name/{name}:
+  /v1/themes/{name}:
     get:
       tags:
         - themes
@@ -44,7 +44,7 @@ paths:
                 $ref: '#/components/schemas/Theme'
         "404":
           description: Not found
-  /v1/themes/name/{name}/favicon:
+  /v1/themes/{name}/favicon:
     get:
       tags:
         - themes
@@ -57,14 +57,15 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        200:
           description: OK
           content:
-            application/octet-stream:
+            image/x-icon:
               schema:
+                minLength: 1
                 type: string
                 format: binary
-        "404":
+        404:
           description: Not found
 components:
   schemas:
