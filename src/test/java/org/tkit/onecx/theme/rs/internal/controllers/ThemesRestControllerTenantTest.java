@@ -305,7 +305,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         // update none existing theme
         var themeDto = new UpdateThemeDTO();
         themeDto.setName("test01");
-        themeDto.setModificationCount(2);
+        themeDto.setModificationCount(0);
         themeDto.setDescription("description-update");
 
         given()
@@ -346,7 +346,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         var themeDto = new UpdateThemeDTO();
         themeDto.setName("themeWithoutPortal");
-        themeDto.setModificationCount(2);
+        themeDto.setModificationCount(0);
         themeDto.setDescription("description");
 
         var exception = given()

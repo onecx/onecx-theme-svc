@@ -12,4 +12,5 @@
 
 
 	<IMAGE guid="i1" optlock="0" mime_type="image/x-icon" data_length="3" data="123456667890123456" ref_type="favicon" ref_id="test1" tenant_id="default" />
+	<IMAGE guid="i2" optlock="0" mime_type="image/x-icon" data_length="3" data="123456667890123456" ref_type="favicon" ref_id="test1" tenant_id="tenant-100" />
 </dataset>

@@ -4,15 +4,16 @@ import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.tkit.onecx.theme.rs.internal.mappers.ExceptionMapper.ErrorKeys.CONSTRAINT_VIOLATIONS;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.Random;
 
 import jakarta.ws.rs.core.HttpHeaders;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.tkit.onecx.theme.rs.internal.mappers.ExceptionMapper;
 import org.tkit.quarkus.test.WithDBData;
 
 import gen.org.tkit.onecx.image.rs.internal.model.ImageInfoDTO;
@@ -61,7 +62,7 @@ class ImageRestControllerTest {
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(exception.getErrorCode()).isEqualTo(ExceptionMapper.ErrorKeys.CONSTRAINT_VIOLATIONS.name());
+        assertThat(exception.getErrorCode()).isEqualTo(CONSTRAINT_VIOLATIONS.name());
         assertThat(exception.getDetail()).isEqualTo("uploadImage.contentLength: must be greater than or equal to 1");
     }
 
@@ -94,7 +95,7 @@ class ImageRestControllerTest {
 
         assertThat(exception.getErrorCode()).isEqualTo("PERSIST_ENTITY_FAILED");
         assertThat(exception.getDetail()).isEqualTo(
-                "could not execute statement [ERROR: duplicate key value violates unique constraint 'image_constraints'  Detail: Key (ref_id, tenant_id)=(themeNameUpload, default) already exists.]");
+                "could not execute statement [ERROR: duplicate key value violates unique constraint 'image_constraints'  Detail: Key (ref_id, ref_type, tenant_id)=(themeNameUpload, logo, default) already exists.]");
     }
 
     @Test
@@ -254,4 +255,28 @@ class ImageRestControllerTest {
         Assertions.assertNotNull(exception);
     }
 
+    @Test
+    void testMaxUploadSize() {
+
+        var refId = "themeMaxUpload";
+
+        byte[] body = new byte[20001];
+        new Random().nextBytes(body);
+
+        var exception = given()
+                .pathParam("refId", refId)
+                .pathParam("refType", RefTypeDTO.LOGO)
+                .when()
+                .body(body)
+                .contentType(MEDIA_TYPE_IMAGE_PNG)
+                .post()
+                .then()
+                .statusCode(BAD_REQUEST.getStatusCode())
+                .extract().as(ProblemDetailResponseDTO.class);
+
+        assertThat(exception.getErrorCode()).isEqualTo(CONSTRAINT_VIOLATIONS.name());
+        assertThat(exception.getDetail()).isEqualTo(
+                "uploadImage.contentLength: must be less than or equal to 20000");
+
+    }
 }

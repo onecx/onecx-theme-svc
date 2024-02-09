@@ -54,7 +54,7 @@
                 <column name="modificationuser" type="VARCHAR(255)"/>
                 <column name="data" type="BYTEA"/>
             </createTable>
-            <addUniqueConstraint columnNames="ref_id, tenant_id" constraintName="image_constraints" tableName="image"/>
+            <addUniqueConstraint columnNames="ref_id, ref_type, tenant_id" constraintName="image_constraints" tableName="image"/>
 
         </changeSet>
 

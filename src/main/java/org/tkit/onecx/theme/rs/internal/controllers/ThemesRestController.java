@@ -4,6 +4,7 @@ import static jakarta.transaction.Transactional.TxType.NOT_SUPPORTED;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.Context;
@@ -12,6 +13,7 @@ import jakarta.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.tkit.onecx.theme.domain.daos.ImageDAO;
 import org.tkit.onecx.theme.domain.daos.ThemeDAO;
 import org.tkit.onecx.theme.rs.internal.mappers.ExceptionMapper;
 import org.tkit.onecx.theme.rs.internal.mappers.ThemeMapper;
@@ -30,6 +32,9 @@ public class ThemesRestController implements ThemesInternalApi {
 
     @Inject
     ThemeDAO dao;
+
+    @Inject
+    ImageDAO imageDAO;
 
     @Inject
     ThemeMapper mapper;
@@ -54,7 +59,15 @@ public class ThemesRestController implements ThemesInternalApi {
     @Override
     @Transactional
     public Response deleteTheme(String id) {
+        var image = dao.findById(id);
+        if (image == null) {
+            return Response.noContent().build();
+        }
         dao.deleteQueryById(id);
+
+        // workaround for images
+        imageDAO.deleteQueryByRefId(image.getName());
+
         return Response.noContent().build();
     }
 
@@ -96,7 +109,6 @@ public class ThemesRestController implements ThemesInternalApi {
     }
 
     @Override
-    @Transactional
     public Response updateTheme(String id, UpdateThemeDTO updateThemeDTO) {
 
         var theme = dao.findById(id);
@@ -117,5 +129,10 @@ public class ThemesRestController implements ThemesInternalApi {
     @ServerExceptionMapper
     public RestResponse<ProblemDetailResponseDTO> constraint(ConstraintViolationException ex) {
         return exceptionMapper.constraint(ex);
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<ProblemDetailResponseDTO> optimisticLockException(OptimisticLockException ex) {
+        return exceptionMapper.optimisticLock(ex);
     }
 }

@@ -29,6 +29,9 @@ class ImageDAOTest extends AbstractTest {
 
     @Test
     void methodExceptionTests() {
+        Assertions.assertDoesNotThrow(() -> dao.deleteQueryByRefId(null));
+        methodExceptionTests(() -> dao.deleteQueryByRefId("1"),
+                ImageDAO.ErrorKeys.FAILED_TO_DELETE_BY_REF_ID_QUERY);
         methodExceptionTests(() -> dao.findByRefIdAndRefType(null, null),
                 ImageDAO.ErrorKeys.FIND_ENTITY_BY_REF_ID_REF_TYPE_FAILED);
 

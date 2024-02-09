@@ -259,7 +259,7 @@ class ThemesRestControllerTest extends AbstractTest {
         // update none existing theme
         var themeDto = new UpdateThemeDTO();
         themeDto.setName("test01");
-        themeDto.setModificationCount(2);
+        themeDto.setModificationCount(0);
         themeDto.setDescription("description-update");
 
         given()
@@ -290,6 +290,15 @@ class ThemesRestControllerTest extends AbstractTest {
                 .extract()
                 .body().as(ThemeDTO.class);
 
+        // update theme with wrong modificationCount
+        given()
+                .contentType(APPLICATION_JSON)
+                .body(themeDto)
+                .when()
+                .pathParam("id", "11-111")
+                .put("{id}")
+                .then().statusCode(BAD_REQUEST.getStatusCode());
+
         assertThat(dto).isNotNull();
         assertThat(dto.getDescription()).isEqualTo(themeDto.getDescription());
 
@@ -300,7 +309,7 @@ class ThemesRestControllerTest extends AbstractTest {
 
         var themeDto = new UpdateThemeDTO();
         themeDto.setName("themeWithoutPortal");
-        themeDto.setModificationCount(2);
+        themeDto.setModificationCount(0);
         themeDto.setDescription("description");
 
         var exception = given()
