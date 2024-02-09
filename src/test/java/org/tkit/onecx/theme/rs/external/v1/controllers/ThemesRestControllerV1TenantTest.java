@@ -48,7 +48,7 @@ class ThemesRestControllerV1TenantTest extends AbstractTest {
         var data = given()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
-                .get("list/info")
+                .get()
                 .then()
                 .statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -60,7 +60,7 @@ class ThemesRestControllerV1TenantTest extends AbstractTest {
 
         data = given()
                 .contentType(APPLICATION_JSON)
-                .get("list/info")
+                .get()
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()

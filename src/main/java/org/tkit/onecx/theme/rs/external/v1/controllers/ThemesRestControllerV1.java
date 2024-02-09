@@ -13,7 +13,6 @@ import org.tkit.onecx.theme.rs.external.v1.mappers.ThemeMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.theme.rs.external.v1.ThemesV1Api;
-import gen.org.tkit.onecx.theme.rs.external.v1.model.RefTypeDTOV1;
 
 @LogService
 @ApplicationScoped
@@ -39,8 +38,8 @@ public class ThemesRestControllerV1 implements ThemesV1Api {
     }
 
     @Override
-    public Response getThemeFaviconByName(String name, RefTypeDTOV1 refTypeDTOV1) {
-        Image image = imageDAO.findByRefIdAndRefType(name, refTypeDTOV1.toString());
+    public Response getThemeFaviconByName(String name) {
+        Image image = imageDAO.findByRefIdAndRefType(name, "favicon");
         if (image == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

@@ -8,7 +8,7 @@ servers:
 tags:
   - name: themes
 paths:
-  /v1/themes/list/info:
+  /v1/themes:
     get:
       tags:
         - themes
@@ -44,7 +44,7 @@ paths:
                 $ref: '#/components/schemas/Theme'
         "404":
           description: Not found
-  /v1/themes/{name}/image/{type}:
+  /v1/themes/{name}/favicon:
     get:
       tags:
         - themes
@@ -56,32 +56,19 @@ paths:
           required: true
           schema:
             type: string
-        - name: type
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/RefType"
       responses:
-        "200":
+        200:
           description: OK
           content:
-            image/png:
+            image/x-icon:
               schema:
                 minLength: 1
                 type: string
                 format: binary
-            image/jpg:
-              schema:
-                minLength: 1
-                type: string
-                format: binary
-        "404":
+        404:
           description: Not found
 components:
   schemas:
-    RefType:
-      type: string
-      enum: [ favicon ]
     ThemeInfoList:
       type: object
       properties:

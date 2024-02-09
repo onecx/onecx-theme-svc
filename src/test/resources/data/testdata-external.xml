@@ -11,5 +11,5 @@
 	<THEME guid="t-DELETE_1" optlock="0" name="toDelete" tenant_id="tenant-200" />
 
 
-	<IMAGE guid="i1" optlock="0" mime_type="image/png" data_length="3" data="123456667890" ref_type="favicon" ref_id="test1" tenant_id="default" />
+	<IMAGE guid="i1" optlock="0" mime_type="image/x-icon" data_length="3" data="123456667890123456" ref_type="favicon" ref_id="test1" tenant_id="default" />
 </dataset>

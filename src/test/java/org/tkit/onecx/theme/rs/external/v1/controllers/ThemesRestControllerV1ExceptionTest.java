@@ -33,13 +33,13 @@ class ThemesRestControllerV1ExceptionTest extends AbstractTest {
     void exceptionTest() {
         given()
                 .contentType(APPLICATION_JSON)
-                .get("list/info")
+                .get()
                 .then()
                 .statusCode(INTERNAL_SERVER_ERROR.getStatusCode());
 
         given()
                 .contentType(APPLICATION_JSON)
-                .get("list/info")
+                .get()
                 .then()
                 .statusCode(INTERNAL_SERVER_ERROR.getStatusCode());
 

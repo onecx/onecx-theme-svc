@@ -43,7 +43,7 @@ class ThemesRestControllerV1Test extends AbstractTest {
     void getThemeInfoListTest() {
         var data = given()
                 .contentType(APPLICATION_JSON)
-                .get("list/info")
+                .get()
                 .then()
                 .statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -58,11 +58,11 @@ class ThemesRestControllerV1Test extends AbstractTest {
     void getThemeByThemeFaviconTest() {
         var data = given()
                 .contentType(APPLICATION_JSON)
-                .get("test1/image/favicon")
+                .get("test1/favicon")
                 .then()
                 .log().all()
                 .statusCode(OK.getStatusCode())
-                .contentType("image/png")
+                .contentType("image/x-icon")
                 .extract()
                 .body().asByteArray();
 
@@ -70,7 +70,7 @@ class ThemesRestControllerV1Test extends AbstractTest {
 
         given()
                 .contentType(APPLICATION_JSON)
-                .get("none-exists/image/favicon")
+                .get("none-exists/favicon")
                 .then().statusCode(NOT_FOUND.getStatusCode());
     }
 }
