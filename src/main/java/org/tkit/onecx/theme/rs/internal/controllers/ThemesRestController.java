@@ -4,6 +4,7 @@ import static jakarta.transaction.Transactional.TxType.NOT_SUPPORTED;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.Context;
@@ -15,6 +16,7 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.onecx.theme.domain.daos.ThemeDAO;
 import org.tkit.onecx.theme.rs.internal.mappers.ExceptionMapper;
 import org.tkit.onecx.theme.rs.internal.mappers.ThemeMapper;
+import org.tkit.onecx.theme.rs.internal.services.ThemeService;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
@@ -39,6 +41,9 @@ public class ThemesRestController implements ThemesInternalApi {
 
     @Context
     UriInfo uriInfo;
+
+    @Inject
+    ThemeService themeService;
 
     @Override
     @Transactional
@@ -96,7 +101,6 @@ public class ThemesRestController implements ThemesInternalApi {
     }
 
     @Override
-    @Transactional
     public Response updateTheme(String id, UpdateThemeDTO updateThemeDTO) {
 
         var theme = dao.findById(id);
@@ -105,7 +109,7 @@ public class ThemesRestController implements ThemesInternalApi {
         }
 
         mapper.update(updateThemeDTO, theme);
-        dao.update(theme);
+        themeService.updateTheme(theme);
         return Response.noContent().build();
     }
 
@@ -117,5 +121,10 @@ public class ThemesRestController implements ThemesInternalApi {
     @ServerExceptionMapper
     public RestResponse<ProblemDetailResponseDTO> constraint(ConstraintViolationException ex) {
         return exceptionMapper.constraint(ex);
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<ProblemDetailResponseDTO> optimisticLockException(OptimisticLockException ex) {
+        return exceptionMapper.optimisticLock(ex);
     }
 }
