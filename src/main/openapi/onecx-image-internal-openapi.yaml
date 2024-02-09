@@ -35,19 +35,10 @@ paths:
       requestBody:
         required: true
         content:
-          image/x-icon:
+          image/*:
             schema:
-              minLength: 1
-              type: string
-              format: binary
-          image/png:
-            schema:
-              minLength: 1
-              type: string
-              format: binary
-          image/jpg:
-            schema:
-              minLength: 1
+              minimum: 1
+              maximum: 20000
               type: string
               format: binary
       responses:
@@ -79,12 +70,10 @@ paths:
         "200":
           description: OK
           content:
-            image/png:
+            image/*:
               schema:
-                type: string
-                format: binary
-            image/jpg:
-              schema:
+                minimum: 1
+                maximum: 20000
                 type: string
                 format: binary
         "400":
@@ -118,19 +107,10 @@ paths:
       requestBody:
         required: true
         content:
-          image/x-icon:
+          image/*:
             schema:
-              minLength: 1
-              type: string
-              format: binary
-          image/png:
-            schema:
-              minLength: 1
-              type: string
-              format: binary
-          image/jpg:
-            schema:
-              minLength: 1
+              minimum: 1
+              maximum: 20000
               type: string
               format: binary
       responses:
