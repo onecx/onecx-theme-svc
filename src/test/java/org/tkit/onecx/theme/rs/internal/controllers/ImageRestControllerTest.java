@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.HttpHeaders;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.tkit.onecx.theme.test.AbstractTest;
 import org.tkit.quarkus.test.WithDBData;
 
 import gen.org.tkit.onecx.image.rs.internal.model.ImageInfoDTO;
@@ -25,7 +26,7 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 @TestHTTPEndpoint(ImageRestController.class)
 @WithDBData(value = "data/testdata-internal.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
-class ImageRestControllerTest {
+class ImageRestControllerTest extends AbstractTest {
 
     private static final String MEDIA_TYPE_IMAGE_PNG = "image/png";
     private static final String MEDIA_TYPE_IMAGE_JPG = "image/jpg";
