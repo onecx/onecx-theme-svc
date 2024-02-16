@@ -261,7 +261,7 @@ class ImageRestControllerTest extends AbstractTest {
 
         var refId = "themeMaxUpload";
 
-        byte[] body = new byte[20001];
+        byte[] body = new byte[110001];
         new Random().nextBytes(body);
 
         var exception = given()
@@ -277,7 +277,7 @@ class ImageRestControllerTest extends AbstractTest {
 
         assertThat(exception.getErrorCode()).isEqualTo(CONSTRAINT_VIOLATIONS.name());
         assertThat(exception.getDetail()).isEqualTo(
-                "uploadImage.contentLength: must be less than or equal to 20000");
+                "uploadImage.contentLength: must be less than or equal to 110000");
 
     }
 }
