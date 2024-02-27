@@ -126,6 +126,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
+    delete:
+      tags:
+        - imagesInternal
+      description: delete Image by id
+      operationId: deleteImage
+      parameters:
+        - name: refId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: refType
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/RefType"
+      responses:
+        "200":
+          description: OK
+          content:
+            image/*:
+              schema:
+                minimum: 1
+                maximum: 110000
+                type: string
+                format: binary
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
     RefType:
