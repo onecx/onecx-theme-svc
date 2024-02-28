@@ -126,6 +126,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
+  /internal/images/{refId}:
     delete:
       tags:
         - imagesInternal
@@ -137,11 +138,30 @@ paths:
           required: true
           schema:
             type: string
-        - name: refType
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageInfo'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+    put:
+      tags:
+        - imagesInternal
+      description: update Images ref type
+      operationId: updateImageRefType
+      parameters:
+        - name: refId
           in: path
           required: true
           schema:
-            $ref: "#/components/schemas/RefType"
+            type: string
       responses:
         "200":
           description: OK

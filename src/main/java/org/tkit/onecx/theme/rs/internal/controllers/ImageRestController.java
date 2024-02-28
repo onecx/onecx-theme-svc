@@ -90,9 +90,32 @@ public class ImageRestController implements ImagesInternalApi {
     }
 
     @Override
-    public Response deleteImage(String refId, RefTypeDTO refType) {
+    public Response deleteImage(String refId) {
         imageDAO.deleteQueryByRefId(refId);
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @Override
+    public Response updateImageRefType(String refId) {
+        Image imageForLogo = imageDAO.findByRefIdAndRefType(refId, RefTypeDTO.LOGO.toString());
+        if (imageForLogo != null) {
+            imageForLogo.setRefId(refId);
+            imageDAO.update(imageForLogo);
+        }
+        Image imageForFavicon = imageDAO.findByRefIdAndRefType(refId, RefTypeDTO.FAVICON.toString());
+        if (imageForFavicon != null) {
+            imageForFavicon.setRefId(refId);
+            imageDAO.update(imageForFavicon);
+        }
+
+        if (imageForLogo.getRefId() != null) {
+            return Response.ok(imageMapper.map(imageForLogo)).build();
+        } else if (imageForFavicon.getRefId() != null) {
+            return Response.ok(imageMapper.map(imageForFavicon)).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
     }
 
     @ServerExceptionMapper
