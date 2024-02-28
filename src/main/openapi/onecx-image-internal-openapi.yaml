@@ -146,12 +146,9 @@ paths:
         "200":
           description: OK
           content:
-            image/*:
+            application/json:
               schema:
-                minimum: 1
-                maximum: 110000
-                type: string
-                format: binary
+                $ref: '#/components/schemas/ImageInfo'
         "400":
           description: Bad request
           content:
