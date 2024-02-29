@@ -1,7 +1,7 @@
 ---
 openapi: 3.0.3
 info:
-  title: onecx-theme image import from file during the start of the application
+  title: Onecx-theme Image
   version: 1.0.0
 servers:
   - url: "http://onecx-theme-svc:8080"
