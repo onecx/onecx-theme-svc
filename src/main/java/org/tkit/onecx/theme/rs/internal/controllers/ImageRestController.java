@@ -14,7 +14,6 @@ import org.tkit.onecx.theme.domain.daos.ImageDAO;
 import org.tkit.onecx.theme.domain.models.Image;
 import org.tkit.onecx.theme.rs.internal.mappers.ExceptionMapper;
 import org.tkit.onecx.theme.rs.internal.mappers.ImageMapper;
-import org.tkit.onecx.theme.rs.internal.services.ImagesService;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
@@ -41,8 +40,8 @@ public class ImageRestController implements ImagesInternalApi {
     @Inject
     ImageMapper imageMapper;
 
-    @Inject
-    ImagesService imagesService;
+    @Context
+    HttpHeaders httpHeaders;
 
     @Override
     public Response getImage(String refId, RefTypeDTO refType) {
@@ -57,10 +56,19 @@ public class ImageRestController implements ImagesInternalApi {
     @Override
     public Response updateImage(String refId, RefTypeDTO refType, byte[] body, Integer contentLength) {
 
-        var image = imagesService.updateImage(refId, refType, body, contentLength);
+        Image image = imageDAO.findByRefIdAndRefType(refId, refType.toString());
         if (image == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
+        var contentType = httpHeaders.getMediaType();
+        contentType = new MediaType(contentType.getType(), contentType.getSubtype());
+
+        image.setLength(contentLength);
+        image.setMimeType(contentType.toString());
+        image.setImageData(body);
+
+        image = imageDAO.update(image);
 
         return Response.ok(imageMapper.map(image)).build();
     }
@@ -68,7 +76,14 @@ public class ImageRestController implements ImagesInternalApi {
     @Override
     public Response uploadImage(Integer contentLength, String refId, RefTypeDTO refType, byte[] body) {
 
-        var imageInfoDTO = imagesService.uploadImage(contentLength, refId, refType, body);
+        var contentType = httpHeaders.getMediaType();
+        contentType = new MediaType(contentType.getType(), contentType.getSubtype());
+        var image = imageMapper.create(refId, refType.toString(), contentType.toString(), contentLength);
+        image.setLength(contentLength);
+        image.setImageData(body);
+        image = imageDAO.create(image);
+
+        var imageInfoDTO = imageMapper.map(image);
 
         return Response.created(uriInfo.getAbsolutePathBuilder().path(imageInfoDTO.getId()).build())
                 .entity(imageInfoDTO)
@@ -77,9 +92,9 @@ public class ImageRestController implements ImagesInternalApi {
 
     @Override
     public Response deleteImagesById(String refId) {
-        try{
-            imagesService.deleteImagesById(refId);
-        }catch (Exception e){
+        try {
+            imageDAO.deleteQueryByRefId(refId);
+        } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         return Response.status(Response.Status.NO_CONTENT).build();
@@ -87,7 +102,7 @@ public class ImageRestController implements ImagesInternalApi {
 
     @Override
     public Response deleteImage(String refId, RefTypeDTO refType) {
-        imagesService.deleteImage(refId, refType);
+        imageDAO.deleteQueryByRefIdAndRefType(refId, refType);
 
         return Response.status(Response.Status.NO_CONTENT).build();
     }

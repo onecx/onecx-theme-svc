@@ -293,7 +293,6 @@ class ImageRestControllerTest extends AbstractTest {
 
         Assertions.assertNotNull(res);
 
-
         given()
                 .contentType(APPLICATION_JSON)
                 .pathParam("refId", refId)
@@ -303,7 +302,6 @@ class ImageRestControllerTest extends AbstractTest {
                 .statusCode(NOT_FOUND.getStatusCode());
 
     }
-
 
     @Test
     void updateImage_returnNotFound_whenEntryNotExists() {
