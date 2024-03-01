@@ -226,6 +226,86 @@ class ImageRestControllerTest extends AbstractTest {
     }
 
     @Test
+    void deleteImage() {
+
+        var refId = "themeDeleteTest";
+        var refType = RefTypeDTO.LOGO;
+
+        given()
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .when()
+                .body(FILE)
+                .contentType(MEDIA_TYPE_IMAGE_PNG)
+                .post("/{refType}")
+                .then()
+                .statusCode(CREATED.getStatusCode())
+                .extract()
+                .body().as(ImageInfoDTO.class);
+
+        var res = given()
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .when()
+                .body(FILE)
+                .contentType(MEDIA_TYPE_IMAGE_PNG)
+                .delete("/{refType}")
+                .then()
+                .statusCode(NO_CONTENT.getStatusCode());
+
+        Assertions.assertNotNull(res);
+
+        given()
+                .contentType(APPLICATION_JSON)
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .get("/{refType}")
+                .then()
+                .statusCode(NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    void deleteImagesById() {
+
+        var refId = "themedeleteByIdTest";
+        var refType = RefTypeDTO.LOGO;
+
+        given()
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .when()
+                .body(FILE)
+                .contentType(MEDIA_TYPE_IMAGE_PNG)
+                .post("/{refType}")
+                .then()
+                .statusCode(CREATED.getStatusCode())
+                .extract()
+                .body().as(ImageInfoDTO.class);
+
+        var res = given()
+                .pathParam("refId", refId)
+                .when()
+                .body(FILE)
+                .contentType(MEDIA_TYPE_IMAGE_PNG)
+                .delete()
+                .then()
+                .statusCode(NO_CONTENT.getStatusCode());
+
+        Assertions.assertNotNull(res);
+
+
+        given()
+                .contentType(APPLICATION_JSON)
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .get("/{refType}")
+                .then()
+                .statusCode(NOT_FOUND.getStatusCode());
+
+    }
+
+
+    @Test
     void updateImage_returnNotFound_whenEntryNotExists() {
 
         var refId = "themeNameUpdateFailed";
@@ -254,6 +334,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .statusCode(NOT_FOUND.getStatusCode());
 
         Assertions.assertNotNull(exception);
+
     }
 
     @Test

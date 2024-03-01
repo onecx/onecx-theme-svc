@@ -13,10 +13,10 @@ import jakarta.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
-import org.tkit.onecx.theme.domain.daos.ImageDAO;
 import org.tkit.onecx.theme.domain.daos.ThemeDAO;
 import org.tkit.onecx.theme.rs.internal.mappers.ExceptionMapper;
 import org.tkit.onecx.theme.rs.internal.mappers.ThemeMapper;
+import org.tkit.onecx.theme.rs.internal.services.ThemesService;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
@@ -34,7 +34,7 @@ public class ThemesRestController implements ThemesInternalApi {
     ThemeDAO dao;
 
     @Inject
-    ImageDAO imageDAO;
+    ThemesService themeService;
 
     @Inject
     ThemeMapper mapper;
@@ -46,7 +46,6 @@ public class ThemesRestController implements ThemesInternalApi {
     UriInfo uriInfo;
 
     @Override
-    @Transactional
     public Response createNewTheme(CreateThemeDTO createThemeDTO) {
         var theme = mapper.create(createThemeDTO);
         theme = dao.create(theme);
@@ -57,18 +56,10 @@ public class ThemesRestController implements ThemesInternalApi {
     }
 
     @Override
-    @Transactional
     public Response deleteTheme(String id) {
-        var image = dao.findById(id);
-        if (image == null) {
-            return Response.noContent().build();
-        }
-        dao.deleteQueryById(id);
+        themeService.deleteTheme(id);
 
-        // workaround for images
-        imageDAO.deleteQueryByRefId(image.getName());
-
-        return Response.noContent().build();
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @Override
