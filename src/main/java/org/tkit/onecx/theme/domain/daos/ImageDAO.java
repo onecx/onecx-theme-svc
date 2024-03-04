@@ -53,9 +53,6 @@ public class ImageDAO extends AbstractDAO<Image> {
 
     @Transactional(value = Transactional.TxType.REQUIRED, rollbackOn = DAOException.class)
     public void deleteQueryByRefIdAndRefType(String refId, RefTypeDTO refType) throws DAOException {
-        if (refId == null || refType == null) {
-            return;
-        }
         try {
             var cq = deleteQuery();
             var root = cq.from(Image.class);
@@ -66,7 +63,7 @@ public class ImageDAO extends AbstractDAO<Image> {
             getEntityManager().createQuery(cq).executeUpdate();
             getEntityManager().flush();
         } catch (Exception e) {
-            throw handleConstraint(e, ErrorKeys.FAILED_TO_DELETE_BY_REF_ID_QUERY);
+            throw handleConstraint(e, ErrorKeys.FAILED_TO_DELETE_BY_REF_ID_REF_TYPE_QUERY);
         }
     }
 
@@ -75,6 +72,8 @@ public class ImageDAO extends AbstractDAO<Image> {
         FAILED_TO_DELETE_BY_REF_ID_QUERY,
 
         FIND_ENTITY_BY_REF_ID_REF_TYPE_FAILED,
+
+        FAILED_TO_DELETE_BY_REF_ID_REF_TYPE_QUERY
 
     }
 }
