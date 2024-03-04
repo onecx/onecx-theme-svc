@@ -10,7 +10,6 @@ import java.io.File;
 import java.util.Objects;
 import java.util.Random;
 
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.HttpHeaders;
 
 import org.junit.jupiter.api.Assertions;
