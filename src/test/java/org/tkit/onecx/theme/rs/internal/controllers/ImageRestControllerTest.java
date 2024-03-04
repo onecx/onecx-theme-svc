@@ -31,7 +31,6 @@ class ImageRestControllerTest extends AbstractTest {
     private static final String MEDIA_TYPE_IMAGE_PNG = "image/png";
     private static final String MEDIA_TYPE_IMAGE_JPG = "image/jpg";
 
-
     private static final File FILE = new File(
             Objects.requireNonNull(ImageRestControllerTest.class.getResource("/images/Testimage.png")).getFile());
 
