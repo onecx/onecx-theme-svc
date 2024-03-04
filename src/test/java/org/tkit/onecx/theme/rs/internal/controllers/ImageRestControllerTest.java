@@ -15,7 +15,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.tkit.onecx.theme.domain.daos.ImageDAO;
 import org.tkit.onecx.theme.test.AbstractTest;
 import org.tkit.quarkus.test.WithDBData;
 
@@ -33,8 +32,6 @@ class ImageRestControllerTest extends AbstractTest {
     private static final String MEDIA_TYPE_IMAGE_PNG = "image/png";
     private static final String MEDIA_TYPE_IMAGE_JPG = "image/jpg";
 
-    @Inject
-    ImageDAO imageDAO;
 
     private static final File FILE = new File(
             Objects.requireNonNull(ImageRestControllerTest.class.getResource("/images/Testimage.png")).getFile());
