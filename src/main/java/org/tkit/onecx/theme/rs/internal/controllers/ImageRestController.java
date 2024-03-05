@@ -92,11 +92,8 @@ public class ImageRestController implements ImagesInternalApi {
 
     @Override
     public Response deleteImagesById(String refId) {
-        try {
-            imageDAO.deleteQueryByRefId(refId);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+
+        imageDAO.deleteQueryByRefId(refId);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
