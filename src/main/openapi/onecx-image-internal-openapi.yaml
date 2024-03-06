@@ -1,7 +1,7 @@
 ---
 openapi: 3.0.3
 info:
-  title: onecx-theme image import from file during the start of the application
+  title: Onecx-theme Image
   version: 1.0.0
 servers:
   - url: "http://onecx-theme-svc:8080"
@@ -113,6 +113,60 @@ paths:
               maximum: 110000
               type: string
               format: binary
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageInfo'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+    delete:
+      tags:
+        - imagesInternal
+      description: delete Image
+      operationId: deleteImage
+      parameters:
+        - name: refId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: refType
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/RefType"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageInfo'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /internal/images/{refId}:
+    delete:
+      tags:
+        - imagesInternal
+      description: delete Image by id
+      operationId: deleteImagesById
+      parameters:
+        - name: refId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK

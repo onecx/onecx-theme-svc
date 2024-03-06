@@ -37,14 +37,13 @@ public class ImageRestController implements ImagesInternalApi {
     @Context
     UriInfo uriInfo;
 
-    @Context
-    HttpHeaders httpHeaders;
-
     @Inject
     ImageMapper imageMapper;
 
+    @Context
+    HttpHeaders httpHeaders;
+
     @Override
-    @Transactional
     public Response getImage(String refId, RefTypeDTO refType) {
         Image image = imageDAO.findByRefIdAndRefType(refId, refType.toString());
         if (image == null) {
@@ -70,6 +69,7 @@ public class ImageRestController implements ImagesInternalApi {
         image.setImageData(body);
 
         image = imageDAO.update(image);
+
         return Response.ok(imageMapper.map(image)).build();
     }
 
@@ -84,9 +84,24 @@ public class ImageRestController implements ImagesInternalApi {
         image = imageDAO.create(image);
 
         var imageInfoDTO = imageMapper.map(image);
+
         return Response.created(uriInfo.getAbsolutePathBuilder().path(imageInfoDTO.getId()).build())
                 .entity(imageInfoDTO)
                 .build();
+    }
+
+    @Override
+    public Response deleteImagesById(String refId) {
+
+        imageDAO.deleteQueryByRefId(refId);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @Override
+    public Response deleteImage(String refId, RefTypeDTO refType) {
+        imageDAO.deleteQueryByRefIdAndRefType(refId, refType);
+
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @ServerExceptionMapper

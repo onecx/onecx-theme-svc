@@ -42,7 +42,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .post()
+                .post("/{refType}")
                 .then()
                 .statusCode(CREATED.getStatusCode())
                 .extract()
@@ -58,7 +58,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .pathParam("refType", RefTypeDTO.LOGO.toString())
                 .when()
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .post()
+                .post("/{refType}")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
@@ -79,7 +79,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .post()
+                .post("/{refType}")
                 .then()
                 .statusCode(CREATED.getStatusCode());
 
@@ -89,7 +89,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .post()
+                .post("/{refType}")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
@@ -111,7 +111,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .post()
+                .post("/{refType}")
                 .then()
                 .statusCode(CREATED.getStatusCode());
 
@@ -119,7 +119,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .pathParam("refId", refId)
                 .pathParam("refType", refType)
-                .get()
+                .get("/{refType}")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .header(HttpHeaders.CONTENT_TYPE, MEDIA_TYPE_IMAGE_PNG)
@@ -140,7 +140,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_JPG)
-                .post()
+                .post("/{refType}")
                 .then()
                 .statusCode(CREATED.getStatusCode());
 
@@ -148,7 +148,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .pathParam("refId", refId)
                 .pathParam("refType", refType)
-                .get()
+                .get("/{refType}")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .header(HttpHeaders.CONTENT_TYPE, MEDIA_TYPE_IMAGE_JPG)
@@ -169,7 +169,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .post()
+                .post("/{refType}")
                 .then()
                 .statusCode(CREATED.getStatusCode());
 
@@ -177,7 +177,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .pathParam("refId", refId + "_not_exists")
                 .pathParam("refType", refType)
-                .get()
+                .get("/{refType}")
                 .then()
                 .statusCode(NOT_FOUND.getStatusCode());
     }
@@ -194,7 +194,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .post()
+                .post("/{refType}")
                 .then()
                 .statusCode(CREATED.getStatusCode())
                 .extract()
@@ -206,7 +206,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .put()
+                .put("/{refType}")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
@@ -220,9 +220,87 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .put()
+                .put("/{refType}")
                 .then()
                 .statusCode(NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    void deleteImage() {
+
+        var refId = "themeDeleteTest";
+        var refType = RefTypeDTO.LOGO;
+
+        given()
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .when()
+                .body(FILE)
+                .contentType(MEDIA_TYPE_IMAGE_PNG)
+                .post("/{refType}")
+                .then()
+                .statusCode(CREATED.getStatusCode())
+                .extract()
+                .body().as(ImageInfoDTO.class);
+
+        var res = given()
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .when()
+                .body(FILE)
+                .contentType(MEDIA_TYPE_IMAGE_PNG)
+                .delete("/{refType}")
+                .then()
+                .statusCode(NO_CONTENT.getStatusCode());
+
+        Assertions.assertNotNull(res);
+
+        given()
+                .contentType(APPLICATION_JSON)
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .get("/{refType}")
+                .then()
+                .statusCode(NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    void deleteImagesById() {
+
+        var refId = "themedeleteByIdTest";
+        var refType = RefTypeDTO.LOGO;
+
+        given()
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .when()
+                .body(FILE)
+                .contentType(MEDIA_TYPE_IMAGE_PNG)
+                .post("/{refType}")
+                .then()
+                .statusCode(CREATED.getStatusCode())
+                .extract()
+                .body().as(ImageInfoDTO.class);
+
+        var res = given()
+                .pathParam("refId", refId)
+                .when()
+                .body(FILE)
+                .contentType(MEDIA_TYPE_IMAGE_PNG)
+                .delete()
+                .then()
+                .statusCode(NO_CONTENT.getStatusCode());
+
+        Assertions.assertNotNull(res);
+
+        given()
+                .contentType(APPLICATION_JSON)
+                .pathParam("refId", refId)
+                .pathParam("refType", refType)
+                .get("/{refType}")
+                .then()
+                .statusCode(NOT_FOUND.getStatusCode());
+
     }
 
     @Test
@@ -237,7 +315,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .post()
+                .post("/{refType}")
                 .then()
                 .statusCode(CREATED.getStatusCode())
                 .extract()
@@ -249,11 +327,12 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .put()
+                .put("/{refType}")
                 .then()
                 .statusCode(NOT_FOUND.getStatusCode());
 
         Assertions.assertNotNull(exception);
+
     }
 
     @Test
@@ -270,7 +349,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(body)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .post()
+                .post("/{refType}")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
