@@ -1,5 +1,7 @@
 package org.tkit.onecx.theme.domain.daos;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import jakarta.inject.Inject;
 
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,7 @@ class ImageExtendedDAOTest extends AbstractTest {
 
     @Test
     void methodNoErrorTest() {
-        dao.deleteQueryByRefId(null);
+        assertDoesNotThrow(() -> dao.deleteQueryByRefId(null));
     }
 
 }
