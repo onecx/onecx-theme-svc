@@ -22,11 +22,12 @@ public class ThemesService {
     @Transactional
     public void deleteTheme(String id) {
 
-        var image = dao.findById(id);
-        dao.deleteQueryById(id);
-        if (image != null) {
+        var theme = dao.findById(id);
+
+        if (theme != null) {
+            dao.deleteQueryById(id);
             // workaround for images
-            imageDAO.deleteQueryByRefId(image.getName());
+            imageDAO.deleteQueryByRefId(theme.getName());
         }
     }
 
