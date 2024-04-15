@@ -73,4 +73,23 @@ class ThemesRestControllerV1Test extends AbstractTest {
                 .get("none-exists/favicon")
                 .then().statusCode(NOT_FOUND.getStatusCode());
     }
+
+    @Test
+    void getThemeByThemeLogoTest() {
+        var data = given()
+                .contentType(APPLICATION_JSON)
+                .get("test1/logo")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType("image/png")
+                .extract()
+                .body().asByteArray();
+
+        assertThat(data).isNotNull();
+
+        given()
+                .contentType(APPLICATION_JSON)
+                .get("none-exists/logo")
+                .then().statusCode(NOT_FOUND.getStatusCode());
+    }
 }
