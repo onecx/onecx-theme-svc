@@ -48,8 +48,32 @@ paths:
     get:
       tags:
         - themes
-      description: Load a single theme definition
+      description: get favicon of theme by name
       operationId: getThemeFaviconByName
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            image/*:
+              schema:
+                minimum: 1
+                maximum: 110000
+                type: string
+                format: binary
+        404:
+          description: Not found
+  /v1/themes/{name}/logo:
+    get:
+      tags:
+        - themes
+      description: get logo of theme by name
+      operationId: getThemeLogoByName
       parameters:
         - name: name
           in: path
