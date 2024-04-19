@@ -327,8 +327,8 @@ class ThemesRestControllerTest extends AbstractTest {
         Assertions.assertEquals(
                 "could not execute statement [ERROR: duplicate key value violates unique constraint 'theme_name'  Detail: Key (name, tenant_id)=(themeWithoutPortal, default) already exists.]",
                 exception.getDetail());
-        Assertions.assertNull(exception.getInvalidParams());
-
+        Assertions.assertNotNull(exception.getInvalidParams());
+        Assertions.assertTrue(exception.getInvalidParams().isEmpty());
     }
 
     @Test
