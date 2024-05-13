@@ -46,9 +46,6 @@ public abstract class TemplateImportMapper {
     public List<Image> createImage(ExistingData existingData, Map<String, TemplateThemeDTO> data) {
         List<Image> result = new ArrayList<>();
         for (Map.Entry<String, TemplateThemeDTO> entry : data.entrySet()) {
-            if (existingData.isThemeInDb(entry.getKey())) {
-                continue;
-            }
             var images = entry.getValue().getImages();
             if (images == null) {
                 continue;
