@@ -1,0 +1,71 @@
+---
+openapi: 3.0.3
+info:
+  title: onecx-theme themes import from file during the start of the application
+  version: 1.0.0
+servers:
+  - url: "http://localhost"
+paths:
+  /import/theme:
+    post:
+      operationId: importTheme
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateImport'
+      responses:
+        200:
+          description: ok
+components:
+  schemas:
+    TemplateImport:
+      type: object
+      properties:
+        themes:
+          $ref: '#/components/schemas/TemplateThemes'
+    TemplateThemes:
+      type: object
+      nullable: false
+      additionalProperties:
+        $ref: '#/components/schemas/TemplateTheme'
+    TemplateTheme:
+      type: object
+      required:
+        - tenantId
+      properties:
+        cssFile:
+          type: string
+        description:
+          type: string
+        assetsUrl:
+          type: string
+        logoUrl:
+          type: string
+        faviconUrl:
+          type: string
+        images:
+          $ref: '#/components/schemas/TemplateImages'
+        previewImageUrl:
+          type: string
+        assetsUpdateDate:
+          type: string
+        properties:
+          type: object
+    TemplateImages:
+      type: object
+      nullable: false
+      additionalProperties:
+        $ref: '#/components/schemas/TemplateImage'
+    TemplateImage:
+      type: object
+      properties:
+        imageData:
+          type: string
+          format: byte
+        mimeType:
+          type: string
+    OffsetDateTime:
+      format: date-time
+      type: string
+      example: 2022-03-10T12:15:50-04:00

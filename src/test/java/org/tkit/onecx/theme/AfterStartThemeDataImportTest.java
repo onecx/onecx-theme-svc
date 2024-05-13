@@ -22,7 +22,7 @@ class AfterStartThemeDataImportTest extends AbstractTest {
     @DisplayName("Import theme data from file")
     void importDataFromFileTest() {
         var data = dao.findAll().toList();
-        assertThat(data).isNotNull().hasSize(2);
+        assertThat(data).isNotNull().hasSize(3);
         assertThat(data.get(0)).isNotNull();
     }
 

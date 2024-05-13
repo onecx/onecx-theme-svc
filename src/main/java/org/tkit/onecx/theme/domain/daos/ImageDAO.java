@@ -1,5 +1,8 @@
 package org.tkit.onecx.theme.domain.daos;
 
+import java.util.List;
+import java.util.Set;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
@@ -67,7 +70,23 @@ public class ImageDAO extends AbstractDAO<Image> {
         }
     }
 
+    public List<String> findRefIdRefTypesByRefId(Set<String> refIds) {
+        try {
+            var cb = this.getEntityManager().getCriteriaBuilder();
+            var cq = cb.createQuery(String.class);
+            var root = cq.from(Image.class);
+            cq.select(cb.concat(root.get(Image_.REF_ID), root.get(Image_.REF_TYPE)));
+            cq.where(root.get(Image_.REF_ID).in(refIds));
+            return this.getEntityManager().createQuery(cq).getResultList();
+
+        } catch (Exception ex) {
+            throw new DAOException(ErrorKeys.FIND_REF_TYPES_BY_REF_ID, ex);
+        }
+    }
+
     public enum ErrorKeys {
+
+        FIND_REF_TYPES_BY_REF_ID,
 
         FAILED_TO_DELETE_BY_REF_ID_QUERY,
 

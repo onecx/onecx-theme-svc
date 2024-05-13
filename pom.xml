@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.tkit.onecx</groupId>
         <artifactId>onecx-quarkus3-parent</artifactId>
-        <version>0.48.0</version>
+        <version>0.49.0</version>
     </parent>
 
     <artifactId>onecx-theme-svc</artifactId>
@@ -187,15 +187,15 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>di-theme-v1</id>
+                        <id>template</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>src/main/openapi/di-theme-v1.yaml</inputSpec>
-                            <apiPackage>gen.org.tkit.onecx.theme.di.v1</apiPackage>
-                            <modelPackage>gen.org.tkit.onecx.theme.di.v1.model</modelPackage>
-                            <modelNameSuffix>DTOV1</modelNameSuffix>
+                            <inputSpec>src/main/openapi/onecx-theme-di-template.yaml</inputSpec>
+                            <apiPackage>gen.org.tkit.onecx.theme.di.template</apiPackage>
+                            <modelPackage>gen.org.tkit.onecx.theme.di.template.model</modelPackage>
+                            <modelNameSuffix>DTO</modelNameSuffix>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generateApis>false</generateApis>
                         </configuration>

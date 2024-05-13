@@ -38,7 +38,8 @@ class ImageDAOTest extends AbstractTest {
                 ImageDAO.ErrorKeys.FIND_ENTITY_BY_REF_ID_REF_TYPE_FAILED);
         methodExceptionTests(() -> dao.deleteQueryByRefIdAndRefType("1", RefTypeDTO.LOGO),
                 ImageDAO.ErrorKeys.FAILED_TO_DELETE_BY_REF_ID_REF_TYPE_QUERY);
-
+        methodExceptionTests(() -> dao.findRefIdRefTypesByRefId(null),
+                ImageDAO.ErrorKeys.FIND_REF_TYPES_BY_REF_ID);
     }
 
     void methodExceptionTests(Executable fn, Enum<?> key) {
