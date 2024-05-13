@@ -38,6 +38,17 @@ class ExportImportRestControllerV1Test extends AbstractTest {
         assertThat(dto).isNotNull();
         assertThat(dto.getThemes()).hasSize(3);
 
+        dto = given()
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(new ExportThemeRequestDTOV1().names(null))
+                .post("export")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract().as(ThemeSnapshotDTOV1.class);
+        assertThat(dto).isNotNull();
+        assertThat(dto.getThemes()).hasSize(3);
+
         request.setNames(new HashSet<>());
         dto = given()
                 .when()

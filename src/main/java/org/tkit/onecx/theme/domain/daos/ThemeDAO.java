@@ -1,5 +1,6 @@
 package org.tkit.onecx.theme.domain.daos;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -51,6 +52,20 @@ public class ThemeDAO extends AbstractDAO<Theme> {
 
         } catch (Exception ex) {
             throw new DAOException(ErrorKeys.ERROR_FIND_THEME_BY_NAMES, ex);
+        }
+    }
+
+    public List<String> findNamesByThemeByNames(Set<String> themeNames) {
+        try {
+            var cb = this.getEntityManager().getCriteriaBuilder();
+            var cq = cb.createQuery(String.class);
+            var root = cq.from(Theme.class);
+            cq.select(root.get(Theme_.name));
+            cq.where(root.get(Theme_.name).in(themeNames));
+            return this.getEntityManager().createQuery(cq).getResultList();
+
+        } catch (Exception ex) {
+            throw new DAOException(ErrorKeys.ERROR_FIND_NAMES_BY_NAMES, ex);
         }
     }
 
@@ -115,6 +130,7 @@ public class ThemeDAO extends AbstractDAO<Theme> {
         ERROR_FIND_THEMES_BY_CRITERIA,
         ERROR_FIND_ALL_THEME_INFO,
         ERROR_FIND_ALL_THEME_PAGE,
+        ERROR_FIND_NAMES_BY_NAMES,
         ERROR_FIND_THEME_BY_NAMES,
         ERROR_FIND_THEME_BY_NAME,
     }

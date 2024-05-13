@@ -18,15 +18,15 @@ import org.tkit.quarkus.test.WithDBData;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gen.org.tkit.onecx.theme.di.v1.model.DataImportDTOV1;
+import gen.org.tkit.onecx.theme.di.template.model.TemplateImportDTO;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 @WithDBData(value = "data/testdata-internal.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
-class ThemeDataImportServiceTest extends AbstractTest {
+class TemplateImportServiceTest extends AbstractTest {
 
     @Inject
-    ThemeDataImportServiceV1 service;
+    TemplateImportService service;
 
     @Inject
     ThemeDAO dao;
@@ -55,18 +55,18 @@ class ThemeDataImportServiceTest extends AbstractTest {
 
     @Test
     void importEmptyDataTest() {
-        Assertions.assertDoesNotThrow(() -> {
+        Assertions.assertThrows(Exception.class, () -> {
             service.importData(new DataImportConfig() {
                 @Override
                 public Map<String, String> getMetadata() {
-                    return Map.of("operation", "CLEAN_INSERT");
+                    return Map.of("tenants", "default");
                 }
             });
 
             service.importData(new DataImportConfig() {
                 @Override
                 public Map<String, String> getMetadata() {
-                    return Map.of("operation", "CLEAN_INSERT");
+                    return Map.of("tenants", "default");
                 }
 
                 @Override
@@ -74,17 +74,19 @@ class ThemeDataImportServiceTest extends AbstractTest {
                     return new byte[] {};
                 }
             });
+        });
+        Assertions.assertDoesNotThrow(() -> {
 
             service.importData(new DataImportConfig() {
                 @Override
                 public Map<String, String> getMetadata() {
-                    return Map.of("operation", "CLEAN_INSERT");
+                    return Map.of("tenants", "default");
                 }
 
                 @Override
                 public byte[] getData() {
                     try {
-                        return mapper.writeValueAsBytes(new DataImportDTOV1());
+                        return mapper.writeValueAsBytes(new TemplateImportDTO().themes(null));
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
@@ -94,15 +96,13 @@ class ThemeDataImportServiceTest extends AbstractTest {
             service.importData(new DataImportConfig() {
                 @Override
                 public Map<String, String> getMetadata() {
-                    return Map.of("operation", "CLEAN_INSERT");
+                    return Map.of("tenants", "default");
                 }
 
                 @Override
                 public byte[] getData() {
                     try {
-                        var data = new DataImportDTOV1();
-                        data.setThemes(null);
-                        return mapper.writeValueAsBytes(data);
+                        return mapper.writeValueAsBytes(new TemplateImportDTO().themes(Map.of()));
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
@@ -114,7 +114,7 @@ class ThemeDataImportServiceTest extends AbstractTest {
         var config = new DataImportConfig() {
             @Override
             public Map<String, String> getMetadata() {
-                return Map.of("operation", "CLEAN_INSERT");
+                return Map.of("tenants", "default");
             }
 
             @Override
@@ -122,7 +122,7 @@ class ThemeDataImportServiceTest extends AbstractTest {
                 return new byte[] { 0 };
             }
         };
-        Assertions.assertThrows(ThemeDataImportServiceV1.ImportException.class, () -> service.importData(config));
+        Assertions.assertThrows(TemplateImportService.ImportException.class, () -> service.importData(config));
 
     }
 }
