@@ -36,6 +36,7 @@ public abstract class TemplateImportMapper {
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "operator", ignore = true)
     public abstract Theme create(String name, TemplateThemeDTO dto);
 
     public List<Theme> create(ExistingData existingData, Map<String, TemplateThemeDTO> data) {
@@ -70,6 +71,7 @@ public abstract class TemplateImportMapper {
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "operator", ignore = true)
     @Mapping(target = "length", source = "dto.imageData", qualifiedByName = "length")
     public abstract Image create(String refId, String refType, TemplateImageDTO dto);
 

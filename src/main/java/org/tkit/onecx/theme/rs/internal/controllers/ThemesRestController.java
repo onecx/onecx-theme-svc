@@ -14,9 +14,9 @@ import jakarta.ws.rs.core.UriInfo;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.onecx.theme.domain.daos.ThemeDAO;
+import org.tkit.onecx.theme.domain.services.ThemeService;
 import org.tkit.onecx.theme.rs.internal.mappers.ExceptionMapper;
 import org.tkit.onecx.theme.rs.internal.mappers.ThemeMapper;
-import org.tkit.onecx.theme.rs.internal.services.ThemesService;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
@@ -34,7 +34,7 @@ public class ThemesRestController implements ThemesInternalApi {
     ThemeDAO dao;
 
     @Inject
-    ThemesService themeService;
+    ThemeService themeService;
 
     @Inject
     ThemeMapper mapper;

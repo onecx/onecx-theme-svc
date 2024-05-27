@@ -29,6 +29,8 @@ class ThemeDAOTest extends AbstractTest {
 
     @Test
     void methodExceptionTests() {
+        methodExceptionTests(() -> dao.deleteQueryByNames(null),
+                ThemeDAO.ErrorKeys.ERROR_DELETE_QUERY_BY_NAMES);
         methodExceptionTests(() -> dao.findById(null),
                 ThemeDAO.ErrorKeys.FIND_ENTITY_BY_ID_FAILED);
         methodExceptionTests(() -> dao.findThemesByCriteria(null),

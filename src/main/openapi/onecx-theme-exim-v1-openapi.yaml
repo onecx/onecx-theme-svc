@@ -54,6 +54,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EximProblemDetailResponse'
+  /exim/v1/themes/operator:
+    post:
+      tags:
+        - themesExportImport
+      description: Operator import themes
+      operationId: operatorImportThemes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThemeSnapshot'
+      responses:
+        "200":
+          description: Import result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportThemeResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EximProblemDetailResponse'
 components:
   schemas:
     ExportThemeRequest:
@@ -113,6 +138,8 @@ components:
           type: string
         properties:
           type: object
+        images:
+          $ref: '#/components/schemas/Images'
     EximProblemDetailResponse:
       type: object
       properties:
@@ -146,3 +173,16 @@ components:
       format: date-time
       type: string
       example: 2022-03-10T12:15:50-04:00
+    Images:
+      type: object
+      nullable: false
+      additionalProperties:
+        $ref: '#/components/schemas/Image'
+    Image:
+      type: object
+      properties:
+        imageData:
+          type: string
+          format: byte
+        mimeType:
+          type: string
