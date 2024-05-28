@@ -122,7 +122,12 @@ class ExportImportRestControllerV1Test extends AbstractTest {
 
         var new_theme = new EximThemeDTOV1();
         new_theme.setDescription("new theme description");
+        new_theme.putImagesItem("logo", new ImageDTOV1().imageData(new byte[] { 1, 2, 3 }).mimeType("image/*"));
+        new_theme.putImagesItem("logo2", new ImageDTOV1().imageData(new byte[] { 1, 2, 3 }).mimeType("image/*"));
         data.getThemes().put("new_theme", new_theme);
+        // add new image to existing theme
+        data.getThemes().get("cg").putImagesItem("logo2",
+                new ImageDTOV1().imageData(new byte[] { 1, 2, 3 }).mimeType("image/*"));
 
         var dto = given()
                 .when()
@@ -140,6 +145,58 @@ class ExportImportRestControllerV1Test extends AbstractTest {
                 from(ImportThemeResponseStatusDTOV1::toString));
         assertThat(dto.getThemes().get("new_theme")).returns(ImportThemeResponseStatusDTOV1.CREATED.toString(),
                 from(ImportThemeResponseStatusDTOV1::toString));
+    }
+
+    @Test
+    void importOperatorThemesTest() {
+
+        var request = new ThemeSnapshotDTOV1();
+
+        var data = given()
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(request)
+                .post("export")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract().as(ThemeSnapshotDTOV1.class);
+        assertThat(data).isNotNull();
+        assertThat(data.getThemes()).hasSize(3);
+
+        data.getThemes().remove("themeWithoutPortal");
+        data.getThemes().remove("toDelete");
+
+        var new_theme = new EximThemeDTOV1();
+        new_theme.setDescription("new theme description");
+        new_theme.putImagesItem("logo", new ImageDTOV1().imageData(new byte[] { 1, 2, 3 }).mimeType("image/*"));
+        new_theme.putImagesItem("logo2", new ImageDTOV1().imageData(new byte[] { 1, 2, 3 }).mimeType("image/*"));
+        data.getThemes().put("new_theme", new_theme);
+        // add new image to existing theme
+        data.getThemes().get("cg").putImagesItem("logo2",
+                new ImageDTOV1().imageData(new byte[] { 1, 2, 3 }).mimeType("image/*"));
+
+        given()
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(data)
+                .post("operator")
+                .then()
+                .statusCode(OK.getStatusCode());
+
+        data = given()
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(request)
+                .post("export")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract().as(ThemeSnapshotDTOV1.class);
+        assertThat(data).isNotNull();
+        assertThat(data.getThemes()).hasSize(4);
+
+        assertThat(data.getThemes().get("cg").getImages()).hasSize(3);
+        assertThat(data.getThemes().get("new_theme")).isNotNull();
+        assertThat(data.getThemes().get("new_theme").getImages()).hasSize(2);
     }
 
 }

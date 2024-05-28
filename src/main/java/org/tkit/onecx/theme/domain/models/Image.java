@@ -29,6 +29,9 @@ public class Image extends TraceableEntity {
     @Column(name = "DATA_LENGTH")
     private Integer length;
 
+    @Column(name = "OPERATOR", nullable = false, columnDefinition = "boolean default false")
+    private boolean operator;
+
     @Column(name = "DATA")
     private byte[] imageData;
 

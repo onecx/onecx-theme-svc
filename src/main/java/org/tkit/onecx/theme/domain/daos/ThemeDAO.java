@@ -1,5 +1,6 @@
 package org.tkit.onecx.theme.domain.daos;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -9,9 +10,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 
 import org.tkit.onecx.theme.domain.criteria.ThemeSearchCriteria;
-import org.tkit.onecx.theme.domain.models.Theme;
-import org.tkit.onecx.theme.domain.models.ThemeInfo;
-import org.tkit.onecx.theme.domain.models.Theme_;
+import org.tkit.onecx.theme.domain.models.*;
 import org.tkit.quarkus.jpa.daos.AbstractDAO;
 import org.tkit.quarkus.jpa.daos.Page;
 import org.tkit.quarkus.jpa.daos.PageResult;
@@ -52,6 +51,19 @@ public class ThemeDAO extends AbstractDAO<Theme> {
 
         } catch (Exception ex) {
             throw new DAOException(ErrorKeys.ERROR_FIND_THEME_BY_NAMES, ex);
+        }
+    }
+
+    @Transactional(value = Transactional.TxType.REQUIRED, rollbackOn = DAOException.class)
+    public void deleteQueryByNames(Collection<String> themeNames) throws DAOException {
+        try {
+            var cq = deleteQuery();
+            var root = cq.from(Theme.class);
+            cq.where(root.get(Theme_.NAME).in(themeNames));
+            getEntityManager().createQuery(cq).executeUpdate();
+            getEntityManager().flush();
+        } catch (Exception e) {
+            throw handleConstraint(e, ErrorKeys.ERROR_DELETE_QUERY_BY_NAMES);
         }
     }
 
@@ -126,6 +138,7 @@ public class ThemeDAO extends AbstractDAO<Theme> {
 
     public enum ErrorKeys {
 
+        ERROR_DELETE_QUERY_BY_NAMES,
         FIND_ENTITY_BY_ID_FAILED,
         ERROR_FIND_THEMES_BY_CRITERIA,
         ERROR_FIND_ALL_THEME_INFO,

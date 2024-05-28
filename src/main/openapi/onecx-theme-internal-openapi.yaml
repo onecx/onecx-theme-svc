@@ -277,6 +277,8 @@ components:
           type: string
         properties:
           type: object
+        operator:
+          type: boolean
     OffsetDateTime:
       format: date-time
       type: string
