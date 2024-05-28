@@ -50,6 +50,6 @@ public class Theme extends TraceableEntity {
     @Column(name = "PROPERTIES", columnDefinition = "TEXT")
     private String properties;
 
-    @Column(name = "OPERATOR", nullable = false)
+    @Column(name = "OPERATOR", nullable = false, columnDefinition = "boolean default false")
     private boolean operator;
 }
