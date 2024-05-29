@@ -111,6 +111,11 @@ public class ExportImportRestControllerV1 implements ThemesExportImportApi {
 
     @Override
     public Response operatorImportThemes(ThemeSnapshotDTOV1 request) {
+
+        if (request.getThemes() == null) {
+            return Response.ok().build();
+        }
+
         List<Theme> themes = new ArrayList<>();
         List<Image> images = new ArrayList<>();
         request.getThemes().forEach((name, dto) -> {
