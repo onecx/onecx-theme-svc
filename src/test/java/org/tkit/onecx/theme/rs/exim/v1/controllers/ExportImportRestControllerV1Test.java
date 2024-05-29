@@ -199,4 +199,27 @@ class ExportImportRestControllerV1Test extends AbstractTest {
         assertThat(data.getThemes().get("new_theme").getImages()).hasSize(2);
     }
 
+    @Test
+    void importOperatorThemesEmptyTest() {
+
+        var request = new ThemeSnapshotDTOV1();
+
+        given()
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(request)
+                .post("operator")
+                .then()
+                .statusCode(OK.getStatusCode());
+
+        request.setThemes(null);
+        given()
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(request)
+                .post("operator")
+                .then()
+                .statusCode(OK.getStatusCode());
+    }
+
 }

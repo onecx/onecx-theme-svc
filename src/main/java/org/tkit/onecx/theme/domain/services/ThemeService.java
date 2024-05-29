@@ -45,7 +45,9 @@ public class ThemeService {
 
     @Transactional
     public void importOperator(List<Theme> themes, List<Image> images) {
-
+        if (themes.isEmpty()) {
+            return;
+        }
         var names = themes.stream().map(Theme::getName).collect(Collectors.toSet());
 
         // delete existing data
