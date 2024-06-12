@@ -6,5 +6,5 @@
     <include relativeToChangelogFile="true" file="v1/2023-11-09-create-tables.xml"/>
     <include relativeToChangelogFile="true" file="v1/2023-11-09-data-import-log.xml"/>
     <include relativeToChangelogFile="true" file="v1/2024-05-27-operator-attribute.xml"/>
-
+    <include relativeToChangelogFile="true" file="v1/2024-06-12-drop-not-null.xml"/>
 </databaseChangeLog>
