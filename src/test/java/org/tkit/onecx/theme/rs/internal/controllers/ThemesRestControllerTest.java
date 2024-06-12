@@ -118,7 +118,7 @@ class ThemesRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .pathParam("name", "themeWithoutPortal")
                 .get("/name/{name}")
-                .then().log().all()
+                .then()
                 .statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
