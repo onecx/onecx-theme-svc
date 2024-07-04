@@ -135,9 +135,9 @@ class ExportImportRestControllerV1TenantTest extends AbstractTest {
         assertThat(data).isNotNull();
         assertThat(data.getThemes()).hasSize(2);
 
-        var new_theme = new EximThemeDTOV1();
-        new_theme.setDescription("new theme description");
-        data.getThemes().put("new_theme", new_theme);
+        var importTheme = new EximThemeDTOV1();
+        importTheme.setDescription("new theme description");
+        data.getThemes().put("importTheme", importTheme);
 
         var dto = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
@@ -155,7 +155,7 @@ class ExportImportRestControllerV1TenantTest extends AbstractTest {
         assertThat(dto.getThemes()).isNotNull().hasSize(3);
         assertThat(dto.getThemes().get("cg")).returns(ImportThemeResponseStatusDTOV1.UPDATE.toString(),
                 from(ImportThemeResponseStatusDTOV1::toString));
-        assertThat(dto.getThemes().get("new_theme")).returns(ImportThemeResponseStatusDTOV1.CREATED.toString(),
+        assertThat(dto.getThemes().get("importTheme")).returns(ImportThemeResponseStatusDTOV1.CREATED.toString(),
                 from(ImportThemeResponseStatusDTOV1::toString));
     }
 
