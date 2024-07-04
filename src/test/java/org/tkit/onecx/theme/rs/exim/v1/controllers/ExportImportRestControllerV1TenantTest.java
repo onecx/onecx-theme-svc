@@ -5,12 +5,14 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.from;
+import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.tkit.onecx.theme.test.AbstractTest;
+import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
 import gen.org.tkit.onecx.theme.rs.exim.v1.model.*;
@@ -20,6 +22,7 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 @TestHTTPEndpoint(ExportImportRestControllerV1.class)
 @WithDBData(value = "data/testdata-exim.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
+@GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-th:read", "ocx-th:write" })
 class ExportImportRestControllerV1TenantTest extends AbstractTest {
 
     @Test
@@ -28,6 +31,7 @@ class ExportImportRestControllerV1TenantTest extends AbstractTest {
         var request = new ExportThemeRequestDTOV1();
 
         var dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
@@ -41,6 +45,7 @@ class ExportImportRestControllerV1TenantTest extends AbstractTest {
 
         request.setNames(new HashSet<>());
         dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
@@ -54,6 +59,7 @@ class ExportImportRestControllerV1TenantTest extends AbstractTest {
 
         request.setNames(Set.of("cg", "themeWithoutPortal"));
         dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
@@ -66,6 +72,7 @@ class ExportImportRestControllerV1TenantTest extends AbstractTest {
         assertThat(dto.getThemes()).hasSize(2);
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
@@ -83,6 +90,7 @@ class ExportImportRestControllerV1TenantTest extends AbstractTest {
         request.setNames(Set.of("does-not-exists"));
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
@@ -96,6 +104,7 @@ class ExportImportRestControllerV1TenantTest extends AbstractTest {
     void exportThemesEmptyBodyTest() {
 
         var exception = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
@@ -114,6 +123,7 @@ class ExportImportRestControllerV1TenantTest extends AbstractTest {
         var request = new ThemeSnapshotDTOV1();
 
         var data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
@@ -130,6 +140,7 @@ class ExportImportRestControllerV1TenantTest extends AbstractTest {
         data.getThemes().put("new_theme", new_theme);
 
         var dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))

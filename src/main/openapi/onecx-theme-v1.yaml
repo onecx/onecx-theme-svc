@@ -10,6 +10,8 @@ tags:
 paths:
   /v1/themes:
     get:
+      security:
+        - oauth2: [ ocx-th:read ]
       tags:
         - themes
       description: Get list of all themes
@@ -25,6 +27,8 @@ paths:
           description: Not found
   /v1/themes/{name}:
     get:
+      security:
+        - oauth2: [ ocx-th:read ]
       tags:
         - themes
       description: Load a single theme definition
@@ -46,6 +50,8 @@ paths:
           description: Not found
   /v1/themes/{name}/favicon:
     get:
+      security:
+        - oauth2: [ ocx-th:read ]
       tags:
         - themes
       description: get favicon of theme by name
@@ -70,6 +76,8 @@ paths:
           description: Not found
   /v1/themes/{name}/logo:
     get:
+      security:
+        - oauth2: [ ocx-th:read ]
       tags:
         - themes
       description: get logo of theme by name
@@ -93,6 +101,14 @@ paths:
         404:
           description: Not found
 components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://oauth.simple.api/token
+          scopes:
+            ocx-th:read: Grants read access
   schemas:
     ThemeInfoList:
       type: object

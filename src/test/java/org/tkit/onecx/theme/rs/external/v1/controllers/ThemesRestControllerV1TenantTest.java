@@ -5,9 +5,11 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
 import static jakarta.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import org.junit.jupiter.api.Test;
 import org.tkit.onecx.theme.test.AbstractTest;
+import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
 import gen.org.tkit.onecx.theme.rs.external.v1.model.ThemeDTOV1;
@@ -18,11 +20,13 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 @TestHTTPEndpoint(ThemesRestControllerV1.class)
 @WithDBData(value = "data/testdata-external.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
+@GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-th:read" })
 class ThemesRestControllerV1TenantTest extends AbstractTest {
 
     @Test
     void getThemeByThemeDefinitionNameTest() {
         var dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .pathParam("name", "themeWithoutPortal")
                 .header(APM_HEADER_PARAM, createToken("org1"))
@@ -36,6 +40,7 @@ class ThemesRestControllerV1TenantTest extends AbstractTest {
         assertThat(dto.getName()).isEqualTo("themeWithoutPortal");
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .pathParam("name", "themeWithoutPortal")
@@ -46,6 +51,7 @@ class ThemesRestControllerV1TenantTest extends AbstractTest {
     @Test
     void getThemeInfoListTest() {
         var data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .get()
@@ -59,6 +65,7 @@ class ThemesRestControllerV1TenantTest extends AbstractTest {
         assertThat(data.getThemes()).isNotNull().hasSize(2);
 
         data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .get()
                 .then()
