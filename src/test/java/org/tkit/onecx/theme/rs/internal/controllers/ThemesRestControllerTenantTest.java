@@ -5,12 +5,14 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.from;
+import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import jakarta.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.tkit.onecx.theme.test.AbstractTest;
+import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
 import gen.org.tkit.onecx.theme.rs.internal.model.*;
@@ -20,6 +22,7 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 @TestHTTPEndpoint(ThemesRestController.class)
 @WithDBData(value = "data/testdata-internal.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
+@GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-th:all", "ocx-th:read", "ocx-th:write", "ocx-th:delete" })
 class ThemesRestControllerTenantTest extends AbstractTest {
 
     @Test
@@ -34,6 +37,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         themeDto.setPreviewImageUrl("image/url");
 
         var dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
@@ -45,6 +49,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
                 .body().as(ThemeDTO.class);
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .get(dto.getId())
@@ -52,6 +57,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
                 .statusCode(NOT_FOUND.getStatusCode());
 
         dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .get(dto.getId())
@@ -68,6 +74,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         // create theme without body
         var exception = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
@@ -83,7 +90,8 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         themeDto = new CreateThemeDTO();
         themeDto.setName("cg");
 
-        exception = given().when()
+        exception = given()
+                .auth().oauth2(getKeycloakClientToken("testClient")).when()
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(themeDto)
@@ -102,6 +110,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         // delete entity with wrong tenant
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .delete("t-DELETE_1")
@@ -109,6 +118,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         // delete entity with wrong tenant still exists
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .get("t-DELETE_1")
@@ -116,6 +126,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         // delete theme
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .delete("t-DELETE_1")
@@ -123,6 +134,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         // check if theme exists
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .get("t-DELETE_1")
@@ -130,6 +142,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         // delete theme in portal
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .delete("t-11-111")
@@ -141,6 +154,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
     @Test
     void getThemeByThemeDefinitionNameTest() {
         var dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .pathParam("name", "themeWithoutPortal")
@@ -155,6 +169,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         assertThat(dto.getId()).isEqualTo("t-22-222");
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .pathParam("name", "themeWithoutPortal")
@@ -166,6 +181,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
     void getThemeByIdTest() {
 
         var dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .get("t-22-222")
@@ -179,11 +195,13 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         assertThat(dto.getId()).isEqualTo("t-22-222");
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .get("t-22-222")
                 .then().statusCode(NOT_FOUND.getStatusCode());
 
         dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .get("t-11-111")
@@ -201,6 +219,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
     @Test
     void getThemesTest() {
         var data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .get()
@@ -215,6 +234,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         assertThat(data.getStream()).isNotNull().hasSize(2);
 
         data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .get()
@@ -235,6 +255,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         var criteria = new ThemeSearchCriteriaDTO();
 
         var data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(criteria)
@@ -251,6 +272,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         criteria.setName(" ");
         data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(criteria)
@@ -267,6 +289,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         criteria.setName("cg");
         data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(criteria)
@@ -286,6 +309,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
     @Test
     void getThemeInfoListTest() {
         var data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .get("info")
@@ -309,6 +333,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         themeDto.setDescription("description-update");
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .body(themeDto)
@@ -318,6 +343,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         // update theme
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(themeDto)
@@ -326,7 +352,8 @@ class ThemesRestControllerTenantTest extends AbstractTest {
                 .then().statusCode(NO_CONTENT.getStatusCode());
 
         // download theme
-        var dto = given().contentType(APPLICATION_JSON)
+        var dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient")).contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .body(themeDto)
                 .when()
@@ -350,6 +377,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         themeDto.setDescription("description");
 
         var exception = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org1"))
                 .when()
@@ -373,6 +401,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
     void updateThemeWithoutBodyTest() {
 
         var exception = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .header(APM_HEADER_PARAM, createToken("org2"))
                 .when()

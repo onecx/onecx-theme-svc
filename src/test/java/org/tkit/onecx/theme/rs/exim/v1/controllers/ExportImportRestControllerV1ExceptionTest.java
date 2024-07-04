@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.Response.Status.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.mockito.Mockito;
 import org.tkit.onecx.theme.domain.daos.ThemeDAO;
 import org.tkit.onecx.theme.test.AbstractTest;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
+import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 
 import gen.org.tkit.onecx.theme.rs.exim.v1.model.ExportThemeRequestDTOV1;
 import io.quarkus.test.InjectMock;
@@ -19,6 +21,7 @@ import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 @TestHTTPEndpoint(ExportImportRestControllerV1.class)
+@GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-th:read", "ocx-th:write" })
 class ExportImportRestControllerV1ExceptionTest extends AbstractTest {
 
     @InjectMock
@@ -37,6 +40,7 @@ class ExportImportRestControllerV1ExceptionTest extends AbstractTest {
         var request = new ExportThemeRequestDTOV1();
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .body(request)
@@ -45,6 +49,7 @@ class ExportImportRestControllerV1ExceptionTest extends AbstractTest {
                 .statusCode(INTERNAL_SERVER_ERROR.getStatusCode());
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .body(request)
