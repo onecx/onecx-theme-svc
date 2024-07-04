@@ -30,6 +30,7 @@ public abstract class TemplateImportMapper {
     @Mapping(target = "properties", qualifiedByName = "properties")
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "creationUser", ignore = true)
+    @Mapping(target = "displayName", ignore = true)
     @Mapping(target = "modificationDate", ignore = true)
     @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)

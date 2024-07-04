@@ -244,6 +244,7 @@ components:
     Theme:
       required:
         - name
+        - displayName
       type: object
       properties:
         modificationCount:
@@ -260,6 +261,9 @@ components:
         id:
           type: string
         name:
+          minLength: 2
+          type: string
+        displayName:
           minLength: 2
           type: string
         cssFile:
@@ -317,9 +321,13 @@ components:
     CreateTheme:
       required:
         - name
+        - displayName
       type: object
       properties:
         name:
+          minLength: 2
+          type: string
+        displayName:
           minLength: 2
           type: string
         cssFile:
@@ -341,6 +349,7 @@ components:
     UpdateTheme:
       required:
         - name
+        - displayName
         - modificationCount
       type: object
       properties:
@@ -348,6 +357,9 @@ components:
           format: int32
           type: integer
         name:
+          minLength: 2
+          type: string
+        displayName:
           minLength: 2
           type: string
         cssFile:
