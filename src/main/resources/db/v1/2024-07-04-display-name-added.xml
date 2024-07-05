@@ -9,6 +9,9 @@
         <addColumn tableName="theme">
             <column name="display_name" type="VARCHAR(255)"/>
         </addColumn>
+        <sql>
+            UPDATE theme SET display_name = name;
+        </sql>
     </changeSet>
 
 </databaseChangeLog>
