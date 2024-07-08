@@ -104,6 +104,7 @@ public abstract class ExportImportMapperV1 {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", ignore = true)
+    @Mapping(target = "displayName", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "creationUser", ignore = true)
     @Mapping(target = "modificationDate", ignore = true)
@@ -117,6 +118,7 @@ public abstract class ExportImportMapperV1 {
     public abstract void update(EximThemeDTOV1 dto, @MappingTarget Theme entity);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "displayName", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "creationUser", ignore = true)
     @Mapping(target = "modificationDate", ignore = true)

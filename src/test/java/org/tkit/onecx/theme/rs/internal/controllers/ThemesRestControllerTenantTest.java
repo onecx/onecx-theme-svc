@@ -31,6 +31,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         // create theme
         var themeDto = new CreateThemeDTO();
         themeDto.setName("test01");
+        themeDto.setDisplayName("test01");
         themeDto.setCssFile("cssFile");
         themeDto.setDescription("description");
         themeDto.setAssetsUrl("assets/url");
@@ -89,6 +90,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         // create theme with existing name
         themeDto = new CreateThemeDTO();
         themeDto.setName("cg");
+        themeDto.setDisplayName("cg_display");
 
         exception = given()
                 .auth().oauth2(getKeycloakClientToken("testClient")).when()
@@ -329,6 +331,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
         // update none existing theme
         var themeDto = new UpdateThemeDTO();
         themeDto.setName("test01");
+        themeDto.setDisplayName("test01");
         themeDto.setModificationCount(0);
         themeDto.setDescription("description-update");
 
@@ -373,6 +376,7 @@ class ThemesRestControllerTenantTest extends AbstractTest {
 
         var themeDto = new UpdateThemeDTO();
         themeDto.setName("themeWithoutPortal");
+        themeDto.setDisplayName("themeWithoutPortal");
         themeDto.setModificationCount(0);
         themeDto.setDescription("description");
 

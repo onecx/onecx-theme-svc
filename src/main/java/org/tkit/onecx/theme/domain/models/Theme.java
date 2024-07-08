@@ -22,6 +22,9 @@ public class Theme extends TraceableEntity {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "DISPLAY_NAME")
+    private String displayName;
+
     @TenantId
     @Column(name = "TENANT_ID")
     private String tenantId;
