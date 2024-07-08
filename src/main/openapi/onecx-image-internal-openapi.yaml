@@ -10,6 +10,8 @@ tags:
 paths:
   /internal/images/{refId}/{refType}:
     post:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:write ]
       tags:
         - imagesInternal
       description: Upload Images
@@ -51,6 +53,8 @@ paths:
         "400":
           description: Bad Request
     get:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - imagesInternal
       description: Get Image by id
@@ -83,6 +87,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
     put:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:write ]
       tags:
         - imagesInternal
       description: update Images
@@ -127,6 +133,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
     delete:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:delete ]
       tags:
         - imagesInternal
       description: delete Image
@@ -157,6 +165,8 @@ paths:
                 $ref: '#/components/schemas/ProblemDetailResponse'
   /internal/images/{refId}:
     delete:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:delete ]
       tags:
         - imagesInternal
       description: delete Image by id
@@ -181,6 +191,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
 components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://oauth.simple.api/token
+          scopes:
+            ocx-th:all: Grants access to all operations
+            ocx-th:read: Grants read access
+            ocx-th:write: Grants write access
+            ocx-th:delete: Grants access to delete operations
   schemas:
     RefType:
       type: string

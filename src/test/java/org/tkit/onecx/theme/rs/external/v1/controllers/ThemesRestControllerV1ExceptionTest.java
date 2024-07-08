@@ -3,6 +3,7 @@ package org.tkit.onecx.theme.rs.external.v1.controllers;
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.mockito.Mockito;
 import org.tkit.onecx.theme.domain.daos.ThemeDAO;
 import org.tkit.onecx.theme.test.AbstractTest;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
+import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -17,6 +19,7 @@ import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 @TestHTTPEndpoint(ThemesRestControllerV1.class)
+@GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-th:read" })
 class ThemesRestControllerV1ExceptionTest extends AbstractTest {
 
     @InjectMock
@@ -32,12 +35,14 @@ class ThemesRestControllerV1ExceptionTest extends AbstractTest {
     @Test
     void exceptionTest() {
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .get()
                 .then()
                 .statusCode(INTERNAL_SERVER_ERROR.getStatusCode());
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .get()
                 .then()

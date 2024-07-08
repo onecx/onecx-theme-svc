@@ -10,6 +10,8 @@ tags:
 paths:
   /internal/themes:
     get:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - themesInternal
       description: Return list of themes
@@ -39,6 +41,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/ThemePageResult'
     post:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:write ]
       tags:
         - themesInternal
       description: Create new theme
@@ -70,6 +74,8 @@ paths:
                 $ref: '#/components/schemas/ProblemDetailResponse'
   /internal/themes/{id}:
     get:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - themesInternal
       description: Return theme by ID
@@ -90,6 +96,8 @@ paths:
         "404":
           description: Not found
     put:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:write ]
       tags:
         - themesInternal
       description: Update theme by ID
@@ -118,6 +126,8 @@ paths:
         "404":
           description: Theme not found
     delete:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:delete ]
       tags:
         - themesInternal
       description: Delete theme by ID
@@ -133,6 +143,8 @@ paths:
           description: No Content
   /internal/themes/info:
     get:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - themesInternal
       description: Get list of all themes
@@ -148,6 +160,8 @@ paths:
           description: Not found
   /internal/themes/search:
     post:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - themesInternal
       description: Search for themes
@@ -169,6 +183,8 @@ paths:
                   $ref: '#/components/schemas/ThemePageResult'
   /internal/themes/name/{name}:
     get:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - themesInternal
       description: Load a single theme definition
@@ -189,6 +205,17 @@ paths:
         "404":
           description: Not found
 components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://oauth.simple.api/token
+          scopes:
+            ocx-th:all: Grants access to all operations
+            ocx-th:read: Grants read access
+            ocx-th:write: Grants write access
+            ocx-th:delete: Grants access to delete operations
   schemas:
     ThemeSearchCriteria:
       type: object
