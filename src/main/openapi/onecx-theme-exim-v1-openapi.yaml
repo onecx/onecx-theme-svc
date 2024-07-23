@@ -93,6 +93,7 @@ components:
         clientCredentials:
           tokenUrl: https://oauth.simple.api/token
           scopes:
+            ocx-th:all: Grants access to all operations
             ocx-th:read: Grants read access
             ocx-th:write: Grants write access
   schemas:
