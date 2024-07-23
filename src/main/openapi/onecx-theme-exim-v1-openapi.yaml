@@ -11,7 +11,7 @@ paths:
   /exim/v1/themes/export:
     post:
       security:
-        - oauth2: [ ocx-th:read ]
+        - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - themesExportImport
       description: Export list of themes
@@ -34,7 +34,7 @@ paths:
   /exim/v1/themes/import:
     post:
       security:
-        - oauth2: [ ocx-th:write ]
+        - oauth2: [ ocx-th:all, ocx-th:write ]
       tags:
         - themesExportImport
       description: Import themes
@@ -61,7 +61,7 @@ paths:
   /exim/v1/themes/operator:
     post:
       security:
-        - oauth2: [ ocx-th:write ]
+        - oauth2: [ ocx-th:all, ocx-th:write ]
       tags:
         - themesExportImport
       description: Operator import themes
@@ -93,6 +93,7 @@ components:
         clientCredentials:
           tokenUrl: https://oauth.simple.api/token
           scopes:
+            ocx-th:all: Grants access to all operations
             ocx-th:read: Grants read access
             ocx-th:write: Grants write access
   schemas:
