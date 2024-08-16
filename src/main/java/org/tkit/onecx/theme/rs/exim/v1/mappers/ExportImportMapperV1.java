@@ -55,6 +55,7 @@ public abstract class ExportImportMapperV1 {
 
     @Mapping(target = "id", source = "request.id")
     @Mapping(target = "themes", source = "themes")
+    @Mapping(target = "removeThemesItem", ignore = true)
     public abstract ImportThemeResponseDTOV1 create(ThemeSnapshotDTOV1 request,
             Map<String, ImportThemeResponseStatusDTOV1> themes);
 
