@@ -130,6 +130,8 @@ components:
         - name
       type: object
       properties:
+        displayName:
+          type: string
         name:
           minLength: 2
           type: string
