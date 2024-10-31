@@ -1,6 +1,7 @@
 {
   "themes": {
     "OneCX": {
+      "displayName": "OneCX Theme",
       "cssFile": null,
       "description": "OneCX Theme",
       "assetsUrl": null,

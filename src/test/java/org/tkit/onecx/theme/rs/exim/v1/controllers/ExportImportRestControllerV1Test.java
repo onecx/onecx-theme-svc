@@ -159,6 +159,58 @@ class ExportImportRestControllerV1Test extends AbstractTest {
     }
 
     @Test
+    void importThemeWithoutDisplayNameTest() {
+
+        var request = new ThemeSnapshotDTOV1();
+
+        var data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(request)
+                .post("export")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract().as(ThemeSnapshotDTOV1.class);
+        assertThat(data).isNotNull();
+        assertThat(data.getThemes()).hasSize(3);
+
+        var importTheme = new EximThemeDTOV1();
+        importTheme.setDescription("new theme description");
+        importTheme.putImagesItem("logo", new ImageDTOV1().imageData(new byte[] { 1, 2, 3 }).mimeType("image/*"));
+        importTheme.putImagesItem("logo2", new ImageDTOV1().imageData(new byte[] { 1, 2, 3 }).mimeType("image/*"));
+        data.getThemes().put("themeWithoutDisplayName", importTheme);
+
+        var dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(data)
+                .post("import")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract().as(ImportThemeResponseDTOV1.class);
+
+        assertThat(dto).isNotNull().returns(data.getId(), from(ImportThemeResponseDTOV1::getId));
+
+        //check if fallback displayname was used
+        var exportResponse = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(request)
+                .post("export")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract().as(ThemeSnapshotDTOV1.class);
+
+        assertThat(exportResponse).isNotNull();
+        assertThat(exportResponse.getThemes()).hasSize(4);
+        assertThat(exportResponse.getThemes().get("themeWithoutDisplayName").getDisplayName())
+                .isEqualTo("themeWithoutDisplayName");
+    }
+
+    @Test
     void importOperatorThemesTest() {
 
         var request = new ThemeSnapshotDTOV1();

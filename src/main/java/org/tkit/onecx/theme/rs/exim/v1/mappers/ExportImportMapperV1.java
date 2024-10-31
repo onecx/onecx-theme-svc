@@ -128,6 +128,7 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "displayName", source = "dto.displayName", defaultExpression = "java(name)")
     public abstract Theme create(String name, EximThemeDTOV1 dto);
 
     @Named("properties")
