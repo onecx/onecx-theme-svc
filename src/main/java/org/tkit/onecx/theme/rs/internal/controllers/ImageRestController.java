@@ -18,6 +18,7 @@ import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.image.rs.internal.ImagesInternalApi;
+import gen.org.tkit.onecx.image.rs.internal.model.MimeTypeDTO;
 import gen.org.tkit.onecx.image.rs.internal.model.RefTypeDTO;
 import gen.org.tkit.onecx.theme.rs.internal.model.ProblemDetailResponseDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -54,18 +55,14 @@ public class ImageRestController implements ImagesInternalApi {
     }
 
     @Override
-    public Response updateImage(String refId, RefTypeDTO refType, byte[] body, Integer contentLength) {
+    public Response updateImage(String refId, RefTypeDTO refType, MimeTypeDTO mimeType, byte[] body, Integer contentLength) {
 
         Image image = imageDAO.findByRefIdAndRefType(refId, refType.toString());
         if (image == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
-        var contentType = httpHeaders.getMediaType();
-        contentType = new MediaType(contentType.getType(), contentType.getSubtype());
-
         image.setLength(contentLength);
-        image.setMimeType(contentType.toString());
+        image.setMimeType(mimeType.toString());
         image.setImageData(body);
 
         image = imageDAO.update(image);
@@ -74,11 +71,8 @@ public class ImageRestController implements ImagesInternalApi {
     }
 
     @Override
-    public Response uploadImage(Integer contentLength, String refId, RefTypeDTO refType, byte[] body) {
-
-        var contentType = httpHeaders.getMediaType();
-        contentType = new MediaType(contentType.getType(), contentType.getSubtype());
-        var image = imageMapper.create(refId, refType.toString(), contentType.toString(), contentLength);
+    public Response uploadImage(Integer contentLength, String refId, RefTypeDTO refType, MimeTypeDTO mimeType, byte[] body) {
+        var image = imageMapper.create(refId, refType.toString(), mimeType.toString(), contentLength);
         image.setLength(contentLength);
         image.setImageData(body);
         image = imageDAO.create(image);
