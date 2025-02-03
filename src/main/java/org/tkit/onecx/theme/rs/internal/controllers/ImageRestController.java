@@ -41,9 +41,6 @@ public class ImageRestController implements ImagesInternalApi {
     @Inject
     ImageMapper imageMapper;
 
-    @Context
-    HttpHeaders httpHeaders;
-
     @Override
     public Response getImage(String refId, RefTypeDTO refType) {
         Image image = imageDAO.findByRefIdAndRefType(refId, refType.toString());

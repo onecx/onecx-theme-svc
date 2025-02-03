@@ -74,7 +74,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /internal/images/{refId}/{refType}/{mimeType}:
     post:
       security:
         - oauth2: [ ocx-th:all, ocx-th:write ]
@@ -100,7 +99,7 @@ paths:
           schema:
             $ref: "#/components/schemas/RefType"
         - name: mimeType
-          in: path
+          in: header
           required: true
           schema:
             $ref: "#/components/schemas/MimeType"
@@ -148,7 +147,7 @@ paths:
           schema:
             $ref: "#/components/schemas/RefType"
         - name: mimeType
-          in: path
+          in: header
           required: true
           schema:
             $ref: "#/components/schemas/MimeType"
