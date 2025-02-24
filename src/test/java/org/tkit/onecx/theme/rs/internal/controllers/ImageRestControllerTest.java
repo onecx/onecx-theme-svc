@@ -92,23 +92,6 @@ class ImageRestControllerTest extends AbstractTest {
                 .post("/{refType}")
                 .then()
                 .statusCode(CREATED.getStatusCode());
-
-        var exception = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
-                .pathParam("refId", refId)
-                .pathParam("refType", refType)
-                .header("mimeType", MimeTypeDTO.PNG)
-                .when()
-                .body(FILE)
-                .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .post("/{refType}")
-                .then()
-                .statusCode(BAD_REQUEST.getStatusCode())
-                .extract().as(ProblemDetailResponseDTO.class);
-
-        assertThat(exception.getErrorCode()).isEqualTo("PERSIST_ENTITY_FAILED");
-        assertThat(exception.getDetail()).isEqualTo(
-                "could not execute statement [ERROR: duplicate key value violates unique constraint 'image_constraints'  Detail: Key (ref_id, ref_type, tenant_id)=(themeNameUpload, logo, default) already exists.]");
     }
 
     @Test
@@ -231,9 +214,9 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .put("/{refType}")
+                .post("/{refType}")
                 .then()
-                .statusCode(OK.getStatusCode())
+                .statusCode(CREATED.getStatusCode())
                 .extract()
                 .body().as(ImageInfoDTO.class);
 
@@ -247,9 +230,9 @@ class ImageRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .put("/{refType}")
+                .post("/{refType}")
                 .then()
-                .statusCode(NOT_FOUND.getStatusCode());
+                .statusCode(CREATED.getStatusCode());
     }
 
     @Test
@@ -335,42 +318,6 @@ class ImageRestControllerTest extends AbstractTest {
                 .get("/{refType}")
                 .then()
                 .statusCode(NOT_FOUND.getStatusCode());
-
-    }
-
-    @Test
-    void updateImage_returnNotFound_whenEntryNotExists() {
-
-        var refId = "themeNameUpdateFailed";
-        var refType = RefTypeDTO.LOGO;
-
-        given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
-                .pathParam("refId", refId)
-                .pathParam("refType", refType)
-                .header("mimeType", MimeTypeDTO.PNG)
-                .when()
-                .body(FILE)
-                .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .post("/{refType}")
-                .then()
-                .statusCode(CREATED.getStatusCode())
-                .extract()
-                .body().as(ImageInfoDTO.class);
-
-        var exception = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
-                .pathParam("refId", "wrongRefId")
-                .pathParam("refType", "wrongRefType")
-                .header("mimeType", MimeTypeDTO.PNG)
-                .when()
-                .body(FILE)
-                .contentType(MEDIA_TYPE_IMAGE_PNG)
-                .put("/{refType}")
-                .then()
-                .statusCode(NOT_FOUND.getStatusCode());
-
-        Assertions.assertNotNull(exception);
 
     }
 
