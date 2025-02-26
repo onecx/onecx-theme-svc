@@ -62,6 +62,9 @@ components:
           type: string
         properties:
           type: object
+        mandatory:
+          type: boolean
+          default: false
     TemplateImages:
       type: object
       nullable: false

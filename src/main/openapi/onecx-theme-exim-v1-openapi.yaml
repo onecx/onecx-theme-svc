@@ -158,6 +158,9 @@ components:
           type: object
         images:
           $ref: '#/components/schemas/Images'
+        mandatory:
+          type: boolean
+          default: false
     EximProblemDetailResponse:
       type: object
       properties:

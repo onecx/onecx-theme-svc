@@ -39,6 +39,7 @@ public abstract class ThemeMapper {
     @Mapping(target = "removeStreamItem", ignore = true)
     public abstract ThemePageResultDTO mapPage(PageResult<Theme> page);
 
+    @Mapping(target = "mandatory", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     @Mapping(target = "modificationCount", ignore = true)
@@ -57,6 +58,7 @@ public abstract class ThemeMapper {
     @Mapping(target = "properties", qualifiedByName = "propertiesJson")
     public abstract ThemeDTO map(Theme theme);
 
+    @Mapping(target = "mandatory", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "creationUser", ignore = true)

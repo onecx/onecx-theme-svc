@@ -312,6 +312,9 @@ components:
         operator:
           type: boolean
           default: false
+        mandatory:
+          type: boolean
+          default: false
     OffsetDateTime:
       format: date-time
       type: string
