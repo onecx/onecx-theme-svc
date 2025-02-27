@@ -28,7 +28,7 @@ public class ThemeService {
     public void deleteTheme(String id) {
 
         var theme = dao.findById(id);
-        if (theme != null) {
+        if (theme != null && !Boolean.TRUE.equals(theme.getMandatory())) {
             dao.deleteQueryById(id);
             // workaround for images
             imageDAO.deleteQueryByRefId(theme.getName());
