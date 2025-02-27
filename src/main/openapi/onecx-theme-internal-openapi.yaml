@@ -312,6 +312,9 @@ components:
         operator:
           type: boolean
           default: false
+        mandatory:
+          type: boolean
+          default: false
     OffsetDateTime:
       format: date-time
       type: string
@@ -373,6 +376,9 @@ components:
           type: string
         properties:
           type: object
+        mandatory:
+          type: boolean
+          default: false
     UpdateTheme:
       required:
         - name
@@ -405,3 +411,5 @@ components:
           type: string
         properties:
           type: object
+        mandatory:
+          type: boolean

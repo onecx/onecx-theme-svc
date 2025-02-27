@@ -95,6 +95,87 @@ class ThemesRestControllerTest extends AbstractTest {
     }
 
     @Test
+    void delete_mandatory_theme_not_possible() {
+        // create theme
+        var themeDto = new CreateThemeDTO();
+        themeDto.setName("test01");
+        themeDto.setDisplayName("test01");
+        themeDto.setCssFile("cssFile");
+        themeDto.setDescription("description");
+        themeDto.setAssetsUrl("assets/url");
+        themeDto.setPreviewImageUrl("image/url");
+        themeDto.setMandatory(true);
+
+        var uri = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(themeDto)
+                .post()
+                .then().statusCode(CREATED.getStatusCode())
+                .extract().header(HttpHeaders.LOCATION);
+
+        var dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .get(uri)
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .extract()
+                .body().as(ThemeDTO.class);
+
+        // delete theme
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .pathParam("id", dto.getId())
+                .delete("{id}")
+                .then().statusCode(NO_CONTENT.getStatusCode());
+
+        // check if theme still exists
+        dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .pathParam("id", dto.getId())
+                .get("{id}")
+                .then().statusCode(OK.getStatusCode())
+                .extract().as(ThemeDTO.class);
+
+        // update theme, set mandatory to false
+        var themeUpdateDto = new UpdateThemeDTO();
+        themeUpdateDto.setName("test01");
+        themeUpdateDto.setDisplayName("test01");
+        themeUpdateDto.setModificationCount(dto.getModificationCount());
+        themeUpdateDto.setDescription("description-update");
+        themeUpdateDto.setMandatory(false);
+
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .body(themeUpdateDto)
+                .when()
+                .pathParam("id", dto.getId())
+                .put("{id}")
+                .then().statusCode(NO_CONTENT.getStatusCode());
+
+        // try to delete theme again
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .pathParam("id", dto.getId())
+                .delete("{id}")
+                .then().statusCode(NO_CONTENT.getStatusCode());
+
+        // check if theme doesn't exist anymore
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .pathParam("id", dto.getId())
+                .get("{id}")
+                .then().statusCode(NOT_FOUND.getStatusCode());
+    }
+
+    @Test
     void deleteThemeTest() {
 
         // delete theme

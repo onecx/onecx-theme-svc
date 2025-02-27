@@ -55,4 +55,7 @@ public class Theme extends TraceableEntity {
 
     @Column(name = "OPERATOR")
     private Boolean operator;
+
+    @Column(name = "MANDATORY")
+    private Boolean mandatory;
 }
