@@ -67,5 +67,9 @@ app:
         spec:
           kcConfig:
             defaultClientScopes: [ ocx-tn:read ]
+    microservice:
+      spec:
+        description: OneCX Theme Backend Service
+        name: OneCX Theme SVC
 ----
 
