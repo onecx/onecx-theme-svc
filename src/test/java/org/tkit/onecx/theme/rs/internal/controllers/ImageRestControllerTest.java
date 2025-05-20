@@ -5,7 +5,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.tkit.onecx.theme.rs.internal.mappers.ExceptionMapper.ErrorKeys.CONSTRAINT_VIOLATIONS;
-import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import java.io.File;
 import java.util.Objects;
@@ -36,7 +35,7 @@ class ImageRestControllerTest extends AbstractTest {
     private static final String MEDIA_TYPE_IMAGE_JPG = "image/jpg";
 
     private static final File FILE = new File(
-            Objects.requireNonNull(ImageRestControllerTest.class.getResource("/images/Testimage.png")).getFile());
+            Objects.requireNonNull(ImageRestControllerTest.class.getResource("/images/Testimage.IMAGE_PNG")).getFile());
 
     @Test
     void uploadImage() {
@@ -44,7 +43,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", "themeName")
                 .pathParam("refType", RefTypeDTO.LOGO.toString())
-                .header("mimeType", MimeTypeDTO.PNG)
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
@@ -63,7 +62,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", "themeName")
                 .pathParam("refType", RefTypeDTO.LOGO.toString())
-                .header("mimeType", MimeTypeDTO.PNG)
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
                 .when()
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
                 .post("/{refType}")
@@ -85,7 +84,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", refId)
                 .pathParam("refType", refType)
-                .header("mimeType", MimeTypeDTO.PNG)
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
@@ -104,7 +103,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", refId)
                 .pathParam("refType", refType)
-                .header("mimeType", MimeTypeDTO.PNG)
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
@@ -136,7 +135,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", refId)
                 .pathParam("refType", refType)
-                .header("mimeType", MimeTypeDTO.JPG)
+                .header("mimeType", MimeTypeDTO.IMAGE_JPG)
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_JPG)
@@ -168,7 +167,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", refId)
                 .pathParam("refType", refType)
-                .header("mimeType", MimeTypeDTO.PNG)
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
@@ -196,7 +195,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", refId)
                 .pathParam("refType", refType)
-                .header("mimeType", MimeTypeDTO.PNG)
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
@@ -210,7 +209,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", refId)
                 .pathParam("refType", refType)
-                .header("mimeType", MimeTypeDTO.PNG)
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
@@ -226,7 +225,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", "does-not-exists")
                 .pathParam("refType", refType)
-                .header("mimeType", MimeTypeDTO.PNG)
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
@@ -245,7 +244,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", refId)
                 .pathParam("refType", refType)
-                .header("mimeType", MimeTypeDTO.PNG)
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
@@ -288,7 +287,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", refId)
                 .pathParam("refType", refType)
-                .header("mimeType", MimeTypeDTO.PNG)
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
                 .when()
                 .body(FILE)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)
@@ -333,7 +332,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", refId)
                 .pathParam("refType", RefTypeDTO.LOGO)
-                .header("mimeType", MimeTypeDTO.PNG)
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
                 .when()
                 .body(body)
                 .contentType(MEDIA_TYPE_IMAGE_PNG)

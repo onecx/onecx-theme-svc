@@ -15,6 +15,7 @@ import org.eclipse.microprofile.jwt.Claims;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.quarkus.test.keycloak.client.KeycloakTestClient;
 import io.restassured.config.RestAssuredConfig;
 import io.smallrye.jwt.build.Jwt;
 import io.smallrye.jwt.util.KeyUtils;
@@ -26,6 +27,8 @@ public class AbstractTest {
     protected static final String CLAIMS_ORG_ID = ConfigProvider.getConfig()
             .getValue("%test.tkit.rs.context.tenant-id.mock.claim-org-id", String.class);
 
+    KeycloakTestClient keycloakClient = new KeycloakTestClient();
+
     static {
         config = RestAssuredConfig.config().objectMapperConfig(
                 objectMapperConfig().jackson2ObjectMapperFactory(
@@ -35,6 +38,10 @@ public class AbstractTest {
                             objectMapper.configure(WRITE_DATES_AS_TIMESTAMPS, false);
                             return objectMapper;
                         }));
+    }
+
+    protected String getKeycloakClientToken(String clientId) {
+        return keycloakClient.getClientAccessToken(clientId);
     }
 
     protected static String createToken(String organizationId) {
