@@ -66,7 +66,6 @@ class ThemesRestControllerV1Test extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .get("test1/favicon")
                 .then()
-                .log().all()
                 .statusCode(OK.getStatusCode())
                 .contentType("image/x-icon")
                 .extract()
