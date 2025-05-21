@@ -21,7 +21,7 @@ class AfterStartThemeDataImportTest extends AbstractTest {
     @Test
     @DisplayName("Import theme data from file")
     void importDataFromFileTest() {
-        var data = dao.findAll().toList();
+        var data = dao.findAllAsList();
         assertThat(data).isNotNull().hasSize(3);
         assertThat(data.get(0)).isNotNull();
     }
