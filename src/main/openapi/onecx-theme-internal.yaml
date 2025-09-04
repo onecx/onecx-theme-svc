@@ -2,50 +2,21 @@
 openapi: 3.0.3
 info:
   title: onecx-theme internal service
+  description: This API provides endpoints to manage Themes
   version: 1.0.0
 servers:
   - url: "http://onecx-theme-svc:8080"
 tags:
   - name: themesInternal
+    description: Managing Themes
 paths:
   /internal/themes:
-    get:
-      security:
-        - oauth2: [ ocx-th:all, ocx-th:read ]
-      tags:
-        - themesInternal
-      description: Return list of themes
-      operationId: getThemes
-      parameters:
-        - name: pageNumber
-          in: query
-          schema:
-            format: int32
-            description: The number of page.
-            default: 0
-            type: integer
-        - name: pageSize
-          in: query
-          schema:
-            format: int32
-            description: The size of page
-            default: 10
-            type: integer
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ThemePageResult'
     post:
       security:
         - oauth2: [ ocx-th:all, ocx-th:write ]
       tags:
         - themesInternal
-      description: Create new theme
+      description: Create a new theme
       operationId: createNewTheme
       requestBody:
         required: true
@@ -55,7 +26,7 @@ paths:
               $ref: '#/components/schemas/CreateTheme'
       responses:
         "201":
-          description: New theme created
+          description: Theme created successfully
           headers:
             Location:
               required: true
@@ -78,7 +49,7 @@ paths:
         - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - themesInternal
-      description: Return theme by ID
+      description: Get a theme by its id
       operationId: getThemeById
       parameters:
         - name: id
@@ -88,19 +59,19 @@ paths:
             type: string
       responses:
         "200":
-          description: OK
+          description: Theme retrieved successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Theme'
         "404":
-          description: Not found
+          description: Theme not found
     put:
       security:
         - oauth2: [ ocx-th:all, ocx-th:write ]
       tags:
         - themesInternal
-      description: Update theme by ID
+      description: Update a theme by its id
       operationId: updateTheme
       parameters:
         - name: id
@@ -116,7 +87,7 @@ paths:
               $ref: '#/components/schemas/UpdateTheme'
       responses:
         "204":
-          description: Theme updated
+          description: Theme updated successfully
         "400":
           description: Bad request
           content:
@@ -130,7 +101,7 @@ paths:
         - oauth2: [ ocx-th:all, ocx-th:delete ]
       tags:
         - themesInternal
-      description: Delete theme by ID
+      description: Delete a theme by its id
       operationId: deleteTheme
       parameters:
         - name: id
@@ -140,31 +111,31 @@ paths:
             type: string
       responses:
         "204":
-          description: No Content
+          description: Theme deleted successfully
   /internal/themes/info:
     get:
       security:
         - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - themesInternal
-      description: Get list of all themes
+      description: Get a list of all themes
       operationId: getThemeInfoList
       responses:
         "200":
-          description: OK
+          description: Themes retrieved successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ThemeInfoList'
         "404":
-          description: Not found
+          description: Themes not found
   /internal/themes/search:
     post:
       security:
         - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - themesInternal
-      description: Search for themes
+      description: Search for themes by search criteria
       operationId: searchThemes
       requestBody:
         required: true
@@ -174,7 +145,7 @@ paths:
               $ref: '#/components/schemas/ThemeSearchCriteria'
       responses:
         "200":
-          description: OK
+          description: Theme search results retrieved successfully
           content:
             application/json:
               schema:
@@ -187,7 +158,7 @@ paths:
         - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - themesInternal
-      description: Load a single theme definition
+      description: Load a single theme by its name
       operationId: getThemeByThemeDefinitionName
       parameters:
         - name: name
@@ -197,13 +168,13 @@ paths:
             type: string
       responses:
         "200":
-          description: OK
+          description: Theme retrieved successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Theme'
         "404":
-          description: Not found
+          description: Theme not found
 components:
   securitySchemes:
     oauth2:

@@ -1,7 +1,8 @@
 ---
 openapi: 3.0.3
 info:
-  title: onecx-theme themes import from file during the start of the application
+  title: onecx-theme internal template import service
+  description: This API provides endpoints for themes import from file during the start of the application
   version: 1.0.0
 servers:
   - url: "http://localhost"
@@ -18,7 +19,7 @@ paths:
               $ref: '#/components/schemas/TemplateImport'
       responses:
         200:
-          description: ok
+          description: Template imported successfully
 components:
   securitySchemes:
     oauth2:

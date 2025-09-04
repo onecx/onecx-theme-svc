@@ -1,12 +1,14 @@
 ---
 openapi: 3.0.3
 info:
-  title: onecx-theme export and import v1
+  title: onecx-theme export and import service v1
+  description: This API provides endpoints for exporting and importing themes
   version: 1.0.0
 servers:
   - url: "http://onecx-theme-svc:8080"
 tags:
   - name: themesExportImport
+    description: Exporting and importing Themes
 paths:
   /exim/v1/themes/export:
     post:
@@ -14,7 +16,7 @@ paths:
         - oauth2: [ ocx-th:all, ocx-th:read ]
       tags:
         - themesExportImport
-      description: Export list of themes
+      description: Export one or multiple themes
       operationId: exportThemes
       requestBody:
         required: true
@@ -24,20 +26,20 @@ paths:
               $ref: '#/components/schemas/ExportThemeRequest'
       responses:
         "200":
-          description: OK
+          description: Theme exported successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ThemeSnapshot'
         "404":
-          description: No themes founds
+          description: Themes not found
   /exim/v1/themes/import:
     post:
       security:
         - oauth2: [ ocx-th:all, ocx-th:write ]
       tags:
         - themesExportImport
-      description: Import themes
+      description: Import one or multiple themes
       operationId: importThemes
       requestBody:
         required: true
@@ -47,7 +49,7 @@ paths:
               $ref: '#/components/schemas/ThemeSnapshot'
       responses:
         "200":
-          description: Import result
+          description: Themes imported successfully
           content:
             application/json:
               schema:
@@ -64,7 +66,7 @@ paths:
         - oauth2: [ ocx-th:all, ocx-th:write ]
       tags:
         - themesExportImport
-      description: Operator import themes
+      description: Import themes by the onecx operator only
       operationId: operatorImportThemes
       requestBody:
         required: true
@@ -74,7 +76,7 @@ paths:
               $ref: '#/components/schemas/ThemeSnapshot'
       responses:
         "200":
-          description: Import result
+          description: Theme imported successfully
           content:
             application/json:
               schema:
