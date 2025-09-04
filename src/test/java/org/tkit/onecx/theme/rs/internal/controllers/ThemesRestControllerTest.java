@@ -270,24 +270,6 @@ class ThemesRestControllerTest extends AbstractTest {
     }
 
     @Test
-    void getThemesTest() {
-        var data = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
-                .contentType(APPLICATION_JSON)
-                .get()
-                .then()
-                .statusCode(OK.getStatusCode())
-                .contentType(APPLICATION_JSON)
-                .extract()
-                .as(ThemePageResultDTO.class);
-
-        assertThat(data).isNotNull();
-        assertThat(data.getTotalElements()).isEqualTo(3);
-        assertThat(data.getStream()).isNotNull().hasSize(3);
-
-    }
-
-    @Test
     void searchThemesTest() {
         var criteria = new ThemeSearchCriteriaDTO();
 

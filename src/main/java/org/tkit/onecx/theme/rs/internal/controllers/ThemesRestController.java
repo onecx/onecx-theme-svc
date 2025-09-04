@@ -87,12 +87,6 @@ public class ThemesRestController implements ThemesInternalApi {
     }
 
     @Override
-    public Response getThemes(Integer pageNumber, Integer pageSize) {
-        var items = dao.findAll(pageNumber, pageSize);
-        return Response.ok(mapper.mapPage(items)).build();
-    }
-
-    @Override
     public Response searchThemes(ThemeSearchCriteriaDTO themeSearchCriteriaDTO) {
         var criteria = mapper.map(themeSearchCriteriaDTO);
         var result = dao.findThemesByCriteria(criteria);

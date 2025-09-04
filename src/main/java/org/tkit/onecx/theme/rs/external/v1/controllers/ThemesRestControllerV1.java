@@ -48,8 +48,12 @@ public class ThemesRestControllerV1 implements ThemesV1Api {
     }
 
     @Override
-    public Response getThemeLogoByName(String name) {
-        Image image = imageDAO.findByRefIdAndRefType(name, "logo");
+    public Response getThemeLogoByName(String name, Boolean small) {
+        String refType = "logo";
+        if (Boolean.TRUE.equals(small)) {
+            refType = "logo-small";
+        }
+        Image image = imageDAO.findByRefIdAndRefType(name, refType);
         if (image == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

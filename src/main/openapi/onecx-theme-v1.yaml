@@ -1,12 +1,14 @@
 ---
 openapi: 3.0.3
 info:
-  title: onecx-theme internal service
+  title: onecx-theme external service V1
+  description: This API provides endpoints to retrieve Themes and Images
   version: 1.0.0
 servers:
   - url: "http://onecx-theme-svc:8080"
 tags:
   - name: themes
+    description: Retrieve Themes and Images
 paths:
   /v1/themes:
     get:
@@ -14,24 +16,24 @@ paths:
         - oauth2: [ ocx-th:read ]
       tags:
         - themes
-      description: Get list of all themes
+      description: Get a list of all themes
       operationId: getThemesInfo
       responses:
         "200":
-          description: OK
+          description: Themes retrieved successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ThemeInfoList'
         "404":
-          description: Not found
+          description: Themes not found
   /v1/themes/{name}:
     get:
       security:
         - oauth2: [ ocx-th:read ]
       tags:
         - themes
-      description: Load a single theme definition
+      description: Get a single theme by its name
       operationId: getThemeByName
       parameters:
         - name: name
@@ -41,20 +43,20 @@ paths:
             type: string
       responses:
         "200":
-          description: OK
+          description: Theme retrieved successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Theme'
         "404":
-          description: Not found
+          description: Theme not found
   /v1/themes/{name}/favicon:
     get:
       security:
         - oauth2: [ ocx-th:read ]
       tags:
         - themes
-      description: get favicon of theme by name
+      description: Get the favicon of a theme by its name
       operationId: getThemeFaviconByName
       parameters:
         - name: name
@@ -64,7 +66,7 @@ paths:
             type: string
       responses:
         200:
-          description: OK
+          description: Favicon retrieved successfully
           content:
             image/*:
               schema:
@@ -73,14 +75,14 @@ paths:
                 type: string
                 format: binary
         404:
-          description: Not found
+          description: Favicon not found
   /v1/themes/{name}/logo:
     get:
       security:
         - oauth2: [ ocx-th:read ]
       tags:
         - themes
-      description: get logo of theme by name
+      description: Get a logo of a theme by its name
       operationId: getThemeLogoByName
       parameters:
         - name: name
@@ -88,9 +90,15 @@ paths:
           required: true
           schema:
             type: string
+        - name: small
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         200:
-          description: OK
+          description: Logo retrieved successfully
           content:
             image/*:
               schema:
@@ -99,7 +107,7 @@ paths:
                 type: string
                 format: binary
         404:
-          description: Not found
+          description: Logo not found
 components:
   securitySchemes:
     oauth2:

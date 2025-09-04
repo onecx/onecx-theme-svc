@@ -218,40 +218,6 @@ class ThemesRestControllerTenantTest extends AbstractTest {
     }
 
     @Test
-    void getThemesTest() {
-        var data = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
-                .contentType(APPLICATION_JSON)
-                .header(APM_HEADER_PARAM, createToken("org1"))
-                .get()
-                .then()
-                .statusCode(OK.getStatusCode())
-                .contentType(APPLICATION_JSON)
-                .extract()
-                .as(ThemePageResultDTO.class);
-
-        assertThat(data).isNotNull();
-        assertThat(data.getTotalElements()).isEqualTo(2);
-        assertThat(data.getStream()).isNotNull().hasSize(2);
-
-        data = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
-                .contentType(APPLICATION_JSON)
-                .header(APM_HEADER_PARAM, createToken("org2"))
-                .get()
-                .then()
-                .statusCode(OK.getStatusCode())
-                .contentType(APPLICATION_JSON)
-                .extract()
-                .as(ThemePageResultDTO.class);
-
-        assertThat(data).isNotNull();
-        assertThat(data.getTotalElements()).isEqualTo(1);
-        assertThat(data.getStream()).isNotNull().hasSize(1);
-
-    }
-
-    @Test
     void searchThemesTest() {
         var criteria = new ThemeSearchCriteriaDTO();
 

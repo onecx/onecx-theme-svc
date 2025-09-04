@@ -100,4 +100,26 @@ class ThemesRestControllerV1Test extends AbstractTest {
                 .get("none-exists/logo")
                 .then().statusCode(NOT_FOUND.getStatusCode());
     }
+
+    @Test
+    void getThemeLogoSmallTest() {
+        var data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .queryParam("small", true)
+                .get("test2/logo")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType("image/png")
+                .extract()
+                .body().asByteArray();
+
+        assertThat(data).isNotNull();
+
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .get("none-exists/logo")
+                .then().statusCode(NOT_FOUND.getStatusCode());
+    }
 }

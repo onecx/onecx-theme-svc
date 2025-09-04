@@ -209,7 +209,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>src/main/openapi/onecx-theme-internal-openapi.yaml</inputSpec>
+                            <inputSpec>src/main/openapi/onecx-theme-internal.yaml</inputSpec>
                             <apiPackage>gen.org.tkit.onecx.theme.rs.internal</apiPackage>
                             <modelPackage>gen.org.tkit.onecx.theme.rs.internal.model</modelPackage>
                             <modelNameSuffix>DTO</modelNameSuffix>
@@ -235,7 +235,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>src/main/openapi/onecx-theme-exim-v1-openapi.yaml</inputSpec>
+                            <inputSpec>src/main/openapi/onecx-theme-exim-v1.yaml</inputSpec>
                             <apiPackage>gen.org.tkit.onecx.theme.rs.exim.v1</apiPackage>
                             <modelPackage>gen.org.tkit.onecx.theme.rs.exim.v1.model</modelPackage>
                             <modelNameSuffix>DTOV1</modelNameSuffix>
@@ -247,7 +247,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>src/main/openapi/onecx-image-internal-openapi.yaml</inputSpec>
+                            <inputSpec>src/main/openapi/onecx-image-internal.yaml</inputSpec>
                             <apiPackage>gen.org.tkit.onecx.image.rs.internal</apiPackage>
                             <modelPackage>gen.org.tkit.onecx.image.rs.internal.model</modelPackage>
                             <generateModelTests>true</generateModelTests>
