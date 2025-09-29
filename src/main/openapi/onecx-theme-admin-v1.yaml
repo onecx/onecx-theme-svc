@@ -1,0 +1,345 @@
+---
+openapi: 3.0.3
+info:
+ title: onecx-theme admin v1 service
+ description: This API provides endpoints to manage Themes as an Admin
+ version: 1.0.0
+servers:
+ - url: "http://onecx-theme-svc:8080"
+tags:
+ - name: themesAdmin
+   description: Managing Themes as an Admin
+paths:
+ /admin/v1/themes:
+  post:
+   security:
+    - oauth2: [ ocx-th:admin-write ]
+   tags:
+    - themesAdmin
+   description: Create a new theme
+   operationId: createNewTheme
+   requestBody:
+    required: true
+    content:
+     application/json:
+      schema:
+       $ref: '#/components/schemas/CreateThemeRequest'
+   responses:
+    "201":
+     description: Theme created successfully
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/CreateThemeResponse'
+    "400":
+     description: Bad request
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/ProblemDetailResponse'
+ /admin/v1/themes/{id}:
+  get:
+   security:
+    - oauth2: [ ocx-th:admin-read ]
+   tags:
+    - themesAdmin
+   description: Get a theme by its id
+   operationId: getThemeById
+   parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+       type: string
+   responses:
+    "200":
+     description: Theme retrieved successfully
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Theme'
+    "404":
+     description: Theme not found
+  put:
+   security:
+    - oauth2: [ ocx-th:admin-write ]
+   tags:
+    - themesAdmin
+   description: Update a theme by its id
+   operationId: updateTheme
+   parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+       type: string
+   requestBody:
+    required: true
+    content:
+     application/json:
+      schema:
+       $ref: '#/components/schemas/UpdateThemeRequest'
+   responses:
+    "204":
+     description: Theme updated successfully
+    "400":
+     description: Bad request
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/ProblemDetailResponse'
+    "404":
+     description: Theme not found
+  delete:
+   security:
+    - oauth2: [ ocx-th:admin-delete ]
+   tags:
+    - themesAdmin
+   description: Delete a theme by its id
+   operationId: deleteTheme
+   parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+       type: string
+   responses:
+    "204":
+     description: Theme deleted successfully
+ /admin/v1/themes/search:
+  post:
+   security:
+    - oauth2: [ ocx-th:admin-read ]
+   tags:
+    - themesAdmin
+   description: Search for themes by search criteria
+   operationId: searchThemes
+   requestBody:
+    required: true
+    content:
+     application/json:
+      schema:
+       $ref: '#/components/schemas/ThemeSearchCriteria'
+   responses:
+    "200":
+     description: Theme search results retrieved successfully
+     content:
+      application/json:
+       schema:
+        type: array
+        items:
+         $ref: '#/components/schemas/ThemePageResult'
+components:
+ securitySchemes:
+  oauth2:
+   type: oauth2
+   flows:
+    clientCredentials:
+     tokenUrl: https://oauth.simple.api/token
+     scopes:
+      ocx-th:admin-read: Grants read access
+      ocx-th:admin-write: Grants write access
+      ocx-th:admin-delete: Grants access to delete operations
+ schemas:
+  ThemeSearchCriteria:
+   type: object
+   properties:
+    name:
+     type: string
+    pageNumber:
+     format: int32
+     description: The number of page.
+     default: 0
+     type: integer
+    pageSize:
+     format: int32
+     description: The size of page
+     default: 100
+     maximum: 1000
+     type: integer
+  ThemePageResult:
+   type: object
+   properties:
+    totalElements:
+     format: int64
+     description: The total elements in the resource.
+     type: integer
+    number:
+     format: int32
+     type: integer
+    size:
+     format: int32
+     type: integer
+    totalPages:
+     format: int64
+     type: integer
+    stream:
+     type: array
+     items:
+      $ref: '#/components/schemas/Theme'
+  CreateThemeRequest:
+   type: object
+   required:
+    - resource
+   properties:
+    resource:
+     $ref: '#/components/schemas/CreateTheme'
+  CreateThemeResponse:
+   type: object
+   required:
+    - resource
+   properties:
+    resource:
+     $ref: '#/components/schemas/Theme'
+  UpdateThemeRequest:
+   type: object
+   required:
+    - resource
+   properties:
+    resource:
+     $ref: '#/components/schemas/UpdateTheme'
+  Theme:
+   required:
+    - name
+    - displayName
+   type: object
+   properties:
+    modificationCount:
+     format: int32
+     type: integer
+    creationDate:
+     $ref: '#/components/schemas/OffsetDateTime'
+    creationUser:
+     type: string
+    modificationDate:
+     $ref: '#/components/schemas/OffsetDateTime'
+    modificationUser:
+     type: string
+    id:
+     type: string
+    name:
+     minLength: 2
+     type: string
+    displayName:
+     minLength: 2
+     type: string
+    cssFile:
+     type: string
+    description:
+     type: string
+    assetsUrl:
+     type: string
+    logoUrl:
+     type: string
+    faviconUrl:
+     type: string
+    previewImageUrl:
+     type: string
+    assetsUpdateDate:
+     type: string
+    properties:
+     type: object
+    operator:
+     type: boolean
+     default: false
+    mandatory:
+     type: boolean
+     default: false
+  OffsetDateTime:
+   format: date-time
+   type: string
+   example: 2022-03-10T12:15:50-04:00
+  ProblemDetailResponse:
+   type: object
+   properties:
+    errorCode:
+     type: string
+    detail:
+     type: string
+    params:
+     type: array
+     items:
+      $ref: '#/components/schemas/ProblemDetailParam'
+    invalidParams:
+     type: array
+     items:
+      $ref: '#/components/schemas/ProblemDetailInvalidParam'
+  ProblemDetailParam:
+   type: object
+   properties:
+    key:
+     type: string
+    value:
+     type: string
+  ProblemDetailInvalidParam:
+   type: object
+   properties:
+    name:
+     type: string
+    message:
+     type: string
+  CreateTheme:
+   required:
+    - name
+    - displayName
+   type: object
+   properties:
+    name:
+     minLength: 2
+     type: string
+    displayName:
+     minLength: 2
+     type: string
+    cssFile:
+     type: string
+    description:
+     type: string
+    assetsUrl:
+     type: string
+    logoUrl:
+     type: string
+    faviconUrl:
+     type: string
+    previewImageUrl:
+     type: string
+    assetsUpdateDate:
+     type: string
+    properties:
+     type: object
+    mandatory:
+     type: boolean
+     default: false
+  UpdateTheme:
+   required:
+    - name
+    - displayName
+    - modificationCount
+   type: object
+   properties:
+    modificationCount:
+     format: int32
+     type: integer
+    name:
+     minLength: 2
+     type: string
+    displayName:
+     minLength: 2
+     type: string
+    cssFile:
+     type: string
+    description:
+     type: string
+    assetsUrl:
+     type: string
+    logoUrl:
+     type: string
+    faviconUrl:
+     type: string
+    previewImageUrl:
+     type: string
+    assetsUpdateDate:
+     type: string
+    properties:
+     type: object
+    mandatory:
+     type: boolean
