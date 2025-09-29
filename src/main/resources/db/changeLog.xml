@@ -9,4 +9,6 @@
     <include relativeToChangelogFile="true" file="v1/2024-06-12-drop-not-null.xml"/>
     <include relativeToChangelogFile="true" file="v1/2024-07-04-display-name-added.xml"/>
     <include relativeToChangelogFile="true" file="v1/2025-02-26-mandatory-attribute.xml"/>
+    <include relativeToChangelogFile="true" file="v1/2025-09-29-add-small-logo-url.xml"/>
+
 </databaseChangeLog>

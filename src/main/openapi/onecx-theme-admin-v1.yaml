@@ -231,6 +231,8 @@ components:
      type: string
     logoUrl:
      type: string
+    smallLogoUrl:
+     type: string
     faviconUrl:
      type: string
     previewImageUrl:
@@ -298,6 +300,8 @@ components:
      type: string
     logoUrl:
      type: string
+    smallLogoUrl:
+     type: string
     faviconUrl:
      type: string
     previewImageUrl:
@@ -332,6 +336,8 @@ components:
     assetsUrl:
      type: string
     logoUrl:
+     type: string
+    smallLogoUrl:
      type: string
     faviconUrl:
      type: string
