@@ -166,7 +166,7 @@ components:
   schemas:
     MimeType:
       type: string
-      enum: [ "image/x-icon", "image/png", "image/jpg", "image/jpeg" ]
+      enum: [ "image/x-icon", "image/svg+xml", "image/png", "image/jpg", "image/jpeg" ]
     RefType:
       type: string
       enum: [ logo, logo-small, favicon ]
