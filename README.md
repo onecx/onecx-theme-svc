@@ -1,2 +1,2 @@
 # onecx-theme-svc
-OneCx Theme Service
+OneCX Theme Service
