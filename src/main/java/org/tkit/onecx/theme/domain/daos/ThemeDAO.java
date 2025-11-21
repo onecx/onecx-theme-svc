@@ -99,18 +99,6 @@ public class ThemeDAO extends AbstractDAO<Theme> {
         }
     }
 
-    public PageResult<Theme> findAll(Integer pageNumber, Integer pageSize) {
-        try {
-            var cb = this.getEntityManager().getCriteriaBuilder();
-            var cq = cb.createQuery(Theme.class);
-            var root = cq.from(Theme.class);
-            cq.orderBy(cb.desc(root.get(AbstractTraceableEntity_.CREATION_DATE)));
-            return createPageQuery(cq, Page.of(pageNumber, pageSize)).getPageResult();
-        } catch (Exception ex) {
-            throw new DAOException(ErrorKeys.ERROR_FIND_ALL_THEME_PAGE, ex);
-        }
-    }
-
     public Stream<ThemeInfo> findAllInfos() {
         try {
             var cb = this.getEntityManager().getCriteriaBuilder();
@@ -145,7 +133,6 @@ public class ThemeDAO extends AbstractDAO<Theme> {
         FIND_ENTITY_BY_ID_FAILED,
         ERROR_FIND_THEMES_BY_CRITERIA,
         ERROR_FIND_ALL_THEME_INFO,
-        ERROR_FIND_ALL_THEME_PAGE,
         ERROR_FIND_NAMES_BY_NAMES,
         ERROR_FIND_THEME_BY_NAMES,
         ERROR_FIND_THEME_BY_NAME,

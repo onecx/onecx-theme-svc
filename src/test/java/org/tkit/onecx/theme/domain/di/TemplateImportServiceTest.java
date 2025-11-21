@@ -48,7 +48,7 @@ class TemplateImportServiceTest extends AbstractTest {
 
         service.importData(config);
 
-        List<Theme> data = dao.findAll().toList();
+        List<Theme> data = dao.findAllAsList();
         assertThat(data).isNotNull().hasSize(3);
 
     }
