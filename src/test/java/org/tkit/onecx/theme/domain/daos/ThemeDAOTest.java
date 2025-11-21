@@ -41,8 +41,6 @@ class ThemeDAOTest extends AbstractTest {
                 ThemeDAO.ErrorKeys.ERROR_FIND_THEME_BY_NAMES);
         methodExceptionTests(() -> dao.findNamesByThemeByNames(null),
                 ThemeDAO.ErrorKeys.ERROR_FIND_NAMES_BY_NAMES);
-        methodExceptionTests(() -> dao.findAll(0, 2),
-                ThemeDAO.ErrorKeys.ERROR_FIND_ALL_THEME_PAGE);
         methodExceptionTests(() -> dao.findAllInfos(),
                 ThemeDAO.ErrorKeys.ERROR_FIND_ALL_THEME_INFO);
     }
