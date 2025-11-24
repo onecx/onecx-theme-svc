@@ -65,6 +65,8 @@ components:
           type: string
         properties:
           type: object
+        overrides:
+          type: object
         mandatory:
           type: boolean
           default: false

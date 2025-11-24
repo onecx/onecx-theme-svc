@@ -47,14 +47,16 @@ public abstract class ThemeMapper {
     @Mapping(target = "modificationDate", ignore = true)
     @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "persisted", ignore = true)
-    @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "properties", qualifiedByName = "o2s")
+    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     public abstract Theme create(CreateThemeDTO object);
 
     public abstract List<ThemeDTO> map(Stream<Theme> entity);
 
-    @Mapping(target = "properties", qualifiedByName = "propertiesJson")
+    @Mapping(target = "properties", qualifiedByName = "s2o")
+    @Mapping(target = "overrides", qualifiedByName = "s2o")
     public abstract ThemeDTO map(Theme theme);
 
     @Mapping(target = "id", ignore = true)
@@ -64,12 +66,13 @@ public abstract class ThemeMapper {
     @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     @Mapping(target = "persisted", ignore = true)
-    @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "properties", qualifiedByName = "o2s")
+    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     public abstract void update(UpdateThemeDTO themeDTO, @MappingTarget Theme entity);
 
-    @Named("properties")
+    @Named("o2s")
     public String mapToString(Object properties) {
 
         if (properties == null) {
@@ -83,7 +86,7 @@ public abstract class ThemeMapper {
         }
     }
 
-    @Named("propertiesJson")
+    @Named("s2o")
     public Object stringToObject(String jsonVar) {
 
         if (jsonVar == null || jsonVar.isEmpty()) {

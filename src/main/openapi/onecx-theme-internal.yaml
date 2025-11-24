@@ -282,6 +282,8 @@ components:
           type: string
         properties:
           type: object
+        overrides:
+          type: object
         operator:
           type: boolean
           default: false
@@ -351,6 +353,8 @@ components:
           type: string
         properties:
           type: object
+        overrides:
+          type: object
         mandatory:
           type: boolean
           default: false
@@ -387,6 +391,8 @@ components:
         assetsUpdateDate:
           type: string
         properties:
+          type: object
+        overrides:
           type: object
         mandatory:
           type: boolean

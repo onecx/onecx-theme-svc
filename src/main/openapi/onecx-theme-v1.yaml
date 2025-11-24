@@ -161,3 +161,5 @@ components:
           type: string
         properties:
           type: object
+        overrides:
+          type: object

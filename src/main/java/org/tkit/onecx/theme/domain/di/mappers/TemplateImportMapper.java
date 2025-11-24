@@ -27,7 +27,8 @@ public abstract class TemplateImportMapper {
     ObjectMapper mapper;
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "properties", qualifiedByName = "o2s")
+    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "creationUser", ignore = true)
     @Mapping(target = "displayName", ignore = true)
@@ -84,7 +85,7 @@ public abstract class TemplateImportMapper {
         return data.length;
     }
 
-    @Named("properties")
+    @Named("o2s")
     public String properties(Object properties) {
         if (properties == null) {
             return null;
