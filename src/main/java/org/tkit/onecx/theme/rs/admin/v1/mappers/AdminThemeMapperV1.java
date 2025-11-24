@@ -38,14 +38,16 @@ public abstract class AdminThemeMapperV1 {
     @Mapping(target = "modificationDate", ignore = true)
     @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "persisted", ignore = true)
-    @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "properties", qualifiedByName = "o2s")
+    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     public abstract Theme create(CreateThemeDTOAdminV1 object);
 
     public abstract List<ThemeDTOAdminV1> map(Stream<Theme> entity);
 
-    @Mapping(target = "resource.properties", qualifiedByName = "propertiesJson")
+    @Mapping(target = "resource.properties", qualifiedByName = "s2o")
+    @Mapping(target = "resource.overrides", qualifiedByName = "s2o")
     @Mapping(target = "resource", source = "theme")
     public abstract CreateThemeResponseDTOAdminV1 mapCreate(Theme theme);
 
@@ -58,12 +60,13 @@ public abstract class AdminThemeMapperV1 {
     @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     @Mapping(target = "persisted", ignore = true)
-    @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "properties", qualifiedByName = "o2s")
+    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     public abstract void update(UpdateThemeDTOAdminV1 themeDTOAdminV1, @MappingTarget Theme entity);
 
-    @Named("properties")
+    @Named("o2s")
     public String mapToString(Object properties) {
 
         if (properties == null) {
@@ -77,7 +80,7 @@ public abstract class AdminThemeMapperV1 {
         }
     }
 
-    @Named("propertiesJson")
+    @Named("s2o")
     public Object stringToObject(String jsonVar) {
 
         if (jsonVar == null || jsonVar.isEmpty()) {

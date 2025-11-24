@@ -56,6 +56,9 @@ public class Theme extends TraceableEntity {
     @Column(name = "PROPERTIES", columnDefinition = "TEXT")
     private String properties;
 
+    @Column(name = "OVERRIDES", columnDefinition = "TEXT")
+    private String overrides;
+
     @Column(name = "OPERATOR")
     private Boolean operator;
 

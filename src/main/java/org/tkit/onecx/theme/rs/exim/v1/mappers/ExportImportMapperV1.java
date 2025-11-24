@@ -98,7 +98,8 @@ public abstract class ExportImportMapperV1 {
 
     public abstract ImageDTOV1 createImage(Image image);
 
-    @Mapping(target = "properties", qualifiedByName = "propertiesJson")
+    @Mapping(target = "properties", qualifiedByName = "s2o")
+    @Mapping(target = "overrides", qualifiedByName = "s2o")
     @Mapping(target = "removeImagesItem", ignore = true)
     @Mapping(target = "images", ignore = true)
     public abstract EximThemeDTOV1 map(Theme theme);
@@ -114,7 +115,8 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
-    @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "properties", qualifiedByName = "o2s")
+    @Mapping(target = "overrides", qualifiedByName = "o2s")
     public abstract void update(EximThemeDTOV1 dto, @MappingTarget Theme entity);
 
     @Mapping(target = "id", ignore = true)
@@ -127,11 +129,12 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
-    @Mapping(target = "properties", qualifiedByName = "properties")
+    @Mapping(target = "properties", qualifiedByName = "o2s")
+    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "displayName", source = "dto.displayName", defaultExpression = "java(name)")
     public abstract Theme create(String name, EximThemeDTOV1 dto);
 
-    @Named("properties")
+    @Named("o2s")
     public String mapToString(Object properties) {
 
         if (properties == null) {
@@ -145,7 +148,7 @@ public abstract class ExportImportMapperV1 {
         }
     }
 
-    @Named("propertiesJson")
+    @Named("s2o")
     public Object stringToObject(String jsonVar) {
 
         if (jsonVar == null || jsonVar.isEmpty()) {
