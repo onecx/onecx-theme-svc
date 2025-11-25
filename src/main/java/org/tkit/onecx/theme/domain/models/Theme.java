@@ -9,6 +9,8 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.TenantId;
 import org.tkit.quarkus.jpa.models.TraceableEntity;
 
@@ -63,6 +65,7 @@ public class Theme extends TraceableEntity {
 
     @OneToMany(cascade = { REMOVE, REFRESH, PERSIST, MERGE }, fetch = LAZY, orphanRemoval = true)
     @JoinColumn(name = "THEME_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ThemeOverride> overrides = new ArrayList<>();
 
     @Column(name = "OPERATOR")
