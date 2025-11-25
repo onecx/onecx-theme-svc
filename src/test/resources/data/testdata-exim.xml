@@ -15,4 +15,11 @@
 
 	<IMAGE guid="i2" optlock="0" mime_type="image/x-icon" data_length="3" data="123456667890123456" ref_type="favicon" ref_id="cg" tenant_id="tenant-100" />
 	<IMAGE guid="i4" optlock="0" mime_type="image/png" data_length="3" data="123456667890123456" ref_type="logo" ref_id="cg" tenant_id="tenant-100" />
+
+	<!-- THEME OVERRIDES -->
+	<THEME_OVERRIDE guid="ovr-1" theme_id="11-111" type="CSS" value="{&quot;colors&quot;:{&quot;primary&quot;:&quot;#FF0000&quot;,&quot;secondary&quot;:&quot;#00FF00&quot;}}"/>
+	<THEME_OVERRIDE guid="ovr-2" theme_id="11-111" type="PRIMENG" value="{&quot;colors&quot;:{&quot;primary&quot;:&quot;#FF0000&quot;,&quot;secondary&quot;:&quot;#00FF00&quot;}}"/>
+	<THEME_OVERRIDE guid="ovr-3" theme_id="22-222" type="PRIMENG" value="{&quot;colors&quot;:{&quot;primary&quot;:&quot;#FF0000&quot;,&quot;secondary&quot;:&quot;#00FF00&quot;}}"/>
+	<THEME_OVERRIDE guid="ovr-4" theme_id="DELETE_1" type="PRIMENG" value="{&quot;colors&quot;:{&quot;primary&quot;:&quot;#FF0000&quot;,&quot;secondary&quot;:&quot;#00FF00&quot;}}"/>
+
 </dataset>

@@ -1,6 +1,11 @@
 package org.tkit.onecx.theme.domain.models;
 
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.LAZY;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -56,8 +61,9 @@ public class Theme extends TraceableEntity {
     @Column(name = "PROPERTIES", columnDefinition = "TEXT")
     private String properties;
 
-    @Column(name = "OVERRIDES", columnDefinition = "TEXT")
-    private String overrides;
+    @OneToMany(cascade = { REMOVE, REFRESH, PERSIST, MERGE }, fetch = LAZY, orphanRemoval = true)
+    @JoinColumn(name = "THEME_ID")
+    private List<ThemeOverride> overrides = new ArrayList<>();
 
     @Column(name = "OPERATOR")
     private Boolean operator;

@@ -29,7 +29,7 @@ public class ThemeService {
 
         var theme = dao.findById(id);
         if (theme != null && !Boolean.TRUE.equals(theme.getMandatory())) {
-            dao.deleteQueryById(id);
+            dao.delete(theme);
             // workaround for images
             imageDAO.deleteQueryByRefId(theme.getName());
         }
@@ -49,7 +49,6 @@ public class ThemeService {
             return;
         }
         var names = themes.stream().map(Theme::getName).collect(Collectors.toSet());
-
         // delete existing data
         themeDAO.deleteQueryByNames(names);
         imageDAO.deleteQueryByRefIds(names);
