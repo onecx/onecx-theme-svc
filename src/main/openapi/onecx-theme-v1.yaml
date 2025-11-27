@@ -162,4 +162,18 @@ components:
         properties:
           type: object
         overrides:
-          type: object
+          type: array
+          items:
+            $ref: '#/components/schemas/Override'
+    Override:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/OverrideType'
+        value:
+          type: string
+    OverrideType:
+      type: string
+      enum:
+        - PRIMENG
+        - CSS

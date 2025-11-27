@@ -283,7 +283,9 @@ components:
         properties:
           type: object
         overrides:
-          type: object
+          type: array
+          items:
+            $ref: '#/components/schemas/Override'
         operator:
           type: boolean
           default: false
@@ -354,7 +356,9 @@ components:
         properties:
           type: object
         overrides:
-          type: object
+          type: array
+          items:
+            $ref: '#/components/schemas/Override'
         mandatory:
           type: boolean
           default: false
@@ -393,6 +397,20 @@ components:
         properties:
           type: object
         overrides:
-          type: object
+          type: array
+          items:
+            $ref: '#/components/schemas/Override'
         mandatory:
           type: boolean
+    Override:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/OverrideType'
+        value:
+          type: string
+    OverrideType:
+      type: string
+      enum:
+        - PRIMENG
+        - CSS

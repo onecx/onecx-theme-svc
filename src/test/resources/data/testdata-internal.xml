@@ -9,4 +9,11 @@
 	<THEME guid="t-11-111" optlock="0" name="cg" tenant_id="tenant-100" />
 	<THEME guid="t-22-222" optlock="0" name="themeWithoutPortal" tenant_id="tenant-100" />
 	<THEME guid="t-DELETE_1" optlock="0" name="toDelete" tenant_id="tenant-200" />
+
+	<!-- THEME OVERRIDES -->
+	<THEME_OVERRIDE guid="ovr-1" theme_id="11-111" type="CSS" value="{&quot;colors&quot;:{&quot;primary&quot;:&quot;#FF0000&quot;,&quot;secondary&quot;:&quot;#00FF00&quot;}}"/>
+	<THEME_OVERRIDE guid="ovr-2" theme_id="11-111" type="PRIMENG" value="{&quot;colors&quot;:{&quot;primary&quot;:&quot;#FF0000&quot;,&quot;secondary&quot;:&quot;#00FF00&quot;}}"/>
+	<THEME_OVERRIDE guid="ovr-3" theme_id="22-222" type="PRIMENG" value="{&quot;colors&quot;:{&quot;primary&quot;:&quot;#FF0000&quot;,&quot;secondary&quot;:&quot;#00FF00&quot;}}"/>
+	<THEME_OVERRIDE guid="ovr-4" theme_id="DELETE_1" type="PRIMENG" value="{&quot;colors&quot;:{&quot;primary&quot;:&quot;#FF0000&quot;,&quot;secondary&quot;:&quot;#00FF00&quot;}}"/>
+
 </dataset>
