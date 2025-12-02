@@ -74,9 +74,9 @@ public abstract class ThemeMapper {
 
     @Mapping(target = "themeId", ignore = true)
     @Mapping(target = "id", ignore = true)
-    public abstract ThemeOverride map(OverrideDTO dto);
+    public abstract ThemeOverride map(ThemeOverrideDTO dto);
 
-    public abstract OverrideDTO map(ThemeOverride override);
+    public abstract ThemeOverrideDTO map(ThemeOverride override);
 
     @Named("o2s")
     public String mapToString(Object properties) {

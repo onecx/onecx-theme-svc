@@ -68,9 +68,9 @@ public abstract class AdminThemeMapperV1 {
 
     @Mapping(target = "themeId", ignore = true)
     @Mapping(target = "id", ignore = true)
-    public abstract ThemeOverride map(OverrideDTOAdminV1 dto);
+    public abstract ThemeOverride map(ThemeOverrideDTOAdminV1 dto);
 
-    public abstract OverrideDTOAdminV1 map(ThemeOverride override);
+    public abstract ThemeOverrideDTOAdminV1 map(ThemeOverride override);
 
     @Named("o2s")
     public String mapToString(Object properties) {

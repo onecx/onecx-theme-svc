@@ -163,7 +163,7 @@ components:
         overrides:
           type: array
           items:
-            $ref: '#/components/schemas/EximOverride'
+            $ref: '#/components/schemas/EximThemeOverride'
         images:
           $ref: '#/components/schemas/Images'
         mandatory:
@@ -215,7 +215,7 @@ components:
           format: byte
         mimeType:
           type: string
-    EximOverride:
+    EximThemeOverride:
       type: object
       properties:
         type:

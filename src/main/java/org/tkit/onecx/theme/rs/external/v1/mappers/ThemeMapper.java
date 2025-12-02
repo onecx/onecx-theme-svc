@@ -10,10 +10,10 @@ import org.tkit.onecx.theme.domain.models.ThemeInfo;
 import org.tkit.onecx.theme.domain.models.ThemeOverride;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
-import gen.org.tkit.onecx.theme.rs.external.v1.model.OverrideDTOV1;
 import gen.org.tkit.onecx.theme.rs.external.v1.model.ThemeDTOV1;
 import gen.org.tkit.onecx.theme.rs.external.v1.model.ThemeInfoDTOV1;
 import gen.org.tkit.onecx.theme.rs.external.v1.model.ThemeInfoListDTOV1;
+import gen.org.tkit.onecx.theme.rs.external.v1.model.ThemeOverrideDTOV1;
 
 @Mapper(uses = { OffsetDateTimeMapper.class })
 public abstract class ThemeMapper {
@@ -31,5 +31,5 @@ public abstract class ThemeMapper {
 
     @Mapping(target = "themeId", ignore = true)
     @Mapping(target = "id", ignore = true)
-    public abstract ThemeOverride map(OverrideDTOV1 dto);
+    public abstract ThemeOverride map(ThemeOverrideDTOV1 dto);
 }

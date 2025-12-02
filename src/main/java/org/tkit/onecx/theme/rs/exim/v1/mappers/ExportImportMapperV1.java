@@ -135,9 +135,9 @@ public abstract class ExportImportMapperV1 {
 
     @Mapping(target = "themeId", ignore = true)
     @Mapping(target = "id", ignore = true)
-    public abstract ThemeOverride map(EximOverrideDTOV1 dto);
+    public abstract ThemeOverride map(EximThemeOverrideDTOV1 dto);
 
-    public abstract EximOverrideDTOV1 map(ThemeOverride override);
+    public abstract EximThemeOverrideDTOV1 map(ThemeOverride override);
 
     @Named("o2s")
     public String mapToString(Object properties) {

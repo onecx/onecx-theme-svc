@@ -68,7 +68,7 @@ components:
         overrides:
           type: array
           items:
-            $ref: '#/components/schemas/TemplateOverride'
+            $ref: '#/components/schemas/TemplateThemeOverride'
         mandatory:
           type: boolean
           default: false
@@ -85,7 +85,7 @@ components:
           format: byte
         mimeType:
           type: string
-    TemplateOverride:
+    TemplateThemeOverride:
       type: object
       properties:
         type:

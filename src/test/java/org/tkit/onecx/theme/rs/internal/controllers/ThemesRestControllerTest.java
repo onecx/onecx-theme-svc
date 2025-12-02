@@ -32,7 +32,7 @@ class ThemesRestControllerTest extends AbstractTest {
 
         // create theme
         var themeDto = new CreateThemeDTO();
-        var overrideDto = new OverrideDTO();
+        var overrideDto = new ThemeOverrideDTO();
         overrideDto.setType(OverrideTypeDTO.CSS);
         overrideDto.setValue(".class { color: red; }");
         themeDto.setName("test01");
@@ -350,7 +350,7 @@ class ThemesRestControllerTest extends AbstractTest {
 
         // update none existing theme
         var themeDto = new UpdateThemeDTO();
-        var overrideDto = new OverrideDTO();
+        var overrideDto = new ThemeOverrideDTO();
         overrideDto.setType(OverrideTypeDTO.CSS);
         overrideDto.setValue(".class { color: blue; }");
         themeDto.setName("test01");

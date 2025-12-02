@@ -164,8 +164,8 @@ components:
         overrides:
           type: array
           items:
-            $ref: '#/components/schemas/Override'
-    Override:
+            $ref: '#/components/schemas/ThemeOverride'
+    ThemeOverride:
       type: object
       properties:
         type:

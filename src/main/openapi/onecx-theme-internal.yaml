@@ -285,7 +285,7 @@ components:
         overrides:
           type: array
           items:
-            $ref: '#/components/schemas/Override'
+            $ref: '#/components/schemas/ThemeOverride'
         operator:
           type: boolean
           default: false
@@ -358,7 +358,7 @@ components:
         overrides:
           type: array
           items:
-            $ref: '#/components/schemas/Override'
+            $ref: '#/components/schemas/ThemeOverride'
         mandatory:
           type: boolean
           default: false
@@ -399,10 +399,10 @@ components:
         overrides:
           type: array
           items:
-            $ref: '#/components/schemas/Override'
+            $ref: '#/components/schemas/ThemeOverride'
         mandatory:
           type: boolean
-    Override:
+    ThemeOverride:
       type: object
       properties:
         type:

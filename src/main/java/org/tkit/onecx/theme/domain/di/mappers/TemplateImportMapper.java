@@ -19,8 +19,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gen.org.tkit.onecx.theme.di.template.model.TemplateImageDTO;
-import gen.org.tkit.onecx.theme.di.template.model.TemplateOverrideDTO;
 import gen.org.tkit.onecx.theme.di.template.model.TemplateThemeDTO;
+import gen.org.tkit.onecx.theme.di.template.model.TemplateThemeOverrideDTO;
 
 @Mapper(uses = OffsetDateTimeMapper.class)
 public abstract class TemplateImportMapper {
@@ -101,8 +101,8 @@ public abstract class TemplateImportMapper {
 
     @Mapping(target = "themeId", ignore = true)
     @Mapping(target = "id", ignore = true)
-    public abstract ThemeOverride map(TemplateOverrideDTO dto);
+    public abstract ThemeOverride map(TemplateThemeOverrideDTO dto);
 
-    public abstract TemplateOverrideDTO map(ThemeOverride override);
+    public abstract TemplateThemeOverrideDTO map(ThemeOverride override);
 
 }
