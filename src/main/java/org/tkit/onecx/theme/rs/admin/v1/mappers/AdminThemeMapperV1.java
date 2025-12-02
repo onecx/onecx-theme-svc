@@ -11,6 +11,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.tkit.onecx.theme.domain.criteria.ThemeSearchCriteria;
 import org.tkit.onecx.theme.domain.models.Theme;
+import org.tkit.onecx.theme.domain.models.ThemeOverride;
 import org.tkit.quarkus.jpa.daos.PageResult;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
@@ -39,7 +40,6 @@ public abstract class AdminThemeMapperV1 {
     @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "o2s")
-    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     public abstract Theme create(CreateThemeDTOAdminV1 object);
@@ -47,10 +47,11 @@ public abstract class AdminThemeMapperV1 {
     public abstract List<ThemeDTOAdminV1> map(Stream<Theme> entity);
 
     @Mapping(target = "resource.properties", qualifiedByName = "s2o")
-    @Mapping(target = "resource.overrides", qualifiedByName = "s2o")
     @Mapping(target = "resource", source = "theme")
     public abstract CreateThemeResponseDTOAdminV1 mapCreate(Theme theme);
 
+    @Mapping(target = "removeOverridesItem", ignore = true)
+    @Mapping(target = "overrides", ignore = true)
     public abstract ThemeDTOAdminV1 map(Theme theme);
 
     @Mapping(target = "id", ignore = true)
@@ -61,10 +62,15 @@ public abstract class AdminThemeMapperV1 {
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "o2s")
-    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     public abstract void update(UpdateThemeDTOAdminV1 themeDTOAdminV1, @MappingTarget Theme entity);
+
+    @Mapping(target = "themeId", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    public abstract ThemeOverride map(ThemeOverrideDTOAdminV1 dto);
+
+    public abstract ThemeOverrideDTOAdminV1 map(ThemeOverride override);
 
     @Named("o2s")
     public String mapToString(Object properties) {

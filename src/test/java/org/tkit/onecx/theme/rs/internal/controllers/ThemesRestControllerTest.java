@@ -6,6 +6,8 @@ import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.from;
 
+import java.util.List;
+
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
@@ -30,12 +32,16 @@ class ThemesRestControllerTest extends AbstractTest {
 
         // create theme
         var themeDto = new CreateThemeDTO();
+        var overrideDto = new ThemeOverrideDTO();
+        overrideDto.setType(OverrideTypeDTO.CSS);
+        overrideDto.setValue(".class { color: red; }");
         themeDto.setName("test01");
         themeDto.setDisplayName("test01");
         themeDto.setCssFile("cssFile");
         themeDto.setDescription("description");
         themeDto.setAssetsUrl("assets/url");
         themeDto.setPreviewImageUrl("image/url");
+        themeDto.setOverrides(List.of(overrideDto));
 
         var uri = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
@@ -245,6 +251,7 @@ class ThemesRestControllerTest extends AbstractTest {
         assertThat(dto).isNotNull();
         assertThat(dto.getName()).isEqualTo("themeWithoutPortal");
         assertThat(dto.getId()).isEqualTo("22-222");
+        assertThat(dto.getOverrides().get(0).getValue()).isNotNull();
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
@@ -343,10 +350,14 @@ class ThemesRestControllerTest extends AbstractTest {
 
         // update none existing theme
         var themeDto = new UpdateThemeDTO();
+        var overrideDto = new ThemeOverrideDTO();
+        overrideDto.setType(OverrideTypeDTO.CSS);
+        overrideDto.setValue(".class { color: blue; }");
         themeDto.setName("test01");
         themeDto.setDisplayName("test01");
         themeDto.setModificationCount(0);
         themeDto.setDescription("description-update");
+        themeDto.setOverrides(List.of(overrideDto));
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
@@ -378,6 +389,7 @@ class ThemesRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .extract()
                 .body().as(ThemeDTO.class);
+        assertThat(dto.getOverrides().get(0).getValue()).isEqualTo(overrideDto.getValue());
 
         // update theme with wrong modificationCount
         given()

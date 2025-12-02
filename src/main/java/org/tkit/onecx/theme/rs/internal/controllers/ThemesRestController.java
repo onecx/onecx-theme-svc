@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.UriInfo;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.onecx.theme.domain.daos.ThemeDAO;
+import org.tkit.onecx.theme.domain.daos.ThemeOverrideDAO;
 import org.tkit.onecx.theme.domain.services.ThemeService;
 import org.tkit.onecx.theme.rs.internal.mappers.ExceptionMapper;
 import org.tkit.onecx.theme.rs.internal.mappers.ThemeMapper;
@@ -32,6 +33,9 @@ public class ThemesRestController implements ThemesInternalApi {
 
     @Inject
     ThemeDAO dao;
+
+    @Inject
+    ThemeOverrideDAO overrideDAO;
 
     @Inject
     ThemeService themeService;
@@ -74,7 +78,9 @@ public class ThemesRestController implements ThemesInternalApi {
         if (theme == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(mapper.map(theme)).build();
+        var mappedTheme = mapper.map(theme);
+        overrideDAO.findByThemeId(theme.getId()).forEach(o -> mappedTheme.getOverrides().add(mapper.map(o)));
+        return Response.ok(mappedTheme).build();
     }
 
     @Override
