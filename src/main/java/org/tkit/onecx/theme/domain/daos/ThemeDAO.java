@@ -92,7 +92,6 @@ public class ThemeDAO extends AbstractDAO<Theme> {
                 cq.where(cb.like(root.get(Theme_.name), QueryCriteriaUtil.wildcard(criteria.getName())));
             }
             cq.orderBy(cb.desc(root.get(AbstractTraceableEntity_.CREATION_DATE)));
-
             return createPageQuery(cq, Page.of(criteria.getPageNumber(), criteria.getPageSize())).getPageResult();
         } catch (Exception ex) {
             throw new DAOException(ErrorKeys.ERROR_FIND_THEMES_BY_CRITERIA, ex);

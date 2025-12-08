@@ -12,6 +12,7 @@ import org.mapstruct.Named;
 import org.tkit.onecx.theme.domain.di.models.ExistingData;
 import org.tkit.onecx.theme.domain.models.Image;
 import org.tkit.onecx.theme.domain.models.Theme;
+import org.tkit.onecx.theme.domain.models.ThemeOverride;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gen.org.tkit.onecx.theme.di.template.model.TemplateImageDTO;
 import gen.org.tkit.onecx.theme.di.template.model.TemplateThemeDTO;
+import gen.org.tkit.onecx.theme.di.template.model.TemplateThemeOverrideDTO;
 
 @Mapper(uses = OffsetDateTimeMapper.class)
 public abstract class TemplateImportMapper {
@@ -28,7 +30,6 @@ public abstract class TemplateImportMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "o2s")
-    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "creationUser", ignore = true)
     @Mapping(target = "displayName", ignore = true)
@@ -97,5 +98,11 @@ public abstract class TemplateImportMapper {
             return null;
         }
     }
+
+    @Mapping(target = "themeId", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    public abstract ThemeOverride map(TemplateThemeOverrideDTO dto);
+
+    public abstract TemplateThemeOverrideDTO map(ThemeOverride override);
 
 }

@@ -12,6 +12,7 @@ import org.mapstruct.Named;
 import org.tkit.onecx.theme.domain.criteria.ThemeSearchCriteria;
 import org.tkit.onecx.theme.domain.models.Theme;
 import org.tkit.onecx.theme.domain.models.ThemeInfo;
+import org.tkit.onecx.theme.domain.models.ThemeOverride;
 import org.tkit.quarkus.jpa.daos.PageResult;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
@@ -48,15 +49,15 @@ public abstract class ThemeMapper {
     @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "o2s")
-    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     public abstract Theme create(CreateThemeDTO object);
 
     public abstract List<ThemeDTO> map(Stream<Theme> entity);
 
+    @Mapping(target = "removeOverridesItem", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "s2o")
-    @Mapping(target = "overrides", qualifiedByName = "s2o")
+    @Mapping(target = "overrides", ignore = true)
     public abstract ThemeDTO map(Theme theme);
 
     @Mapping(target = "id", ignore = true)
@@ -67,10 +68,15 @@ public abstract class ThemeMapper {
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "o2s")
-    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     public abstract void update(UpdateThemeDTO themeDTO, @MappingTarget Theme entity);
+
+    @Mapping(target = "themeId", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    public abstract ThemeOverride map(ThemeOverrideDTO dto);
+
+    public abstract ThemeOverrideDTO map(ThemeOverride override);
 
     @Named("o2s")
     public String mapToString(Object properties) {

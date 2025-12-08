@@ -161,7 +161,9 @@ components:
         properties:
           type: object
         overrides:
-          type: object
+          type: array
+          items:
+            $ref: '#/components/schemas/EximThemeOverride'
         images:
           $ref: '#/components/schemas/Images'
         mandatory:
@@ -213,3 +215,15 @@ components:
           format: byte
         mimeType:
           type: string
+    EximThemeOverride:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/EximOverrideType'
+        value:
+          type: string
+    EximOverrideType:
+      type: string
+      enum:
+        - PRIMENG
+        - CSS

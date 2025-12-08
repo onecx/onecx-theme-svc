@@ -35,6 +35,7 @@ class ThemesRestControllerV1Test extends AbstractTest {
 
         assertThat(dto).isNotNull();
         assertThat(dto.getName()).isEqualTo("themeWithoutPortal");
+        assertThat(dto.getOverrides()).hasSize(2);
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))

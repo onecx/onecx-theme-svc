@@ -11,6 +11,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.tkit.onecx.theme.domain.models.Image;
 import org.tkit.onecx.theme.domain.models.Theme;
+import org.tkit.onecx.theme.domain.models.ThemeOverride;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -98,8 +99,8 @@ public abstract class ExportImportMapperV1 {
 
     public abstract ImageDTOV1 createImage(Image image);
 
+    @Mapping(target = "removeOverridesItem", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "s2o")
-    @Mapping(target = "overrides", qualifiedByName = "s2o")
     @Mapping(target = "removeImagesItem", ignore = true)
     @Mapping(target = "images", ignore = true)
     public abstract EximThemeDTOV1 map(Theme theme);
@@ -116,7 +117,6 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "o2s")
-    @Mapping(target = "overrides", qualifiedByName = "o2s")
     public abstract void update(EximThemeDTOV1 dto, @MappingTarget Theme entity);
 
     @Mapping(target = "id", ignore = true)
@@ -130,9 +130,14 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "o2s")
-    @Mapping(target = "overrides", qualifiedByName = "o2s")
     @Mapping(target = "displayName", source = "dto.displayName", defaultExpression = "java(name)")
     public abstract Theme create(String name, EximThemeDTOV1 dto);
+
+    @Mapping(target = "themeId", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    public abstract ThemeOverride map(EximThemeOverrideDTOV1 dto);
+
+    public abstract EximThemeOverrideDTOV1 map(ThemeOverride override);
 
     @Named("o2s")
     public String mapToString(Object properties) {

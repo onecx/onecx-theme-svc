@@ -66,7 +66,9 @@ components:
         properties:
           type: object
         overrides:
-          type: object
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateThemeOverride'
         mandatory:
           type: boolean
           default: false
@@ -83,3 +85,15 @@ components:
           format: byte
         mimeType:
           type: string
+    TemplateThemeOverride:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/TemplateOverrideType'
+        value:
+          type: string
+    TemplateOverrideType:
+      type: string
+      enum:
+        - PRIMENG
+        - CSS
