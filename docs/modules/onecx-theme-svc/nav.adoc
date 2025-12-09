@@ -1,3 +1,0 @@
-* xref:onecx-theme-svc:index.adoc[Theme service]
-** External API(s)
-*** xref:onecx-theme-svc:openapi/onecx-theme-v1.adoc[Theme Management V1]
