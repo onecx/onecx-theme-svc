@@ -24,4 +24,10 @@
 	<THEME_OVERRIDE guid="ovr-4" theme_id="22-222" type="PRIMENG" value="{&quot;colors&quot;:{&quot;primary&quot;:&quot;#FF0000&quot;,&quot;secondary&quot;:&quot;#00FF00&quot;}}"/>
 	<THEME_OVERRIDE guid="ovr-5" theme_id="DELETE_1" type="PRIMENG" value="{&quot;colors&quot;:{&quot;primary&quot;:&quot;#FF0000&quot;,&quot;secondary&quot;:&quot;#00FF00&quot;}}"/>
 
+	<!-- ICONS -->
+	<ICON guid="icon-1" optlock="0" name="prime:icon1" ref_id="cg" type="SVG" tenant_id="default" body="xx" />
+	<ICON guid="icon-2" optlock="0" name="prime:icon2" ref_id="cg" type="SVG" tenant_id="default" body="xx" />
+	<ICON guid="icon-3" optlock="0" name="prime:icon3" parent="prime:icon1" ref_id="cg" type="SVG" tenant_id="default"/>
+	<ICON guid="icon-4" optlock="0" name="prime:icon4" parent="prime:notExisting" ref_id="cg" type="SVG" tenant_id="default"/>
+
 </dataset>

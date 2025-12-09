@@ -1,0 +1,108 @@
+---
+openapi: 3.0.3
+info:
+ title: OneCX-theme internal icon service
+ description: This API provides endpoints to manage icons of themes
+ version: 1.0.0
+servers:
+ - url: "http://onecx-theme-svc:8080"
+tags:
+ - name: icons
+   description: Manage Icons
+paths:
+ /v1/icons/{refId}:
+  post:
+   security:
+    - oauth2: [ ocx-th:read ]
+   tags:
+    - icons
+   description: Retrieve icons by list of names and refId
+   parameters:
+    - name: refId
+      in: path
+      required: true
+      schema:
+       type: string
+   operationId: findIconsByNamesAndRefId
+   requestBody:
+    required: true
+    content:
+     application/json:
+      schema:
+       $ref: '#/components/schemas/IconCriteria'
+   responses:
+    "200":
+     description: Icons retrieved successfully
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/IconListResponse'
+    "400":
+     description: Bad Request
+components:
+ securitySchemes:
+  oauth2:
+   type: oauth2
+   flows:
+    clientCredentials:
+     tokenUrl: https://oauth.simple.api/token
+     scopes:
+      ocx-th:read: Grants read access
+ schemas:
+  IconCriteria:
+   type: object
+   required:
+    - names
+   properties:
+    names:
+     minItems: 1
+     type: array
+     items:
+      type: string
+  IconListResponse:
+   type: object
+   properties:
+    icons:
+     type: array
+     items:
+      $ref: '#/components/schemas/Icon'
+  Icon:
+   type: object
+   properties:
+    name:
+     type: string
+    type:
+     type: string
+    body:
+     type: string
+    parent:
+     type: string
+  ProblemDetailResponse:
+   type: object
+   properties:
+    errorCode:
+     type: string
+    detail:
+     type: string
+    params:
+     type: array
+     items:
+      $ref: '#/components/schemas/ProblemDetailParam'
+    invalidParams:
+     type: array
+     items:
+      $ref: '#/components/schemas/ProblemDetailInvalidParam'
+  ProblemDetailParam:
+   type: object
+   properties:
+    key:
+     type: string
+    value:
+     type: string
+  ProblemDetailInvalidParam:
+   type: object
+   properties:
+    name:
+     type: string
+    message:
+     type: string

@@ -12,4 +12,6 @@
     <include relativeToChangelogFile="true" file="v1/2025-09-29-add-small-logo-url.xml"/>
     <include relativeToChangelogFile="true" file="v1/2025-11-24-add-overrides.xml"/>
     <include relativeToChangelogFile="true" file="v1/2025-11-24-create-overrides-table.xml"/>
+    <include relativeToChangelogFile="true" file="v1/2025-12-08-create-icon-table.xml"/>
+
 </databaseChangeLog>
