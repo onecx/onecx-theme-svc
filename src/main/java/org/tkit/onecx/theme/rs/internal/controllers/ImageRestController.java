@@ -42,7 +42,7 @@ public class ImageRestController implements ImagesInternalApi {
 
     @Override
     public Response getImage(String refId, String refType) {
-        Image image = imageDAO.findByRefIdAndRefType(refId, refType.toString());
+        Image image = imageDAO.findByRefIdAndRefType(refId, refType);
         if (image == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

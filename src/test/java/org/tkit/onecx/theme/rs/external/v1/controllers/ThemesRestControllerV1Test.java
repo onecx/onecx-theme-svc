@@ -137,7 +137,7 @@ class ThemesRestControllerV1Test extends AbstractTest {
                 .extract()
                 .body().as(AvailableImageTypesDTOV1.class);
 
-        assertThat(2).isEqualTo(output.getTypes().size());
+        assertThat(output.getTypes().size()).isEqualTo(2);
     }
 
     @Test

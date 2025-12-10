@@ -86,7 +86,7 @@ class ImageRestControllerTest extends AbstractTest {
                 .extract()
                 .body().as(AvailableImageTypesDTO.class);
 
-        assertThat(2).isEqualTo(output.getTypes().size());
+        assertThat(output.getTypes().size()).isEqualTo(2);
     }
 
     @Test
