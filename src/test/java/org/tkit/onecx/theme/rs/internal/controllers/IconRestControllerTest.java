@@ -68,7 +68,7 @@ class IconRestControllerTest extends AbstractTest {
                 .extract().as(IconListResponseDTO.class);
 
         assertThat(output).isNotNull();
-        assertThat(output.getIcons().size()).isEqualTo(3);
+        assertThat(3).isEqualTo(output.getIcons().size());
 
         //constraint exception, missing criteria
         given()

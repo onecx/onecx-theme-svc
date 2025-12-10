@@ -43,7 +43,7 @@ class IconRestControllerV1Test extends AbstractTest {
                 .extract().as(IconListResponseDTOV1.class);
 
         assertThat(output).isNotNull();
-        assertThat(output.getIcons().size()).isEqualTo(3);
+        assertThat(3).isEqualTo(output.getIcons().size());
     }
 
     @Test
