@@ -74,6 +74,7 @@ class ImageRestControllerTest extends AbstractTest {
     }
 
     @Test
+    @SuppressWarnings("java:S5838")
     void getAvailableImageTypes_Test() {
         var output = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
