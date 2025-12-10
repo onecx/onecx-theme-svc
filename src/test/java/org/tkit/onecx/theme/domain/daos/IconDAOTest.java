@@ -1,0 +1,45 @@
+package org.tkit.onecx.theme.domain.daos;
+
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+import org.mockito.Mockito;
+import org.tkit.onecx.theme.test.AbstractTest;
+import org.tkit.quarkus.jpa.exceptions.DAOException;
+
+import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+
+@QuarkusTest
+class IconDAOTest extends AbstractTest {
+
+    @Inject
+    IconDAO dao;
+
+    @InjectMock
+    EntityManager em;
+
+    @BeforeEach
+    void beforeAll() {
+        Mockito.when(em.getCriteriaBuilder()).thenThrow(new RuntimeException("Test technical error exception"));
+    }
+
+    @Test
+    void methodExceptionTests() {
+        methodExceptionTests(() -> dao.findIconsByNamesAndRefId(null, null),
+                IconDAO.ErrorKeys.ERROR_FIND_ICONS_BY_NAMES_AND_REF_ID);
+        methodExceptionTests(() -> dao.findByNameAndRefId(null, null),
+                IconDAO.ErrorKeys.FIND_ENTITY_BY_PARENT_NAME_FAILED);
+        methodExceptionTests(() -> dao.deleteQueryByRefId(null),
+                IconDAO.ErrorKeys.FAILED_TO_DELETE_BY_REF_ID_QUERY);
+    }
+
+    void methodExceptionTests(Executable fn, Enum<?> key) {
+        var exc = Assertions.assertThrows(DAOException.class, fn);
+        Assertions.assertEquals(key, exc.key);
+    }
+}

@@ -281,6 +281,31 @@
                             <apiNameSuffix>V1Api</apiNameSuffix>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>icon-internal</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>src/main/openapi/onecx-icon-internal.yaml</inputSpec>
+                            <apiPackage>gen.org.tkit.onecx.theme.rs.icon.internal</apiPackage>
+                            <modelPackage>gen.org.tkit.onecx.theme.rs.icon.internal.model</modelPackage>
+                            <typeMappings>File=byte[]</typeMappings>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>icon-v1</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>src/main/openapi/onecx-icon-v1.yaml</inputSpec>
+                            <apiPackage>gen.org.tkit.onecx.theme.rs.icon.v1</apiPackage>
+                            <modelPackage>gen.org.tkit.onecx.theme.rs.icon.v1.model</modelPackage>
+                            <modelNameSuffix>DTOV1</modelNameSuffix>
+                            <apiNameSuffix>V1Api</apiNameSuffix>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

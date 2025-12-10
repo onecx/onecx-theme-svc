@@ -7,6 +7,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import org.tkit.onecx.theme.domain.daos.IconDAO;
 import org.tkit.onecx.theme.domain.daos.ImageDAO;
 import org.tkit.onecx.theme.domain.daos.ThemeDAO;
 import org.tkit.onecx.theme.domain.models.Image;
@@ -24,6 +25,9 @@ public class ThemeService {
     @Inject
     ImageDAO imageDAO;
 
+    @Inject
+    IconDAO iconDAO;
+
     @Transactional
     public void deleteTheme(String id) {
 
@@ -32,6 +36,7 @@ public class ThemeService {
             dao.delete(theme);
             // workaround for images
             imageDAO.deleteQueryByRefId(theme.getName());
+            iconDAO.deleteQueryByRefId(theme.getName());
         }
     }
 
