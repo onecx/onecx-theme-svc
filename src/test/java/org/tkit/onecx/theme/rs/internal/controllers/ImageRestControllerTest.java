@@ -18,6 +18,7 @@ import org.tkit.onecx.theme.test.AbstractTest;
 import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
+import gen.org.tkit.onecx.image.rs.internal.model.AvailableImageTypesDTO;
 import gen.org.tkit.onecx.image.rs.internal.model.ImageInfoDTO;
 import gen.org.tkit.onecx.image.rs.internal.model.MimeTypeDTO;
 import gen.org.tkit.onecx.image.rs.internal.model.RefTypeDTO;
@@ -53,6 +54,39 @@ class ImageRestControllerTest extends AbstractTest {
                 .extract()
                 .body().as(ImageInfoDTO.class);
 
+    }
+
+    @Test
+    void uploadImage_anyRefType() {
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .pathParam("refId", "themeName")
+                .pathParam("refType", "ANY_TYPE")
+                .header("mimeType", MimeTypeDTO.IMAGE_PNG)
+                .when()
+                .body(FILE)
+                .contentType(MEDIA_TYPE_IMAGE_PNG)
+                .post("/{refType}")
+                .then()
+                .statusCode(CREATED.getStatusCode())
+                .extract()
+                .body().as(ImageInfoDTO.class);
+    }
+
+    @Test
+    void getAvailableImageTypes_Test() {
+        var output = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .pathParam("refId", "11-111")
+                .when()
+                .contentType(MEDIA_TYPE_IMAGE_PNG)
+                .get("/availableTypes")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract()
+                .body().as(AvailableImageTypesDTO.class);
+
+        assertThat(2).isEqualTo(output.getTypes().size());
     }
 
     @Test

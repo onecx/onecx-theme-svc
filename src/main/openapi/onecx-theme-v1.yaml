@@ -108,6 +108,58 @@ paths:
                 format: binary
         404:
           description: Logo not found
+  /v1/themes/{name}/images/{refType}:
+    get:
+      security:
+        - oauth2: [ ocx-th:read ]
+      tags:
+        - themes
+      description: Get an image of a theme by its name and reference type
+      operationId: getThemeImageByNameAndRefType
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: refType
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Image retrieved successfully
+          content:
+            image/*:
+              schema:
+                minimum: 1
+                maximum: 110000
+                type: string
+                format: binary
+        404:
+          description: Image not found
+  /v1/themes/{name}/images/availableTypes:
+    get:
+      security:
+        - oauth2: [ ocx-th:read ]
+      tags:
+        - themes
+      description: Get available image types
+      operationId: getAvailableImageTypes
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Available image types retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableImageTypes'
 components:
   securitySchemes:
     oauth2:
@@ -118,6 +170,16 @@ components:
           scopes:
             ocx-th:read: Grants read access
   schemas:
+    RefType:
+      type: string
+      enum: [ logo, logo-small, favicon ]
+    AvailableImageTypes:
+      type: object
+      properties:
+        types:
+          type: array
+          items:
+            type: string
     ThemeInfoList:
       type: object
       properties:
