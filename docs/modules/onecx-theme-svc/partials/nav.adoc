@@ -1,3 +1,2 @@
-** xref:documentation:onecx-theme-svc:index.adoc[Theme service]
-*** External API(s)
-**** xref:documentation:onecx-theme-svc:openapi/onecx-theme-v1.adoc[Theme Management V1]
+** xref:documentation:onecx-theme-svc:index.adoc[Backend Service]
+*** xref:documentation:onecx-theme-svc:openapi/onecx-theme-v1.adoc[OpenAPI v1]
