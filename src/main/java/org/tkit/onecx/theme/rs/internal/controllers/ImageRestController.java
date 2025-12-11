@@ -17,8 +17,8 @@ import org.tkit.onecx.theme.rs.internal.mappers.ImageMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.image.rs.internal.ImagesInternalApi;
+import gen.org.tkit.onecx.image.rs.internal.model.AvailableImageTypesDTO;
 import gen.org.tkit.onecx.image.rs.internal.model.MimeTypeDTO;
-import gen.org.tkit.onecx.image.rs.internal.model.RefTypeDTO;
 import gen.org.tkit.onecx.theme.rs.internal.model.ProblemDetailResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,8 +41,8 @@ public class ImageRestController implements ImagesInternalApi {
     ImageMapper imageMapper;
 
     @Override
-    public Response getImage(String refId, RefTypeDTO refType) {
-        Image image = imageDAO.findByRefIdAndRefType(refId, refType.toString());
+    public Response getImage(String refId, String refType) {
+        Image image = imageDAO.findByRefIdAndRefType(refId, refType);
         if (image == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -51,10 +51,10 @@ public class ImageRestController implements ImagesInternalApi {
     }
 
     @Override
-    public Response uploadImage(Integer contentLength, String refId, RefTypeDTO refType, MimeTypeDTO mimeType, byte[] body) {
-        Image image = imageDAO.findByRefIdAndRefType(refId, refType.toString());
+    public Response uploadImage(Integer contentLength, String refId, String refType, MimeTypeDTO mimeType, byte[] body) {
+        Image image = imageDAO.findByRefIdAndRefType(refId, refType);
         if (image == null) {
-            image = imageMapper.create(refId, refType.toString(), mimeType.toString(), contentLength, body);
+            image = imageMapper.create(refId, refType, mimeType.toString(), contentLength, body);
             image = imageDAO.create(image);
         } else {
             imageMapper.update(image, contentLength, mimeType.toString(), body);
@@ -74,7 +74,15 @@ public class ImageRestController implements ImagesInternalApi {
     }
 
     @Override
-    public Response deleteImage(String refId, RefTypeDTO refType) {
+    public Response getAvailableImageTypes(String refId) {
+        var availableTypes = imageDAO.findAllTypesByRefId(refId);
+        AvailableImageTypesDTO availableImageTypesDTO = new AvailableImageTypesDTO();
+        availableImageTypesDTO.setTypes(availableTypes);
+        return Response.ok(availableImageTypesDTO).build();
+    }
+
+    @Override
+    public Response deleteImage(String refId, String refType) {
         imageDAO.deleteQueryByRefIdAndRefType(refId, refType);
 
         return Response.status(Response.Status.NO_CONTENT).build();

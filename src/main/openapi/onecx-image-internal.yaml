@@ -10,6 +10,27 @@ tags:
   - name: imagesInternal
     description: Manage Images
 paths:
+  /internal/images/{refId}/availableTypes:
+    get:
+      security:
+        - oauth2: [ ocx-th:all, ocx-th:read ]
+      tags:
+        - imagesInternal
+      description: Get available image types
+      operationId: getAvailableImageTypes
+      parameters:
+        - name: refId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Available image types retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableImageTypes'
   /internal/images/{refId}/{refType}:
     get:
       security:
@@ -28,7 +49,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: "#/components/schemas/RefType"
+            type: string
       responses:
         "200":
           description: Image retrieved successfully
@@ -62,7 +83,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: "#/components/schemas/RefType"
+            type: string
       responses:
         "200":
           description: Image deleted successfully
@@ -99,7 +120,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: "#/components/schemas/RefType"
+            type: string
         - name: mimeType
           in: header
           required: true
@@ -175,6 +196,13 @@ components:
       properties:
         id:
           type: string
+    AvailableImageTypes:
+      type: object
+      properties:
+        types:
+          type: array
+          items:
+            type: string
     ProblemDetailResponse:
       type: object
       properties:

@@ -12,8 +12,6 @@ import org.tkit.onecx.theme.domain.models.*;
 import org.tkit.quarkus.jpa.daos.AbstractDAO;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
 
-import gen.org.tkit.onecx.image.rs.internal.model.RefTypeDTO;
-
 @ApplicationScoped
 @Transactional
 public class ImageDAO extends AbstractDAO<Image> {
@@ -83,14 +81,14 @@ public class ImageDAO extends AbstractDAO<Image> {
     }
 
     @Transactional(value = Transactional.TxType.REQUIRED, rollbackOn = DAOException.class)
-    public void deleteQueryByRefIdAndRefType(String refId, RefTypeDTO refType) throws DAOException {
+    public void deleteQueryByRefIdAndRefType(String refId, String refType) throws DAOException {
         try {
             var cq = deleteQuery();
             var root = cq.from(Image.class);
             var cb = this.getEntityManager().getCriteriaBuilder();
 
             cq.where(cb.and(cb.equal(root.get(Image_.REF_ID), refId)),
-                    cb.equal(root.get(Image_.REF_TYPE), refType.toString()));
+                    cb.equal(root.get(Image_.REF_TYPE), refType));
             getEntityManager().createQuery(cq).executeUpdate();
             getEntityManager().flush();
         } catch (Exception e) {
@@ -112,19 +110,27 @@ public class ImageDAO extends AbstractDAO<Image> {
         }
     }
 
+    public List<String> findAllTypesByRefId(String refId) {
+        try {
+            var cb = this.getEntityManager().getCriteriaBuilder();
+            var cq = cb.createQuery(String.class);
+            var root = cq.from(Image.class);
+            cq.select(root.get(Image_.REF_TYPE));
+            cq.where(cb.equal(root.get(Image_.REF_ID), refId));
+            return this.getEntityManager().createQuery(cq).getResultList();
+
+        } catch (Exception ex) {
+            throw new DAOException(ImageDAO.ErrorKeys.ERROR_FIND_ALL_REF_TYPES_BY_REF_ID, ex);
+        }
+    }
+
     public enum ErrorKeys {
-
         ERROR_FIND_REF_IDS,
-
         FAILED_TO_DELETE_BY_REF_IDS_QUERY,
-
         FIND_REF_TYPES_BY_REF_ID,
-
         FAILED_TO_DELETE_BY_REF_ID_QUERY,
-
         FIND_ENTITY_BY_REF_ID_REF_TYPE_FAILED,
-
-        FAILED_TO_DELETE_BY_REF_ID_REF_TYPE_QUERY
-
+        FAILED_TO_DELETE_BY_REF_ID_REF_TYPE_QUERY,
+        ERROR_FIND_ALL_REF_TYPES_BY_REF_ID
     }
 }

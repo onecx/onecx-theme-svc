@@ -11,7 +11,6 @@ import org.mockito.Mockito;
 import org.tkit.onecx.theme.test.AbstractTest;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
 
-import gen.org.tkit.onecx.image.rs.internal.model.RefTypeDTO;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -40,10 +39,12 @@ class ImageDAOTest extends AbstractTest {
                 ImageDAO.ErrorKeys.FIND_ENTITY_BY_REF_ID_REF_TYPE_FAILED);
         methodExceptionTests(() -> dao.findByRefIdAndRefType(null, null),
                 ImageDAO.ErrorKeys.FIND_ENTITY_BY_REF_ID_REF_TYPE_FAILED);
-        methodExceptionTests(() -> dao.deleteQueryByRefIdAndRefType("1", RefTypeDTO.LOGO),
+        methodExceptionTests(() -> dao.deleteQueryByRefIdAndRefType("1", "LOGO"),
                 ImageDAO.ErrorKeys.FAILED_TO_DELETE_BY_REF_ID_REF_TYPE_QUERY);
         methodExceptionTests(() -> dao.findRefIdRefTypesByRefId(null),
                 ImageDAO.ErrorKeys.FIND_REF_TYPES_BY_REF_ID);
+        methodExceptionTests(() -> dao.findAllTypesByRefId(null),
+                ImageDAO.ErrorKeys.ERROR_FIND_ALL_REF_TYPES_BY_REF_ID);
     }
 
     void methodExceptionTests(Executable fn, Enum<?> key) {

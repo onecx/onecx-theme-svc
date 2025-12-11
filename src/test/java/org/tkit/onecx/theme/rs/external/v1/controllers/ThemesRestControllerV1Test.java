@@ -11,6 +11,7 @@ import org.tkit.onecx.theme.test.AbstractTest;
 import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
+import gen.org.tkit.onecx.theme.rs.external.v1.model.AvailableImageTypesDTOV1;
 import gen.org.tkit.onecx.theme.rs.external.v1.model.ThemeDTOV1;
 import gen.org.tkit.onecx.theme.rs.external.v1.model.ThemeInfoListDTOV1;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -122,5 +123,47 @@ class ThemesRestControllerV1Test extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .get("none-exists/logo")
                 .then().statusCode(NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    @SuppressWarnings("java:S5838")
+    void getAvailableImageTypes_Test() {
+        var output = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .pathParam("name", "test2")
+                .when()
+                .get("/{name}/images/availableTypes")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract()
+                .body().as(AvailableImageTypesDTOV1.class);
+
+        assertThat(output.getTypes().size()).isEqualTo(2);
+    }
+
+    @Test
+    void getThemeImageByRefIdAndType() {
+        var data = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .pathParam("name", "test2")
+                .pathParam("refType", "anyString")
+                .get("/{name}/images/{refType}")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType("image/png")
+                .extract()
+                .body().asByteArray();
+
+        assertThat(data).isNotNull();
+
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .pathParam("name", "test2")
+                .pathParam("refType", "notExisting")
+                .get("/{name}/images/{refType}")
+                .then()
+                .statusCode(NOT_FOUND.getStatusCode());
     }
 }

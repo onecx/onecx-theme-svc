@@ -13,6 +13,7 @@ import org.tkit.onecx.theme.rs.external.v1.mappers.ThemeMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.theme.rs.external.v1.ThemesV1Api;
+import gen.org.tkit.onecx.theme.rs.external.v1.model.AvailableImageTypesDTOV1;
 
 @LogService
 @ApplicationScoped
@@ -29,6 +30,14 @@ public class ThemesRestControllerV1 implements ThemesV1Api {
     ThemeMapper mapper;
 
     @Override
+    public Response getAvailableImageTypes(String refId) {
+        var availableTypes = imageDAO.findAllTypesByRefId(refId);
+        AvailableImageTypesDTOV1 availableImageTypesDTO = new AvailableImageTypesDTOV1();
+        availableImageTypesDTO.setTypes(availableTypes);
+        return Response.ok(availableImageTypesDTO).build();
+    }
+
+    @Override
     public Response getThemeByName(String name) {
         var theme = dao.findThemeByName(name);
         if (theme == null) {
@@ -40,6 +49,16 @@ public class ThemesRestControllerV1 implements ThemesV1Api {
     @Override
     public Response getThemeFaviconByName(String name) {
         Image image = imageDAO.findByRefIdAndRefType(name, "favicon");
+        if (image == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(image.getImageData(), image.getMimeType())
+                .header(HttpHeaders.CONTENT_LENGTH, image.getLength()).build();
+    }
+
+    @Override
+    public Response getThemeImageByNameAndRefType(String name, String refType) {
+        Image image = imageDAO.findByRefIdAndRefType(name, refType);
         if (image == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
