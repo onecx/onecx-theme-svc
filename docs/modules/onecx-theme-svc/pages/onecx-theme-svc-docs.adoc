@@ -33,7 +33,7 @@ tkit.rs.context.tenant-id.enabled=true
 %prod.quarkus.datasource.jdbc.url=${DB_URL:jdbc:postgresql://postgresdb:5432/onecx-theme?sslmode=disable}
 %prod.quarkus.datasource.username=${DB_USER:onecx-theme}
 %prod.quarkus.datasource.password=${DB_PWD:onecx-theme}
-%prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}
+%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
 ----
 ====
 
@@ -57,8 +57,6 @@ Default values
 ----
 app:
   name: svc
-  template:
-    oidc_client_id: "ONECX_OIDC_CLIENT_CLIENT_ID"
   image:
     repository: "onecx/onecx-theme-svc"
   db:
