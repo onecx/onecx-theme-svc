@@ -1,8 +1,7 @@
 include::onecx-theme-svc-attributes.adoc[opts=optional]
 
-== onecx-theme-svc
+= OneCX Theme Backend Service
 
-include::docs.adoc[opts=optional]
 
 
 include::onecx-theme-svc-docs.adoc[opts=optional]
