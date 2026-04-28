@@ -135,7 +135,7 @@ class IconRestControllerTest extends AbstractTest {
                 .extract().as(GetIconSetsResponseDTO.class);
 
         assertThat(res).isNotNull();
-        assertThat(res.getIconSets().size()).isEqualTo(1);
+        assertThat(1).isEqualTo(res.getIconSets().size());
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
