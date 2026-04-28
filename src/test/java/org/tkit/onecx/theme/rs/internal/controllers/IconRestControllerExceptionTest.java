@@ -45,7 +45,7 @@ class IconRestControllerExceptionTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(APPLICATION_JSON)
-                .post("/upload")
+                .post("/iconsets/{refId}")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
     }
