@@ -57,6 +57,7 @@ class IconRestControllerTest extends AbstractTest {
         iconCriteria.getNames().add("mdi:ab-testing");
         iconCriteria.getNames().add("mdi:abacus");
         iconCriteria.getNames().add("mdi:car-tyre-warning");
+        iconCriteria.setPrefix("mdi");
         var output = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", "themeName")
