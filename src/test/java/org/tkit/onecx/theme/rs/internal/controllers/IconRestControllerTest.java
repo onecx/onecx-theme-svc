@@ -6,6 +6,7 @@ import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.tkit.onecx.theme.test.AbstractTest;
 import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
+import gen.org.tkit.onecx.theme.rs.icon.internal.model.GetIconSetsResponseDTO;
 import gen.org.tkit.onecx.theme.rs.icon.internal.model.IconCriteriaDTO;
 import gen.org.tkit.onecx.theme.rs.icon.internal.model.IconListResponseDTO;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -36,7 +38,7 @@ class IconRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(APPLICATION_JSON)
-                .post("/upload")
+                .post("/iconsets/{refId}")
                 .then()
                 .statusCode(CREATED.getStatusCode());
 
@@ -47,7 +49,7 @@ class IconRestControllerTest extends AbstractTest {
                 .when()
                 .body(FILE)
                 .contentType(APPLICATION_JSON)
-                .post("/upload")
+                .post("/iconsets/{refId}")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
 
@@ -61,7 +63,7 @@ class IconRestControllerTest extends AbstractTest {
                 .when()
                 .body(iconCriteria)
                 .contentType(APPLICATION_JSON)
-                .post()
+                .post("/icons/{refId}")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -75,10 +77,85 @@ class IconRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", "themeName")
                 .when()
-                .body(new IconCriteriaDTO())
                 .contentType(APPLICATION_JSON)
-                .post()
+                .post("/icons/{refId}")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    void retrieveIconsWithEmptyCriteria_Test() {
+
+        var iconCriteria = new IconCriteriaDTO();
+
+        var output = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .pathParam("refId", "themeName")
+                .when()
+                .body(iconCriteria)
+                .contentType(APPLICATION_JSON)
+                .post("/icons/{refId}")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract().as(IconListResponseDTO.class);
+
+        assertThat(output).isNotNull();
+        assertThat(5).isEqualTo(output.getIcons().size());
+
+        iconCriteria.setNames(List.of());
+        var outputEmptyList = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .pathParam("refId", "themeName")
+                .when()
+                .body(iconCriteria)
+                .contentType(APPLICATION_JSON)
+                .post("/icons/{refId}")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract().as(IconListResponseDTO.class);
+
+        assertThat(outputEmptyList).isNotNull();
+        assertThat(5).isEqualTo(outputEmptyList.getIcons().size());
+    }
+
+    @Test
+    void getIconSetsAndDeleteIconSet_Test() {
+
+        var res = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .pathParam("refId", "themeName")
+                .when()
+                .get("/iconsets/{refId}")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract().as(GetIconSetsResponseDTO.class);
+
+        assertThat(res).isNotNull();
+        assertThat(res.getIconSets().size()).isEqualTo(1);
+
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .pathParam("refId", "themeName")
+                .pathParam("prefix", "mdi")
+                .when()
+                .delete("/iconsets/{refId}/{prefix}")
+                .then()
+                .statusCode(NO_CONTENT.getStatusCode());
+
+        //check if deleted
+        var deleteRes = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .pathParam("refId", "themeName")
+                .when()
+                .get("/iconsets/{refId}")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract().as(GetIconSetsResponseDTO.class);
+
+        assertThat(deleteRes.getIconSets().isEmpty());
     }
 }

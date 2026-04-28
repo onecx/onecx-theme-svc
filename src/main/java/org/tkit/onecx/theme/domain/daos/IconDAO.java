@@ -1,10 +1,15 @@
 package org.tkit.onecx.theme.domain.daos;
 
+import static org.tkit.quarkus.jpa.utils.QueryCriteriaUtil.addSearchStringPredicate;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 
 import org.tkit.onecx.theme.domain.models.Icon;
@@ -59,9 +64,32 @@ public class IconDAO extends AbstractDAO<Icon> {
         }
     }
 
+    @Transactional(Transactional.TxType.SUPPORTS)
+    public Stream<Icon> findIconsByRefIdIconSetIdAndNames(String refId, String iconSetId, Set<String> iconNames) {
+        try {
+            var cb = this.getEntityManager().getCriteriaBuilder();
+            var cq = cb.createQuery(Icon.class);
+            var root = cq.from(Icon.class);
+            List<Predicate> predicates = new ArrayList<>();
+            addSearchStringPredicate(predicates, cb, root.get(Icon_.REF_ID), refId);
+            addSearchStringPredicate(predicates, cb, root.get(Icon_.iconSetId), iconSetId);
+            if (!iconNames.isEmpty()) {
+                predicates.add(root.get(Icon_.name).in(iconNames));
+            }
+
+            cq.where(cb.and(predicates.toArray(new Predicate[0])));
+
+            return this.getEntityManager().createQuery(cq).getResultStream();
+
+        } catch (Exception ex) {
+            throw new DAOException(IconDAO.ErrorKeys.ERROR_FIND_ICONS_BY_NAMES_AND_REF_ID_AND_ICONSET_ID, ex);
+        }
+    }
+
     public enum ErrorKeys {
         ERROR_FIND_ICONS_BY_NAMES_AND_REF_ID,
         FIND_ENTITY_BY_PARENT_NAME_FAILED,
-        FAILED_TO_DELETE_BY_REF_ID_QUERY
+        FAILED_TO_DELETE_BY_REF_ID_QUERY,
+        ERROR_FIND_ICONS_BY_NAMES_AND_REF_ID_AND_ICONSET_ID
     }
 }

@@ -15,10 +15,10 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-class IconDAOTest extends AbstractTest {
+class IconSetDAOTest extends AbstractTest {
 
     @Inject
-    IconDAO dao;
+    IconSetDAO dao;
 
     @InjectMock
     EntityManager em;
@@ -30,18 +30,15 @@ class IconDAOTest extends AbstractTest {
 
     @Test
     void methodExceptionTests() {
-        methodExceptionTests(() -> dao.findIconsByNamesAndRefId(null, null),
-                IconDAO.ErrorKeys.ERROR_FIND_ICONS_BY_NAMES_AND_REF_ID);
-        methodExceptionTests(() -> dao.findByNameAndRefId(null, null),
-                IconDAO.ErrorKeys.FIND_ENTITY_BY_PARENT_NAME_FAILED);
-        methodExceptionTests(() -> dao.deleteQueryByRefId(null),
-                IconDAO.ErrorKeys.FAILED_TO_DELETE_BY_REF_ID_QUERY);
-        methodExceptionTests(() -> dao.findIconsByRefIdIconSetIdAndNames(null, null, null),
-                IconDAO.ErrorKeys.ERROR_FIND_ICONS_BY_NAMES_AND_REF_ID_AND_ICONSET_ID);
+        methodExceptionTests(() -> dao.findByRefId(null),
+                IconSetDAO.ErrorKeys.ERROR_FIND_ICONSET_BY_REFID);
+        methodExceptionTests(() -> dao.findByPrefixAndRefId(null, null),
+                IconSetDAO.ErrorKeys.ERROR_FIND_ICONSET_BY_REFID_AND_PREFIX);
     }
 
     void methodExceptionTests(Executable fn, Enum<?> key) {
         var exc = Assertions.assertThrows(DAOException.class, fn);
         Assertions.assertEquals(key, exc.key);
     }
+
 }

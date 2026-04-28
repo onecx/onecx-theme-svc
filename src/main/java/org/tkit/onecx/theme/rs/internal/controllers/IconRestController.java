@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.onecx.theme.domain.daos.IconDAO;
+import org.tkit.onecx.theme.domain.daos.IconSetDAO;
 import org.tkit.onecx.theme.domain.services.IconService;
 import org.tkit.onecx.theme.rs.internal.mappers.ExceptionMapper;
 import org.tkit.onecx.theme.rs.internal.mappers.IconMapper;
@@ -35,6 +36,9 @@ public class IconRestController implements IconsInternalApi {
     IconDAO iconDAO;
 
     @Inject
+    IconSetDAO iconSetDAO;
+
+    @Inject
     IconMapper iconMapper;
 
     @Inject
@@ -52,8 +56,25 @@ public class IconRestController implements IconsInternalApi {
     }
 
     @Override
-    public Response findIconsByNamesAndRefId(String refId, IconCriteriaDTO iconCriteriaDTO) {
-        var icons = iconDAO.findIconsByNamesAndRefId(new HashSet<>(iconCriteriaDTO.getNames()), refId).toList();
+    public Response deleteIconSetByRefIdAndPrefix(String refId, String prefix) {
+        iconService.deleteIconSetByRefIdAndPrefix(refId, prefix);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @Override
+    public Response findIconSetsByRefId(String refId) {
+        var iconSets = iconSetDAO.findByRefId(refId);
+        return Response.status(Response.Status.OK).entity(iconMapper.mapIconSets(iconSets)).build();
+    }
+
+    @Override
+    public Response findIconsByCriteria(String refId, IconCriteriaDTO iconCriteriaDTO) {
+        String iconSetId = null;
+        if (iconCriteriaDTO.getPrefix() != null) {
+            iconSetId = iconSetDAO.findByPrefixAndRefId(iconCriteriaDTO.getPrefix(), refId).getId();
+        }
+        var icons = iconDAO.findIconsByRefIdIconSetIdAndNames(refId, iconSetId, new HashSet<>(iconCriteriaDTO.getNames()))
+                .toList();
         icons = iconService.resolveAliases(icons);
 
         IconListResponseDTO res = new IconListResponseDTO();

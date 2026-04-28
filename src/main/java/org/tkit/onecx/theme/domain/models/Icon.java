@@ -35,4 +35,7 @@ public class Icon extends TraceableEntity {
 
     @Column(name = "PARENT")
     private String parent;
+
+    @Column(name = "ICON_SET_ID")
+    private String iconSetId;
 }

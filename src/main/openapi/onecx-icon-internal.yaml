@@ -16,14 +16,14 @@ paths:
     - oauth2: [ ocx-th:all, ocx-th:read ]
    tags:
     - iconsInternal
-   description: Retrieve icons by list of names and refId
+   description: Retrieve icons by criteria
    parameters:
     - name: refId
       in: path
       required: true
       schema:
        type: string
-   operationId: findIconsByNamesAndRefId
+   operationId: findIconsByCriteria
    requestBody:
     required: true
     content:
@@ -38,8 +38,38 @@ paths:
        schema:
         $ref: '#/components/schemas/IconListResponse'
     "400":
-     description: Bad Request
- /internal/icons/{refId}/upload:
+     description: Bad request
+     content:
+       application/json:
+         schema:
+           $ref: '#/components/schemas/ProblemDetailResponse'
+ /internal/iconsets/{refId}:
+  get:
+    security:
+     - oauth2: [ ocx-th:all, ocx-th:read ]
+    tags:
+     - iconsInternal
+    description: Retrieve all icon sets by reference id
+    parameters:
+      - name: refId
+        in: path
+        required: true
+        schema:
+          type: string
+    operationId: findIconSetsByRefId
+    responses:
+     "200":
+      description: Icon sets retrieved successfully
+      content:
+        application/json:
+         schema:
+          $ref: '#/components/schemas/GetIconSetsResponse'
+     "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetailResponse'
   post:
    security:
     - oauth2: [ ocx-th:all, ocx-th:write ]
@@ -64,7 +94,39 @@ paths:
     "201":
      description: Icon uploaded successfully
     "400":
-     description: Bad Request
+     description: Bad request
+     content:
+       application/json:
+         schema:
+           $ref: '#/components/schemas/ProblemDetailResponse'
+ /internal/iconsets/{refId}/{prefix}:
+   delete:
+     security:
+       - oauth2: [ ocx-th:all, ocx-th:delete ]
+     tags:
+       - iconsInternal
+     description: Delete icon set by reference id and prefix
+     parameters:
+       - name: refId
+         in: path
+         required: true
+         schema:
+           type: string
+       - name: prefix
+         in: path
+         required: true
+         schema:
+           type: string
+     operationId: deleteIconSetByRefIdAndPrefix
+     responses:
+       "204":
+         description: Iconset deleted successfully
+       "400":
+         description: Bad request
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/ProblemDetailResponse'
 components:
  securitySchemes:
   oauth2:
@@ -77,14 +139,37 @@ components:
       ocx-th:read: Grants read access
       ocx-th:write: Grants write access
  schemas:
-  IconCriteria:
+  GetIconSetsResponse:
+   type: object
+   properties:
+    iconSets:
+     type: array
+     items:
+      $ref: '#/components/schemas/IconSet'
+  IconSet:
    type: object
    required:
-    - names
+     - refId
+     - prefix
    properties:
+    refId:
+     type: string
+    name:
+     type: string
+    prefix:
+      type: string
+    version:
+      type: string
+    iconCount:
+      type: integer
+      format: int32
+  IconCriteria:
+   type: object
+   properties:
+    prefix:
+     type: string
     names:
      type: array
-     minItems: 1
      items:
       type: string
   IconListResponse:
