@@ -42,8 +42,9 @@ class ThemesRestControllerTest extends AbstractTest {
         themeDto.setAssetsUrl("assets/url");
         themeDto.setPreviewImageUrl("image/url");
         themeDto.setOverrides(List.of(overrideDto));
-        themeDto.setCustomCssVariables("{'body': { 'background-color': 'black' }}");
-        themeDto.setFonts("{ '@font-face' { 'font-family': 'MyFont', 'src': 'url('myfont.woff2') format('woff2')' }}");
+        themeDto.setCustomCssVariables("{ 'my-custom-color': 'blue'}");
+        themeDto.setFonts(
+                "[{'fontFamily':'My Custom Font','src':'url('https://example.com/fonts/my-font.woff2') format('woff2')'}]");
 
         var uri = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
