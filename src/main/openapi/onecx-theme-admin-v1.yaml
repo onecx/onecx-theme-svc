@@ -251,6 +251,10 @@ components:
     mandatory:
      type: boolean
      default: false
+    fonts:
+      type: string
+    customCssVariables:
+      type: string
   OffsetDateTime:
    format: date-time
    type: string
@@ -321,6 +325,10 @@ components:
     mandatory:
      type: boolean
      default: false
+    fonts:
+      type: string
+    customCssVariables:
+      type: string
   UpdateTheme:
    required:
     - name
@@ -361,6 +369,10 @@ components:
       $ref: '#/components/schemas/ThemeOverride'
     mandatory:
      type: boolean
+    fonts:
+      type: string
+    customCssVariables:
+      type: string
   ThemeOverride:
    type: object
    properties:

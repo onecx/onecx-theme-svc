@@ -169,6 +169,10 @@ components:
         mandatory:
           type: boolean
           default: false
+        fonts:
+          type: string
+        customCssVariables:
+          type: string
     EximProblemDetailResponse:
       type: object
       properties:

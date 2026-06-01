@@ -57,6 +57,12 @@ public class Theme extends TraceableEntity {
     @Column(name = "PREVIEW_IMAGE_URL")
     private String previewImageUrl;
 
+    @Column(name = "CUSTOM_CSS_VARIABLES", columnDefinition = "TEXT")
+    private String customCssVariables;
+
+    @Column(name = "FONTS", columnDefinition = "TEXT")
+    private String fonts;
+
     @Column(name = "ASSETS_UPDATE_DATE")
     private LocalDateTime assetsUpdateDate;
 
