@@ -172,7 +172,7 @@ components:
         fonts:
           type: string
         customCssVariables:
-          type: object
+          type: string
     EximProblemDetailResponse:
       type: object
       properties:
