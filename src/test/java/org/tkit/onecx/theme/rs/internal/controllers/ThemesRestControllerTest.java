@@ -229,6 +229,8 @@ class ThemesRestControllerTest extends AbstractTest {
         assertThat(dto).isNotNull();
         assertThat(dto.getName()).isEqualTo("themeWithoutPortal");
         assertThat(dto.getId()).isEqualTo("22-222");
+        assertThat(dto.getOverrides()).hasSize(1);
+        assertThat(dto.getOverrides().get(0).getValue()).isNotNull();
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))

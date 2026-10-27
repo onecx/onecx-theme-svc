@@ -26,6 +26,6 @@ public class ThemeOverride implements Serializable {
     @Column(name = "TYPE")
     private String type;
 
-    @Column(name = "VALUE")
+    @Column(name = "VALUE", columnDefinition = "TEXT")
     private String value;
 }
