@@ -101,7 +101,6 @@ public abstract class ExportImportMapperV1 {
 
     @Mapping(target = "removeOverridesItem", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "s2o")
-    @Mapping(target = "customCssVariables", qualifiedByName = "s2o")
     @Mapping(target = "removeImagesItem", ignore = true)
     @Mapping(target = "images", ignore = true)
     public abstract EximThemeDTOV1 map(Theme theme);
@@ -118,7 +117,6 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "o2s")
-    @Mapping(target = "customCssVariables", qualifiedByName = "o2s")
     public abstract void update(EximThemeDTOV1 dto, @MappingTarget Theme entity);
 
     @Mapping(target = "id", ignore = true)
@@ -132,7 +130,6 @@ public abstract class ExportImportMapperV1 {
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "operator", ignore = true)
     @Mapping(target = "properties", qualifiedByName = "o2s")
-    @Mapping(target = "customCssVariables", qualifiedByName = "o2s")
     @Mapping(target = "displayName", source = "dto.displayName", defaultExpression = "java(name)")
     public abstract Theme create(String name, EximThemeDTOV1 dto);
 
