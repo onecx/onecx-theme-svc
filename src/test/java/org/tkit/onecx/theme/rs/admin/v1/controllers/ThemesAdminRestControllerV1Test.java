@@ -20,7 +20,7 @@ import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 @TestHTTPEndpoint(ThemesAdminRestControllerV1.class)
-@WithDBData(value = "data/testdata-admin.xml", deleteBeforeInsert = true, deleteAfterTest = true, rinseAndRepeat = true)
+@WithDBData(value = "data/testdata-admin.xml", deleteBeforeInsert = true, rinseAndRepeat = true)
 @GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-th:admin-read", "ocx-th:admin-write",
         "ocx-th:admin-delete" })
 class ThemesAdminRestControllerV1Test extends AbstractTest {
