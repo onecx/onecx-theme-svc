@@ -72,6 +72,7 @@ public class Theme extends TraceableEntity {
     @OneToMany(cascade = { REMOVE, REFRESH, PERSIST, MERGE }, fetch = LAZY, orphanRemoval = true)
     @JoinColumn(name = "THEME_ID")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @OrderBy("type ASC, position ASC")
     private List<ThemeOverride> overrides = new ArrayList<>();
 
     @Column(name = "OPERATOR")

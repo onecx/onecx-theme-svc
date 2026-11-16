@@ -224,6 +224,11 @@ components:
       properties:
         type:
           $ref: '#/components/schemas/EximOverrideType'
+        alias:
+          type: string
+        position:
+          format: int32
+          type: integer
         value:
           type: string
     EximOverrideType:
