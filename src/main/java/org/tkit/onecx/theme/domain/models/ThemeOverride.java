@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "THEME_OVERRIDE", uniqueConstraints = {
-        @UniqueConstraint(name = "OVERRIDE_TYPE", columnNames = { "THEME_ID", "TYPE" })
+        @UniqueConstraint(name = "OVERRIDE_TYPE", columnNames = { "THEME_ID", "POS", "TYPE" })
 })
 public class ThemeOverride implements Serializable {
 
@@ -25,6 +25,16 @@ public class ThemeOverride implements Serializable {
 
     @Column(name = "TYPE")
     private String type;
+
+    @Column(name = "ALIAS")
+    private String alias;
+
+    @Column(name = "POS", nullable = false)
+    private int pos = 0;
+
+    public void setPos(Integer pos) {
+        this.pos = pos == null ? 0 : pos;
+    }
 
     @Convert(converter = Utf8BytesConverter.class)
     @Column(name = "VALUE", columnDefinition = "BYTEA")

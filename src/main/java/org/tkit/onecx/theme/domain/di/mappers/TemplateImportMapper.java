@@ -101,6 +101,8 @@ public abstract class TemplateImportMapper {
 
     @Mapping(target = "themeId", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "pos", ignore = true)
+    @Mapping(target = "alias", ignore = true)
     public abstract ThemeOverride map(TemplateThemeOverrideDTO dto);
 
     public abstract TemplateThemeOverrideDTO map(ThemeOverride override);

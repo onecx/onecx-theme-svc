@@ -1,0 +1,20 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet author="dev" id="1794000000000-1">
+        <addColumn tableName="theme_override">
+            <column name="alias" type="VARCHAR(255)"/>
+            <!-- update existing data -->
+            <column name="pos" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <!-- the default only back-fills existing rows; the entity sets position itself -->
+        <dropDefaultValue tableName="theme_override" columnName="pos" columnDataType="INTEGER"/>
+        <dropUniqueConstraint tableName="theme_override" constraintName="override_type"/>
+        <addUniqueConstraint tableName="theme_override" constraintName="override_type" columnNames="theme_id, pos, type"/>
+    </changeSet>
+</databaseChangeLog>
