@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet author="dev" id="1794000000000-1">
+        <addColumn tableName="theme_override">
+            <column name="alias" type="VARCHAR(255)"/>
+            <column name="position" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <dropUniqueConstraint tableName="theme_override" constraintName="override_type"/>
+        <addUniqueConstraint tableName="theme_override" constraintName="override_type" columnNames="theme_id, position, type"/>
+    </changeSet>
+</databaseChangeLog>
