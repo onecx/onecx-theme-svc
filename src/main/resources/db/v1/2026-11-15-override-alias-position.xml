@@ -7,10 +7,13 @@
     <changeSet author="dev" id="1794000000000-1">
         <addColumn tableName="theme_override">
             <column name="alias" type="VARCHAR(255)"/>
+            <!-- update existing data -->
             <column name="position" type="INTEGER" defaultValueNumeric="0">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
+        <!-- the default only back-fills existing rows; the entity sets position itself -->
+        <dropDefaultValue tableName="theme_override" columnName="position" columnDataType="INTEGER"/>
         <dropUniqueConstraint tableName="theme_override" constraintName="override_type"/>
         <addUniqueConstraint tableName="theme_override" constraintName="override_type" columnNames="theme_id, position, type"/>
     </changeSet>
