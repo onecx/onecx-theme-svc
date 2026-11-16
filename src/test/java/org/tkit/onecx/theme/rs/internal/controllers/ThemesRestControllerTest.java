@@ -280,7 +280,7 @@ class ThemesRestControllerTest extends AbstractTest {
         assertThat(dto.getId()).isEqualTo("11-111");
         assertThat(dto.getOverrides()).extracting(ThemeOverrideDTO::getType)
                 .containsExactly(OverrideTypeDTO.CSS, OverrideTypeDTO.PRIMENG);
-        assertThat(dto.getOverrides()).extracting(ThemeOverrideDTO::getPosition).containsExactly(0, 0);
+        assertThat(dto.getOverrides()).extracting(ThemeOverrideDTO::getPos).containsExactly(0, 0);
 
     }
 
@@ -361,7 +361,7 @@ class ThemesRestControllerTest extends AbstractTest {
         var overrideDto = new ThemeOverrideDTO();
         overrideDto.setType(OverrideTypeDTO.CSS);
         overrideDto.setValue(".class { color: blue; }");
-        overrideDto.setPosition(5);
+        overrideDto.setPos(5);
         themeDto.setName("test01");
         themeDto.setDisplayName("test01");
         themeDto.setModificationCount(0);
@@ -399,7 +399,7 @@ class ThemesRestControllerTest extends AbstractTest {
                 .extract()
                 .body().as(ThemeDTO.class);
         assertThat(dto.getOverrides().get(0).getValue()).isEqualTo(overrideDto.getValue());
-        assertThat(dto.getOverrides().get(0).getPosition()).isEqualTo(5);
+        assertThat(dto.getOverrides().get(0).getPos()).isEqualTo(5);
 
         // update theme with wrong modificationCount
         given()
@@ -446,16 +446,16 @@ class ThemesRestControllerTest extends AbstractTest {
 
         assertThat(dto.getOverrides()).extracting(ThemeOverrideDTO::getValue)
                 .containsExactly(".c1 {}", ".c2 {}", ".p0 {}");
-        assertThat(dto.getOverrides()).extracting(ThemeOverrideDTO::getPosition).containsExactly(1, 2, 0);
+        assertThat(dto.getOverrides()).extracting(ThemeOverrideDTO::getPos).containsExactly(1, 2, 0);
         assertThat(dto.getOverrides()).extracting(ThemeOverrideDTO::getAlias)
                 .containsExactly("first", "second", null);
     }
 
-    private static ThemeOverrideDTO override(OverrideTypeDTO type, String value, Integer position, String alias) {
+    private static ThemeOverrideDTO override(OverrideTypeDTO type, String value, Integer pos, String alias) {
         var result = new ThemeOverrideDTO();
         result.setType(type);
         result.setValue(value);
-        result.setPosition(position);
+        result.setPos(pos);
         result.setAlias(alias);
         return result;
     }

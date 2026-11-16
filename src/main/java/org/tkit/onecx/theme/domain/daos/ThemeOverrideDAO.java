@@ -18,7 +18,7 @@ public class ThemeOverrideDAO extends AbstractDAO<ThemeOverride> {
             var cq = cb.createQuery(ThemeOverride.class);
             var root = cq.from(ThemeOverride.class);
             cq.where(cb.equal(root.get(ThemeOverride_.THEME_ID), themeId));
-            cq.orderBy(cb.asc(root.get(ThemeOverride_.TYPE)), cb.asc(root.get(ThemeOverride_.POSITION)));
+            cq.orderBy(cb.asc(root.get(ThemeOverride_.TYPE)), cb.asc(root.get(ThemeOverride_.POS)));
             return this.getEntityManager().createQuery(cq).getResultStream();
         } catch (Exception ex) {
             throw new DAOException(ThemeOverrideDAO.ErrorKeys.ERROR_FIND_THEME_OVERRIDES_BY_THEME_ID, ex);
