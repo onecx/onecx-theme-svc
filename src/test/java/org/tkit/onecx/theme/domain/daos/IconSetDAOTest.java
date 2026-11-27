@@ -34,6 +34,8 @@ class IconSetDAOTest extends AbstractTest {
                 IconSetDAO.ErrorKeys.ERROR_FIND_ICONSET_BY_REFID);
         methodExceptionTests(() -> dao.findByPrefixAndRefId(null, null),
                 IconSetDAO.ErrorKeys.ERROR_FIND_ICONSET_BY_REFID_AND_PREFIX);
+        methodExceptionTests(() -> dao.existsByPrefixAndRefId(null, null),
+                IconSetDAO.ErrorKeys.ERROR_FIND_ICONSET_BY_REFID_AND_PREFIX);
     }
 
     void methodExceptionTests(Executable fn, Enum<?> key) {

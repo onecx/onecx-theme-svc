@@ -26,6 +26,21 @@ public class IconSetDAO extends AbstractDAO<IconSet> {
         }
     }
 
+    public boolean existsByPrefixAndRefId(String prefix, String refId) {
+        try {
+            var cb = this.getEntityManager().getCriteriaBuilder();
+            var cq = cb.createQuery(Long.class);
+            var root = cq.from(IconSet.class);
+            cq.select(cb.count(root))
+                    .where(cb.and(cb.equal(root.get(IconSet_.prefix), prefix), cb.equal(root.get(IconSet_.refId), refId)));
+
+            return this.getEntityManager().createQuery(cq).getSingleResult() > 0;
+
+        } catch (Exception ex) {
+            throw new DAOException(ErrorKeys.ERROR_FIND_ICONSET_BY_REFID_AND_PREFIX, ex);
+        }
+    }
+
     public List<IconSet> findByRefId(String refId) {
         try {
             var cb = this.getEntityManager().getCriteriaBuilder();
