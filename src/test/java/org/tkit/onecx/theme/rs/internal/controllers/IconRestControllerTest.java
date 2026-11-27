@@ -17,6 +17,7 @@ import org.tkit.quarkus.test.WithDBData;
 import gen.org.tkit.onecx.theme.rs.icon.internal.model.GetIconSetsResponseDTO;
 import gen.org.tkit.onecx.theme.rs.icon.internal.model.IconCriteriaDTO;
 import gen.org.tkit.onecx.theme.rs.icon.internal.model.IconListResponseDTO;
+import gen.org.tkit.onecx.theme.rs.internal.model.ProblemDetailResponseDTO;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -42,8 +43,8 @@ class IconRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(CREATED.getStatusCode());
 
-        //duplicated upload => duplicated key exception
-        given()
+        //duplicated upload => qualified error
+        var problem = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .pathParam("refId", "themeName")
                 .when()
@@ -51,7 +52,10 @@ class IconRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .post("/iconsets/{refId}")
                 .then()
-                .statusCode(BAD_REQUEST.getStatusCode());
+                .statusCode(BAD_REQUEST.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract().as(ProblemDetailResponseDTO.class);
+        assertThat(problem.getErrorCode()).isEqualTo("ICONSET_ALREADY_EXISTS");
 
         var iconCriteria = new IconCriteriaDTO();
         iconCriteria.getNames().add("mdi:ab-testing");
@@ -119,6 +123,21 @@ class IconRestControllerTest extends AbstractTest {
 
         assertThat(outputEmptyList).isNotNull();
         assertThat(5).isEqualTo(outputEmptyList.getIcons().size());
+    }
+
+    @Test
+    void uploadIconSetWithoutAliasesAndInfo_Test() {
+        var iconSet = "{\"prefix\":\"min\",\"icons\":{\"home\":{\"body\":\"<path d=\\\"M0 0\\\"/>\"}}}";
+
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .pathParam("refId", "minimalTheme")
+                .when()
+                .body(iconSet)
+                .contentType(APPLICATION_JSON)
+                .post("/iconsets/{refId}")
+                .then()
+                .statusCode(CREATED.getStatusCode());
     }
 
     @Test

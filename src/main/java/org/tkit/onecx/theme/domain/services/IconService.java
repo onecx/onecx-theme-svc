@@ -12,6 +12,7 @@ import org.tkit.onecx.theme.domain.daos.IconDAO;
 import org.tkit.onecx.theme.domain.daos.IconSetDAO;
 import org.tkit.onecx.theme.domain.models.Icon;
 import org.tkit.onecx.theme.domain.models.IconSet;
+import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,16 +33,21 @@ public class IconService {
         ObjectMapper mapper = new ObjectMapper();
         var jsonData = mapper.readTree(iconSetData);
         String prefix = jsonData.get("prefix").asText();
+        if (iconSetDAO.existsByPrefixAndRefId(prefix, refId)) {
+            throw new ConstraintException("Iconset with prefix '" + prefix + "' already exists",
+                    ErrorKeys.ICONSET_ALREADY_EXISTS, null);
+        }
         var aliases = jsonData.get("aliases");
         var icons = jsonData.get("icons");
+        var info = jsonData.path("info");
         var iconListToCreate = new ArrayList<Icon>();
 
         var iconSet = new IconSet();
-        iconSet.setName(jsonData.get("info").path("name").asText());
+        iconSet.setName(info.path("name").asText());
         iconSet.setPrefix(prefix);
-        iconSet.setVersion(jsonData.get("info").path("version").asText());
+        iconSet.setVersion(info.path("version").asText());
         iconSet.setRefId(refId);
-        iconSet.setIconCount(jsonData.get("info").path("total").asInt());
+        iconSet.setIconCount(info.path("total").asInt(icons.size()));
 
         icons.forEachEntry((iconName, jsonNode) -> {
             Icon iconToCreate = new Icon();
@@ -51,14 +57,16 @@ public class IconService {
             iconToCreate.setBody(jsonNode.get("body").asText());
             iconListToCreate.add(iconToCreate);
         });
-        aliases.forEachEntry((alias, jsonNode) -> {
-            Icon iconToCreate = new Icon();
-            iconToCreate.setName(prefix + ":" + alias);
-            iconToCreate.setType("SVG");
-            iconToCreate.setRefId(refId);
-            iconToCreate.setParent(prefix + ":" + jsonNode.get("parent").asText());
-            iconListToCreate.add(iconToCreate);
-        });
+        if (aliases != null) {
+            aliases.forEachEntry((alias, jsonNode) -> {
+                Icon iconToCreate = new Icon();
+                iconToCreate.setName(prefix + ":" + alias);
+                iconToCreate.setType("SVG");
+                iconToCreate.setRefId(refId);
+                iconToCreate.setParent(prefix + ":" + jsonNode.get("parent").asText());
+                iconListToCreate.add(iconToCreate);
+            });
+        }
 
         iconSet.setIcons(iconListToCreate);
         iconSetDAO.create(iconSet);
@@ -99,5 +107,9 @@ public class IconService {
     public void deleteIconSetByRefIdAndPrefix(String refId, String prefix) {
         var iconSet = iconSetDAO.findByPrefixAndRefId(prefix, refId);
         iconSetDAO.delete(iconSet);
+    }
+
+    public enum ErrorKeys {
+        ICONSET_ALREADY_EXISTS
     }
 }
